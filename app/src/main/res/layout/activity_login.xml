@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".LoginActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|top">
+
+            <TextView
+                android:id="@+id/txvWelcome"
+                android:layout_width="152dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="120dp"
+                android:layout_marginTop="50dp"
+                android:gravity="center"
+                android:text="Welcome!"
+                android:textColor="@color/colorBlack"
+                android:textSize="30sp"
+                android:textStyle="italic|bold" />
+
+            <TextView
+                android:id="@+id/txvLogInEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/txvWelcome"
+                android:layout_marginStart="35dp"
+                android:layout_marginTop="120dp"
+                android:text="Email"
+                android:textColor="@color/colorBlack" />
+
+            <EditText
+                android:id="@+id/edtLoginEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txvLogInEmail"
+                android:layout_alignParentStart="true"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="30dp"
+                android:background="@drawable/edit"
+                android:drawableStart="@drawable/ic_email"
+                android:hint="Email..."
+                android:inputType="textEmailAddress"
+                android:minHeight="48dp"
+                android:padding="8dp" />
+
+            <TextView
+                android:id="@+id/txvLogInPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/edtLoginEmail"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="20dp"
+                android:text="Password"
+                android:textColor="@color/colorBlack" />
+
+            <EditText
+                android:id="@+id/edtLoginPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txvLogInPassword"
+                android:layout_alignParentStart="true"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="30dp"
+                android:background="@drawable/edit"
+                android:drawableStart="@drawable/password"
+                android:hint="Password..."
+                android:inputType="textPassword"
+                android:minHeight="48dp"
+                android:padding="8dp" />
+
+            <TextView
+                android:id="@+id/txvForgetPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/edtLoginPassword"
+                android:layout_marginStart="210dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="23dp"
+                android:text="Forget Password?"
+                android:textAlignment="center"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="17sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/btnLogIn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txvForgetPassword"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="30dp"
+                android:padding="4dp"
+                android:background="@drawable/buttonss"
+                android:text="Login"
+                android:textAllCaps="false"
+                android:textColor="@android:color/background_light"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/txvNeedNewAccount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/btnLogIn"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="23dp"
+                android:text="Need new account? Sign up here"
+                android:textAlignment="center"
+                android:textColor="@color/colorPrimary"
+                android:textSize="17sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+    </ScrollView>
+
+</LinearLayout>
