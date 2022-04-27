@@ -19,7 +19,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -58,7 +57,7 @@ public class EditProfilePage extends AppCompatActivity {
     String storagepath = "Users_Profile_Cover_image/";
     String uid;
     ImageView set;
-    TextView profilepic, editname, editpassword;
+    private Button editpassword, profilepic, editname;
     ProgressDialog pd;
     private static final int CAMERA_REQUEST = 100;
     private static final int STORAGE_REQUEST = 200;
@@ -74,12 +73,12 @@ public class EditProfilePage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile_page);
 
-        profilepic = findViewById(R.id.profilepic);
-        editname = findViewById(R.id.editname);
         set = findViewById(R.id.setting_profile_image);
         pd = new ProgressDialog(this);
         pd.setCanceledOnTouchOutside(false);
-        editpassword = findViewById(R.id.changepassword);
+        this.editpassword = (Button) this.findViewById(R.id.changepassword);
+        this.profilepic = (Button) this.findViewById(R.id.profilepic);
+        this.editname = (Button) this.findViewById(R.id.editname);
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
@@ -89,7 +88,7 @@ public class EditProfilePage extends AppCompatActivity {
 
         cameraPermission = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
         storagePermission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
-        
+
         Query query = databaseReference.orderByChild("email").equalTo(firebaseUser.getEmail());
         query.addValueEventListener(new ValueEventListener() {
             @Override
@@ -111,15 +110,17 @@ public class EditProfilePage extends AppCompatActivity {
             }
         });
 
-        editpassword.setOnClickListener(new View.OnClickListener() {
+
+        this.editpassword.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 pd.setMessage("Changing Password");
                 showPasswordChangeDailog();
+                Toast.makeText(EditProfilePage.this, "editpassword", Toast.LENGTH_LONG).show();
             }
         });
 
-        profilepic.setOnClickListener(new View.OnClickListener() {
+        this.profilepic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 pd.setMessage("Updating Profile Picture");
@@ -128,7 +129,7 @@ public class EditProfilePage extends AppCompatActivity {
             }
         });
 
-        editname.setOnClickListener(new View.OnClickListener() {
+        this.editname.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 pd.setMessage("Updating Name");
