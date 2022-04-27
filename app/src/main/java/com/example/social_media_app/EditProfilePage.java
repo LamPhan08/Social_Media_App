@@ -76,9 +76,9 @@ public class EditProfilePage extends AppCompatActivity {
         set = findViewById(R.id.setting_profile_image);
         pd = new ProgressDialog(this);
         pd.setCanceledOnTouchOutside(false);
-        this.editpassword = (Button) this.findViewById(R.id.changepassword);
-        this.profilepic = (Button) this.findViewById(R.id.profilepic);
-        this.editname = (Button) this.findViewById(R.id.editname);
+        this.editpassword = this.findViewById(R.id.changepassword);
+        this.profilepic =  this.findViewById(R.id.profilepic);
+        this.editname =  this.findViewById(R.id.editname);
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
@@ -113,10 +113,10 @@ public class EditProfilePage extends AppCompatActivity {
 
         this.editpassword.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View v) {
                 pd.setMessage("Changing Password");
                 showPasswordChangeDailog();
-                Toast.makeText(EditProfilePage.this, "editpassword", Toast.LENGTH_LONG).show();
+                Toast.makeText(EditProfilePage.this, "editpassword", Toast.LENGTH_SHORT).show();
             }
         });
 
