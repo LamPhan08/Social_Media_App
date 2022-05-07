@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import com.example.social_media_app.Fragments.AddBlogFragment;
 import com.example.social_media_app.Fragments.ChatListFragment;
 import com.example.social_media_app.Fragments.HomeFragment;
+import com.example.social_media_app.Fragments.ProfileFragment;
 import com.example.social_media_app.Fragments.UsersFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
@@ -25,7 +26,6 @@ public class DashboardActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().hide();
         setContentView(R.layout.activity_dashboard);
 
         auth = FirebaseAuth.getInstance();

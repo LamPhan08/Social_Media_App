@@ -19,11 +19,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
@@ -57,7 +57,7 @@ public class EditProfilePage extends AppCompatActivity {
     String storagepath = "Users_Profile_Cover_image/";
     String uid;
     ImageView set;
-    private Button editpassword, profilepic, editname;
+    TextView profilepic, editname, editpassword;
     ProgressDialog pd;
     private static final int CAMERA_REQUEST = 100;
     private static final int STORAGE_REQUEST = 200;
@@ -73,22 +73,19 @@ public class EditProfilePage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile_page);
 
-        set = findViewById(R.id.setting_profile_image);
+        profilepic = findViewById(R.id.profilepic);
+        editname = findViewById(R.id.editname);
+        set = (ImageView) findViewById(R.id.setting_profile_image);
         pd = new ProgressDialog(this);
         pd.setCanceledOnTouchOutside(false);
-        this.editpassword = this.findViewById(R.id.changepassword);
-        this.profilepic =  this.findViewById(R.id.profilepic);
-        this.editname =  this.findViewById(R.id.editname);
-
+        editpassword = findViewById(R.id.changepassword);
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
         firebaseDatabase = FirebaseDatabase.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
         databaseReference = firebaseDatabase.getReference("Users");
-
         cameraPermission = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
         storagePermission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
-
         Query query = databaseReference.orderByChild("email").equalTo(firebaseUser.getEmail());
         query.addValueEventListener(new ValueEventListener() {
             @Override
@@ -110,17 +107,15 @@ public class EditProfilePage extends AppCompatActivity {
             }
         });
 
-
-        this.editpassword.setOnClickListener(new View.OnClickListener() {
+        editpassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 pd.setMessage("Changing Password");
                 showPasswordChangeDailog();
-                Toast.makeText(EditProfilePage.this, "editpassword", Toast.LENGTH_SHORT).show();
             }
         });
 
-        this.profilepic.setOnClickListener(new View.OnClickListener() {
+        profilepic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 pd.setMessage("Updating Profile Picture");
@@ -129,7 +124,7 @@ public class EditProfilePage extends AppCompatActivity {
             }
         });
 
-        this.editname.setOnClickListener(new View.OnClickListener() {
+        editname.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 pd.setMessage("Updating Name");
@@ -212,9 +207,10 @@ public class EditProfilePage extends AppCompatActivity {
     }
 
     // requesting for storage permission
-    @RequiresApi(api = Build.VERSION_CODES.M)
     private void requestStoragePermission() {
-        requestPermissions(storagePermission, STORAGE_REQUEST);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            requestPermissions(storagePermission, STORAGE_REQUEST);
+        }
     }
 
     // checking camera permission ,if given then we can click image using our camera
@@ -225,9 +221,10 @@ public class EditProfilePage extends AppCompatActivity {
     }
 
     // requesting for camera permission if not given
-    @RequiresApi(api = Build.VERSION_CODES.M)
     private void requestCameraPermission() {
-        requestPermissions(cameraPermission, CAMERA_REQUEST);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            requestPermissions(cameraPermission, CAMERA_REQUEST);
+        }
     }
 
     // We will show an alert box where we will write our old and new password
@@ -372,7 +369,6 @@ public class EditProfilePage extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Pick Image From");
         builder.setItems(options, new DialogInterface.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // if access is not given then we will request for permission
@@ -459,48 +455,42 @@ public class EditProfilePage extends AppCompatActivity {
     // We will upload the image from here.
     private void uploadProfileCoverPhoto(final Uri uri) {
         pd.show();
-
-        // We are taking the filepath as storagepath + firebaseauth.getUid()+".png"
-        String filepathname = storagepath + "" + profileOrCoverPhoto + "_" + firebaseUser.getUid();
-        StorageReference storageReference1 = storageReference.child(filepathname);
+        String filepathname=storagepath + "" + profileOrCoverPhoto + "_" +firebaseUser.getUid();
+        StorageReference storageReference1=storageReference.child(filepathname);
         storageReference1.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
-                while (!uriTask.isSuccessful()) ;
-
-                // We will get the url of our image using uritask
-                final Uri downloadUri = uriTask.getResult();
-                if (uriTask.isSuccessful()) {
-
-                    // updating our image url into the realtime database
-                    HashMap<String, Object> hashMap = new HashMap<>();
-                    hashMap.put(profileOrCoverPhoto, downloadUri.toString());
+                Task<Uri> uriTask=taskSnapshot.getStorage().getDownloadUrl();
+                while (!uriTask.isSuccessful());
+                final Uri downloadUri=uriTask.getResult();
+                if(uriTask.isSuccessful()){
+                    HashMap<String,Object> hashMap=new HashMap<>();
+                    hashMap.put(profileOrCoverPhoto,downloadUri.toString());
                     databaseReference.child(firebaseUser.getUid()).updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
                             pd.dismiss();
-                            Toast.makeText(EditProfilePage.this, "Updated", Toast.LENGTH_LONG).show();
+                            Toast.makeText(EditProfilePage.this,"Updated",Toast.LENGTH_LONG).show();
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             pd.dismiss();
-                            Toast.makeText(EditProfilePage.this, "Error Updating ", Toast.LENGTH_LONG).show();
+                            Toast.makeText(EditProfilePage.this,"Error Updating ",Toast.LENGTH_LONG).show();
                         }
                     });
-                } else {
+                }
+                else {
                     pd.dismiss();
-                    Toast.makeText(EditProfilePage.this, "Error", Toast.LENGTH_LONG).show();
+                    Toast.makeText(EditProfilePage.this,"Error",Toast.LENGTH_LONG).show();
                 }
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
                 pd.dismiss();
-                Toast.makeText(EditProfilePage.this, "Error", Toast.LENGTH_LONG).show();
+                Toast.makeText(EditProfilePage.this,"Error",Toast.LENGTH_LONG).show();
             }
         });
     }
 }
-

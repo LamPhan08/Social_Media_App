@@ -22,19 +22,22 @@
         android:layout_height="130dp"
         android:layout_marginStart="140dp"
         android:layout_marginTop="40dp"
-        android:src="@drawable/ic_users" />
+        android:src="@mipmap/ic_launcher" />
 
-    <Button
+    <TextView
         android:id="@+id/profilepic"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="Update Profile Pic"
+        android:text="Update Profile Avatar"
         android:textAlignment="center"
         android:textColor="@android:color/black"
+        android:background="#74d14a"
+        android:layout_marginRight="30dp"
+        android:layout_marginLeft="30dp"
         android:textSize="20sp" />
 
-    <Button
+    <TextView
         android:id="@+id/editname"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -42,16 +45,22 @@
         android:text="Update Name"
         android:textAlignment="center"
         android:textColor="@android:color/black"
+        android:layout_marginRight="30dp"
+        android:layout_marginLeft="30dp"
+        android:background="#74d14a"
         android:textSize="20sp" />
 
-    <Button
+    <TextView
         android:id="@+id/changepassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:text="Change Password "
         android:textAlignment="center"
+        android:background="#74d14a"
         android:textColor="@android:color/black"
+        android:layout_marginRight="30dp"
+        android:layout_marginLeft="30dp"
         android:textSize="20sp" />
 
 </LinearLayout>

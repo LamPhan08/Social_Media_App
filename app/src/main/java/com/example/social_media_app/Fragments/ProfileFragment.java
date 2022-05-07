@@ -1,4 +1,4 @@
-package com.example.social_media_app;
+package com.example.social_media_app.Fragments;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -15,6 +15,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.social_media_app.EditProfilePage;
+import com.example.social_media_app.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
