@@ -271,11 +271,11 @@ public class EditProfilePage extends AppCompatActivity {
                 String oldp = oldpass.getText().toString().trim();
                 String newp = newpass.getText().toString().trim();
                 if (TextUtils.isEmpty(oldp)) {
-                    Toast.makeText(EditProfilePage.this, "Current Password cant be empty", Toast.LENGTH_LONG).show();
+                    Toast.makeText(EditProfilePage.this, "Current Password can't be empty!", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if (TextUtils.isEmpty(newp)) {
-                    Toast.makeText(EditProfilePage.this, "New Password cant be empty", Toast.LENGTH_LONG).show();
+                    Toast.makeText(EditProfilePage.this, "New Password can't be empty!", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 dialog.dismiss();
@@ -299,13 +299,13 @@ public class EditProfilePage extends AppCompatActivity {
                                     @Override
                                     public void onSuccess(Void aVoid) {
                                         pd.dismiss();
-                                        Toast.makeText(EditProfilePage.this, "Changed Password", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(EditProfilePage.this, "Password changed!", Toast.LENGTH_SHORT).show();
                                     }
                                 }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
                                 pd.dismiss();
-                                Toast.makeText(EditProfilePage.this, "Failed", Toast.LENGTH_LONG).show();
+                                Toast.makeText(EditProfilePage.this, "Failed!", Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
@@ -313,7 +313,7 @@ public class EditProfilePage extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Exception e) {
                 pd.dismiss();
-                Toast.makeText(EditProfilePage.this, "Failed", Toast.LENGTH_LONG).show();
+                Toast.makeText(EditProfilePage.this, "Failed!", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -348,13 +348,13 @@ public class EditProfilePage extends AppCompatActivity {
                             pd.dismiss();
 
                             // after updated we will show updated
-                            Toast.makeText(EditProfilePage.this, " updated ", Toast.LENGTH_LONG).show();
+                            Toast.makeText(EditProfilePage.this, " Updated! ", Toast.LENGTH_SHORT).show();
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             pd.dismiss();
-                            Toast.makeText(EditProfilePage.this, "Unable to update", Toast.LENGTH_LONG).show();
+                            Toast.makeText(EditProfilePage.this, "Unable to update!", Toast.LENGTH_SHORT).show();
                         }
                     });
                     if (key.equals("name")) {
@@ -376,7 +376,7 @@ public class EditProfilePage extends AppCompatActivity {
                         });
                     }
                 } else {
-                    Toast.makeText(EditProfilePage.this, "Unable to update", Toast.LENGTH_LONG).show();
+                    Toast.makeText(EditProfilePage.this, "Unable to update!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -443,7 +443,7 @@ public class EditProfilePage extends AppCompatActivity {
                     if (camera_accepted && writeStorageaccepted) {
                         pickFromCamera();
                     } else {
-                        Toast.makeText(this, "Please Enable Camera and Storage Permissions", Toast.LENGTH_LONG).show();
+                        Toast.makeText(this, "Please Enable Camera Permission!", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -454,7 +454,7 @@ public class EditProfilePage extends AppCompatActivity {
                     if (writeStorageaccepted) {
                         pickFromGallery();
                     } else {
-                        Toast.makeText(this, "Please Enable Storage Permissions", Toast.LENGTH_LONG).show();
+                        Toast.makeText(this, "Please Enable Storage Permission!", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -499,25 +499,25 @@ public class EditProfilePage extends AppCompatActivity {
                             @Override
                             public void onSuccess(Void aVoid) {
                                 pd.dismiss();
-                                Toast.makeText(EditProfilePage.this, "Updated", Toast.LENGTH_LONG).show();
+                                Toast.makeText(EditProfilePage.this, "Updated!", Toast.LENGTH_SHORT).show();
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
                                 pd.dismiss();
-                                Toast.makeText(EditProfilePage.this, "Error Updating ", Toast.LENGTH_LONG).show();
+                                Toast.makeText(EditProfilePage.this, "Error Updating! ", Toast.LENGTH_SHORT).show();
                             }
                         });
                     } else {
                         pd.dismiss();
-                        Toast.makeText(EditProfilePage.this, "Error", Toast.LENGTH_LONG).show();
+                        Toast.makeText(EditProfilePage.this, "Error!", Toast.LENGTH_SHORT).show();
                     }
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     pd.dismiss();
-                    Toast.makeText(EditProfilePage.this, "Error", Toast.LENGTH_LONG).show();
+                    Toast.makeText(EditProfilePage.this, "Error!", Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -538,25 +538,25 @@ public class EditProfilePage extends AppCompatActivity {
                             @Override
                             public void onSuccess(Void aVoid) {
                                 pd.dismiss();
-                                Toast.makeText(EditProfilePage.this, "Updated", Toast.LENGTH_LONG).show();
+                                Toast.makeText(EditProfilePage.this, "Updated!", Toast.LENGTH_SHORT).show();
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
                                 pd.dismiss();
-                                Toast.makeText(EditProfilePage.this, "Error Updating ", Toast.LENGTH_LONG).show();
+                                Toast.makeText(EditProfilePage.this, "Error Updating! ", Toast.LENGTH_SHORT).show();
                             }
                         });
                     } else {
                         pd.dismiss();
-                        Toast.makeText(EditProfilePage.this, "Error", Toast.LENGTH_LONG).show();
+                        Toast.makeText(EditProfilePage.this, "Error!", Toast.LENGTH_SHORT).show();
                     }
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     pd.dismiss();
-                    Toast.makeText(EditProfilePage.this, "Error", Toast.LENGTH_LONG).show();
+                    Toast.makeText(EditProfilePage.this, "Error!", Toast.LENGTH_SHORT).show();
                 }
             });
         }

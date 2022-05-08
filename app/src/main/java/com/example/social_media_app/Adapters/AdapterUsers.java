@@ -1,4 +1,4 @@
-package com.example.social_media_app;
+package com.example.social_media_app.Adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,6 +10,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.social_media_app.Models.ModelUsers;
+import com.example.social_media_app.R;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.List;
@@ -41,13 +43,13 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder> {
     @Override
     public void onBindViewHolder(@NonNull MyHolder holder, final int position) {
         final String hisuid = list.get(position).getUid();
-        String userImage = list.get(position).getImage();
+        String userAvatar = list.get(position).getAvatar();
         String username = list.get(position).getName();
         String usermail = list.get(position).getEmail();
         holder.name.setText(username);
         holder.email.setText(usermail);
         try {
-            Glide.with(context).load(userImage).into(holder.profiletv);
+            Glide.with(context).load(userAvatar).into(holder.profiletv);
         } catch (Exception e) {
         }
     }

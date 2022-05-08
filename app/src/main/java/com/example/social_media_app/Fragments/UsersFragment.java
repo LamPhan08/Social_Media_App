@@ -17,8 +17,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.social_media_app.AdapterUsers;
-import com.example.social_media_app.ModelUsers;
+import com.example.social_media_app.Adapters.AdapterUsers;
+import com.example.social_media_app.Models.ModelUsers;
 import com.example.social_media_app.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -66,13 +66,17 @@ public class UsersFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 usersList.clear();
-                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                for (DataSnapshot dataSnapshot1:dataSnapshot.getChildren()) {
                     ModelUsers modelUsers = dataSnapshot1.getValue(ModelUsers.class);
-                    if (modelUsers.getUid() != null && !modelUsers.getUid().equals(firebaseUser.getUid())) {
-                        usersList.add(modelUsers);
+                    //if uid is not equl is current user uid
+                    //the add modelusers
+                    if (dataSnapshot1.exists()) {
+                        if (!modelUsers.getUid().equals(firebaseUser.getUid())) {
+                            usersList.add(modelUsers);
+                        }
+                        adapterUsers = new AdapterUsers(getActivity(), usersList);
+                        recyclerView.setAdapter(adapterUsers);
                     }
-                    adapterUsers = new AdapterUsers(getActivity(), usersList);
-                    recyclerView.setAdapter(adapterUsers);
                 }
 
             }
@@ -121,7 +125,7 @@ public class UsersFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_find, menu);
+        inflater.inflate(R.menu.menu_users, menu);
 //        menu.findItem(R.id.logout).setVisible(false);
         MenuItem item = menu.findItem(R.id.search);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);

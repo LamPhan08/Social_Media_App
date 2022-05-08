@@ -99,7 +99,7 @@ public class RegistrationActivity extends AppCompatActivity {
                     hashMap.put("name", mName);
                     hashMap.put("onlineStatus", "online");
                     hashMap.put("typingTo", "noOne");
-                    hashMap.put("avatar", "https://firebasestorage.googleapis.com/v0/b/social-media-app-e7c34.appspot.com/o/profile_image.png?alt=media&token=81b74847-8952-404d-9b30-2c05a2cf02c4");
+                    hashMap.put("avatar", "https://firebasestorage.googleapis.com/v0/b/social-media-app-e7c34.appspot.com/o/profile_image.png?alt=media&token=81c84b7a-4829-4d6d-9491-0dfea9c5d73e");
                     hashMap.put("cover", "");
 
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -116,14 +116,14 @@ public class RegistrationActivity extends AppCompatActivity {
                 }
                 else {
                     loadingBar.dismiss();
-                    Toast.makeText(RegistrationActivity.this, "Error!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(RegistrationActivity.this, "Error!", Toast.LENGTH_SHORT).show();
                 }
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
                 loadingBar.dismiss();
-                Toast.makeText(RegistrationActivity.this, "Error Occured!", Toast.LENGTH_LONG).show();
+                Toast.makeText(RegistrationActivity.this, "Error Occured!", Toast.LENGTH_SHORT).show();
             }
         });
     }

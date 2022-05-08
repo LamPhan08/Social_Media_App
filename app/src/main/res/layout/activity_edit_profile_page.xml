@@ -10,10 +10,11 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:text="Edit Profile"
+        android:textStyle="bold"
         android:textAlignment="center"
-        android:textColor="@android:color/black"
+        android:textColor="#2196F3"
         android:textSize="26sp" />
 
     <RelativeLayout
@@ -66,8 +67,9 @@
         android:layout_marginTop="50dp"
         android:text="Update Profile Avatar"
         android:textAlignment="center"
-        android:textColor="@android:color/black"
-        android:background="#74d14a"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        android:background="@drawable/update_buttons"
         android:layout_marginRight="30dp"
         android:layout_marginLeft="30dp"
         android:textSize="20sp" />
@@ -79,8 +81,9 @@
         android:layout_marginTop="20dp"
         android:text="Update Cover Photo"
         android:textAlignment="center"
-        android:textColor="@android:color/black"
-        android:background="#74d14a"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        android:background="@drawable/update_buttons"
         android:layout_marginRight="30dp"
         android:layout_marginLeft="30dp"
         android:textSize="20sp" />
@@ -92,10 +95,11 @@
         android:layout_marginTop="20dp"
         android:text="Update Name"
         android:textAlignment="center"
-        android:textColor="@android:color/black"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        android:background="@drawable/update_buttons"
         android:layout_marginRight="30dp"
         android:layout_marginLeft="30dp"
-        android:background="#74d14a"
         android:textSize="20sp" />
 
     <TextView
@@ -105,8 +109,9 @@
         android:layout_marginTop="20dp"
         android:text="Change Password "
         android:textAlignment="center"
-        android:background="#74d14a"
-        android:textColor="@android:color/black"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        android:background="@drawable/update_buttons"
         android:layout_marginRight="30dp"
         android:layout_marginLeft="30dp"
         android:textSize="20sp" />
