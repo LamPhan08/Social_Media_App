@@ -97,9 +97,10 @@ public class RegistrationActivity extends AppCompatActivity {
                     hashMap.put("email", emaill);
                     hashMap.put("uid", uid);
                     hashMap.put("name", mName);
-                    hashMap.put("onlineStatuc", "online");
+                    hashMap.put("onlineStatus", "online");
                     hashMap.put("typingTo", "noOne");
-                    hashMap.put("image", "");
+                    hashMap.put("avatar", "https://firebasestorage.googleapis.com/v0/b/social-media-app-e7c34.appspot.com/o/profile_image.png?alt=media&token=81b74847-8952-404d-9b30-2c05a2cf02c4");
+                    hashMap.put("cover", "");
 
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
                     DatabaseReference reference = database.getReference("Users");

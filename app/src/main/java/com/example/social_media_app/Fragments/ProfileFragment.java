@@ -37,8 +37,8 @@ public class ProfileFragment extends Fragment {
     FirebaseUser firebaseUser;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
-    ImageView avatartv;
-    TextView nam, email;
+    ImageView mAvatar, mCover;
+    TextView name, email;
     RecyclerView postrecycle;
     FloatingActionButton fab;
     ProgressDialog pd;
@@ -60,8 +60,9 @@ public class ProfileFragment extends Fragment {
         databaseReference = firebaseDatabase.getReference("Users");
 
         // Initialising the text view and imageview
-        avatartv = view.findViewById(R.id.avatartv);
-        nam = view.findViewById(R.id.nametv);
+        mAvatar = view.findViewById(R.id.avatarIV);
+        mCover = view.findViewById(R.id.coverIV);
+        name = view.findViewById(R.id.nametv);
         email = view.findViewById(R.id.emailtv);
         fab = view.findViewById(R.id.fab);
         pd = new ProgressDialog(getActivity());
@@ -73,14 +74,16 @@ public class ProfileFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                     // Retrieving Data from firebase
-                    String name = "" + dataSnapshot1.child("name").getValue();
+                    String mName = "" + dataSnapshot1.child("name").getValue();
                     String emaill = "" + dataSnapshot1.child("email").getValue();
-                    String image = "" + dataSnapshot1.child("image").getValue();
+                    String avatar = "" + dataSnapshot1.child("avatar").getValue();
+                    String cover = "" + dataSnapshot1.child("cover").getValue();
                     // setting data to our text view
-                    nam.setText(name);
+                    name.setText(mName);
                     email.setText(emaill);
                     try {
-                        Glide.with(getActivity()).load(image).into(avatartv);
+                        Glide.with(getActivity()).load(avatar).into(mAvatar);
+                        Glide.with(getActivity()).load(cover).into(mCover);
                     } catch (Exception e) {
 
                     }
