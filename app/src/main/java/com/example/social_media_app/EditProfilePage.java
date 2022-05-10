@@ -91,7 +91,9 @@ public class EditProfilePage extends AppCompatActivity {
         databaseReference = firebaseDatabase.getReference("Users");
         cameraPermission = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
         storagePermission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
+
         Query query = databaseReference.orderByChild("email").equalTo(firebaseUser.getEmail());
+
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -105,7 +107,8 @@ public class EditProfilePage extends AppCompatActivity {
                     try {
                         Glide.with(EditProfilePage.this).load(mAvatar).into(avatar);
                         Glide.with(EditProfilePage.this).load(mCover).into(cover);
-                    } catch (Exception e) {
+                    }
+                    catch (Exception e) {
                     }
                 }
             }

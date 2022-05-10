@@ -13,8 +13,10 @@
         android:label="Social Media"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Social_Media_App"
-        >
+        android:theme="@style/Theme.Social_Media_App">
+        <activity
+            android:name=".ChatActivity"
+            android:exported="false" />
         <activity
             android:name=".EditProfilePage"
             android:exported="false" />

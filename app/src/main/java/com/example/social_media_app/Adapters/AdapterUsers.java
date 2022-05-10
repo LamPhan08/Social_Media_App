@@ -1,6 +1,7 @@
 package com.example.social_media_app.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.social_media_app.ChatActivity;
 import com.example.social_media_app.Models.ModelUsers;
 import com.example.social_media_app.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -52,6 +54,16 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder> {
             Glide.with(context).load(userAvatar).into(holder.profiletv);
         } catch (Exception e) {
         }
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent=new Intent(context, ChatActivity.class);
+                intent.putExtra("uid",hisuid);
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override

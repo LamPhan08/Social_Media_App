@@ -23,6 +23,14 @@ public class DashboardActivity extends AppCompatActivity {
     String myUID;
     BottomNavigationView bottomNavigationView;
 
+    private static int homeFragment = 0,
+            usersFragment = 1,
+            addBlogFragment = 2,
+            chatListFragment = 3,
+            profileFragment = 4;
+
+    private static int currentFragment = homeFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,37 +49,52 @@ public class DashboardActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.menuHome: {
-                        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                        transaction.replace(R.id.content, new HomeFragment());
-                        transaction.commit();
+                        if (currentFragment != homeFragment) {
+                            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                            transaction.replace(R.id.content, new HomeFragment());
+                            currentFragment = homeFragment;
+                            transaction.commit();
+                        }
                         return true;
                     }
 
                     case R.id.menuProfile: {
-                        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                        transaction.replace(R.id.content, new ProfileFragment());
-                        transaction.commit();
+                        if (currentFragment != profileFragment) {
+                            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                            transaction.replace(R.id.content, new ProfileFragment());
+                            currentFragment = profileFragment;
+                            transaction.commit();
+                        }
                         return true;
                     }
 
                     case R.id.menuUsers: {
-                        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                        transaction.replace(R.id.content, new UsersFragment());
-                        transaction.commit();
+                        if (currentFragment != usersFragment) {
+                            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                            transaction.replace(R.id.content, new UsersFragment());
+                            currentFragment = usersFragment;
+                            transaction.commit();
+                        }
                         return true;
                     }
 
                     case R.id.menuAddBlog: {
-                        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                        transaction.replace(R.id.content, new AddBlogFragment());
-                        transaction.commit();
+                        if (currentFragment != addBlogFragment) {
+                            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                            transaction.replace(R.id.content, new AddBlogFragment());
+                            currentFragment = addBlogFragment;
+                            transaction.commit();
+                        }
                         return true;
                     }
 
                     case R.id.menuChatList: {
-                        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                        transaction.replace(R.id.content, new ChatListFragment());
-                        transaction.commit();
+                        if (currentFragment != chatListFragment) {
+                            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                            transaction.replace(R.id.content, new ChatListFragment());
+                            currentFragment = chatListFragment;
+                            transaction.commit();
+                        }
                         return true;
                     }
                 }
