@@ -4,10 +4,14 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.social_media_app.EditProfilePage;
+import com.example.social_media_app.LoginActivity;
 import com.example.social_media_app.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -41,7 +46,7 @@ public class ProfileFragment extends Fragment {
     TextView name, email;
     RecyclerView postrecycle;
     FloatingActionButton fab;
-    ProgressDialog pd;
+    ProgressDialog progressDialog;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -65,8 +70,9 @@ public class ProfileFragment extends Fragment {
         name = view.findViewById(R.id.nametv);
         email = view.findViewById(R.id.emailtv);
         fab = view.findViewById(R.id.fab);
-        pd = new ProgressDialog(getActivity());
-        pd.setCanceledOnTouchOutside(false);
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setMessage("Logging out...");
+        progressDialog.setCanceledOnTouchOutside(false);
         Query query = databaseReference.orderByChild("email").equalTo(firebaseUser.getEmail());
 
         query.addValueEventListener(new ValueEventListener() {
@@ -112,4 +118,27 @@ public class ProfileFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_profile, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.logout) {
+            progressDialog.show();
+
+            firebaseAuth.signOut();
+
+            Intent logInIntent = new Intent(getContext(), LoginActivity.class);
+            startActivity(logInIntent);
+
+            Toast.makeText(getActivity(), "Logout Successfully!", Toast.LENGTH_SHORT).show();
+
+            getActivity().finish();
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 }

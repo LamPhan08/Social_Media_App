@@ -16,6 +16,7 @@
         <entry key="..\:/Hoc/git/Social_Media_App/app/src/main/res/layout/fragment_profile.xml" value="0.25416666666666665" />
         <entry key="..\:/Hoc/git/Social_Media_App/app/src/main/res/layout/fragment_users.xml" value="0.25416666666666665" />
         <entry key="..\:/Social_Media_App/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.2115" />
+        <entry key="..\:/Social_Media_App/app/src/main/res/drawable/background.xml" value="0.292" />
         <entry key="..\:/Social_Media_App/app/src/main/res/drawable/background_color.xml" value="0.2115" />
         <entry key="..\:/Social_Media_App/app/src/main/res/drawable/bg_receiver.xml" value="0.292" />
         <entry key="..\:/Social_Media_App/app/src/main/res/drawable/bg_sender.xml" value="0.292" />
@@ -29,9 +30,11 @@
         <entry key="..\:/Social_Media_App/app/src/main/res/drawable/ic_email.xml" value="0.2115" />
         <entry key="..\:/Social_Media_App/app/src/main/res/drawable/ic_home.xml" value="0.2115" />
         <entry key="..\:/Social_Media_App/app/src/main/res/drawable/ic_images.xml" value="0.2115" />
+        <entry key="..\:/Social_Media_App/app/src/main/res/drawable/ic_launcher.xml" value="0.292" />
         <entry key="..\:/Social_Media_App/app/src/main/res/drawable/ic_launcher_background.xml" value="0.2115" />
         <entry key="..\:/Social_Media_App/app/src/main/res/drawable/ic_like.xml" value="0.2115" />
         <entry key="..\:/Social_Media_App/app/src/main/res/drawable/ic_liked.xml" value="0.2115" />
+        <entry key="..\:/Social_Media_App/app/src/main/res/drawable/ic_menu.xml" value="0.292" />
         <entry key="..\:/Social_Media_App/app/src/main/res/drawable/ic_more.xml" value="0.2115" />
         <entry key="..\:/Social_Media_App/app/src/main/res/drawable/ic_search.xml" value="0.2115" />
         <entry key="..\:/Social_Media_App/app/src/main/res/drawable/ic_unblock.xml" value="0.292" />
@@ -48,6 +51,7 @@
         <entry key="..\:/Social_Media_App/app/src/main/res/layout/activity_main.xml" value="0.358695652173913" />
         <entry key="..\:/Social_Media_App/app/src/main/res/layout/activity_registration.xml" value="0.358695652173913" />
         <entry key="..\:/Social_Media_App/app/src/main/res/layout/activity_splash_screen.xml" value="0.358695652173913" />
+        <entry key="..\:/Social_Media_App/app/src/main/res/layout/dialog_update_password.xml" value="0.358695652173913" />
         <entry key="..\:/Social_Media_App/app/src/main/res/layout/fragment_add_blog.xml" value="0.358695652173913" />
         <entry key="..\:/Social_Media_App/app/src/main/res/layout/fragment_chat_list.xml" value="0.358695652173913" />
         <entry key="..\:/Social_Media_App/app/src/main/res/layout/fragment_home.xml" value="0.358695652173913" />
@@ -61,6 +65,8 @@
         <entry key="..\:/Social_Media_App/app/src/main/res/menu/menu.xml" value="0.3625" />
         <entry key="..\:/Social_Media_App/app/src/main/res/menu/menu_find.xml" value="0.3490740740740741" />
         <entry key="..\:/Social_Media_App/app/src/main/res/menu/menu_home.xml" value="0.3625" />
+        <entry key="..\:/Social_Media_App/app/src/main/res/menu/menu_logout.xml" value="0.3625" />
+        <entry key="..\:/Social_Media_App/app/src/main/res/menu/menu_users.xml" value="0.3625" />
       </map>
     </option>
   </component>

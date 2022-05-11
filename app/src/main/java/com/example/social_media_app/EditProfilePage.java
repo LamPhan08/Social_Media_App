@@ -73,6 +73,7 @@ public class EditProfilePage extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().hide();
         setContentView(R.layout.activity_edit_profile_page);
 
         editAvatar = findViewById(R.id.avatarEdit);

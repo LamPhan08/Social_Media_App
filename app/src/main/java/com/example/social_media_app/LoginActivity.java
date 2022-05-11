@@ -152,7 +152,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void loginUser(String emaill, String pass) {
-        loadingBar.setMessage("Logging In...");
+        loadingBar.setMessage("Logging in...");
         loadingBar.show();
 
         /** Đăng nhập bằng email và password sau khi xác thực */

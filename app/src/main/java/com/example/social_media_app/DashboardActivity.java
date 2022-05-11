@@ -1,9 +1,12 @@
 package com.example.social_media_app;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -22,6 +25,7 @@ public class DashboardActivity extends AppCompatActivity {
     FirebaseUser user;
     String myUID;
     BottomNavigationView bottomNavigationView;
+    ActionBar actionBar;
 
     private static int homeFragment = 0,
             usersFragment = 1,
@@ -35,6 +39,9 @@ public class DashboardActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
+
+        actionBar = getSupportActionBar();
+        actionBar.setTitle("Home");
 
         auth = FirebaseAuth.getInstance();
 
@@ -50,6 +57,7 @@ public class DashboardActivity extends AppCompatActivity {
                 switch (item.getItemId()) {
                     case R.id.menuHome: {
                         if (currentFragment != homeFragment) {
+                            actionBar.setTitle("Home");
                             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                             transaction.replace(R.id.content, new HomeFragment());
                             currentFragment = homeFragment;
@@ -60,6 +68,7 @@ public class DashboardActivity extends AppCompatActivity {
 
                     case R.id.menuProfile: {
                         if (currentFragment != profileFragment) {
+                            actionBar.setTitle("Profile");
                             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                             transaction.replace(R.id.content, new ProfileFragment());
                             currentFragment = profileFragment;
@@ -70,6 +79,7 @@ public class DashboardActivity extends AppCompatActivity {
 
                     case R.id.menuUsers: {
                         if (currentFragment != usersFragment) {
+                            actionBar.setTitle("Users");
                             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                             transaction.replace(R.id.content, new UsersFragment());
                             currentFragment = usersFragment;
@@ -80,6 +90,7 @@ public class DashboardActivity extends AppCompatActivity {
 
                     case R.id.menuAddBlog: {
                         if (currentFragment != addBlogFragment) {
+                            actionBar.setTitle("Add blog");
                             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                             transaction.replace(R.id.content, new AddBlogFragment());
                             currentFragment = addBlogFragment;
@@ -90,6 +101,7 @@ public class DashboardActivity extends AppCompatActivity {
 
                     case R.id.menuChatList: {
                         if (currentFragment != chatListFragment) {
+                            actionBar.setTitle("Chats");
                             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                             transaction.replace(R.id.content, new ChatListFragment());
                             currentFragment = chatListFragment;

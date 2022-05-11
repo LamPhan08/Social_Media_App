@@ -74,7 +74,7 @@ public class ChatActivity extends AppCompatActivity {
     EditText msg;
     ImageButton send, attach;
     FirebaseAuth firebaseAuth;
-    String uid, myuid, image;
+    String uid, myuid, avatar;
     List<ModelChat> chatList;
     AdapterChat adapterChat;
 
@@ -92,11 +92,11 @@ public class ChatActivity extends AppCompatActivity {
     DatabaseReference users;
 
     boolean notify=false;
-    boolean isBlocked=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().hide();
         setContentView(R.layout.activity_chat);
 
         firebaseAuth = FirebaseAuth.getInstance();
@@ -107,7 +107,6 @@ public class ChatActivity extends AppCompatActivity {
         msg = findViewById(R.id.messaget);
         send = findViewById(R.id.sendmsg);
         attach = findViewById(R.id.attachbtn);
-        block = findViewById(R.id.block);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setStackFromEnd(true);
         recyclerView = findViewById(R.id.chatrecycle);
@@ -134,8 +133,8 @@ public class ChatActivity extends AppCompatActivity {
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                notify=true;
-                String message=msg.getText().toString().trim();
+                notify = true;
+                String message = msg.getText().toString().trim();
                 if (TextUtils.isEmpty(message)) {
                     Toast.makeText(ChatActivity.this,"Please Write Something Here",Toast.LENGTH_LONG).show();
                 }
@@ -154,7 +153,7 @@ public class ChatActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                     String mName = "" + dataSnapshot1.child("name").getValue();
-                    image = "" + dataSnapshot1.child("image").getValue();
+                    avatar = "" + dataSnapshot1.child("avatar").getValue();
                     String onlinestatus = "" + dataSnapshot1.child("onlineStatus").getValue();
                     String typingto = "" + dataSnapshot1.child("typingTo").getValue();
 
@@ -169,14 +168,14 @@ public class ChatActivity extends AppCompatActivity {
                             Calendar calendar = Calendar.getInstance();
                             calendar.setTimeInMillis(Long.parseLong(onlinestatus));
                             String timedate = DateFormat.format("dd/MM/yyyy hh:mm aa", calendar).toString();
-                            userstatus.setText("Last Seen:" + timedate);
+                            userstatus.setText("Last Seen: " + timedate);
                         }
                     }
 
                     name.setText(mName);
 
                     try {
-                        Glide.with(ChatActivity.this).load(image).placeholder(R.drawable.profile_image).into(profile);
+                        Glide.with(ChatActivity.this).load(avatar).placeholder(R.drawable.profile_image).into(profile);
                     } catch (Exception e) {
 
                     }
@@ -254,7 +253,7 @@ public class ChatActivity extends AppCompatActivity {
                         chatList.add(modelChat);
                     }
 
-                    adapterChat = new AdapterChat(ChatActivity.this,chatList,image);
+                    adapterChat = new AdapterChat(ChatActivity.this,chatList,avatar);
                     adapterChat.notifyDataSetChanged();
                     recyclerView.setAdapter(adapterChat);
                 }
@@ -284,7 +283,7 @@ public class ChatActivity extends AppCompatActivity {
                     else {
                         pickFromCamera();
                     }
-                } else if(which==1) {
+                } else if (which==1) {
                     if (!checkStoragePermission()) {
                         requestStoragePermission();
                     }

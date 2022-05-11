@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#CC2E76BE</color>
-    <color name="colorPrimaryDark">#CC073D74</color>
+    <color name="colorPrimaryDark">#004827</color>
     <color name="colorAccent">#0A527E</color>
     <color name="colorBlack">#000000</color>
     <color name="colorWhite">#fff</color>
@@ -14,4 +14,5 @@
     <color name="btnedit">#2CA7E0</color>
     <color name="neutral">#0a1b97</color>
     <color name="colordrawer">#2B2C2E</color>
+    <color name="colorGreen1">#4CAF50</color>
 </resources>
