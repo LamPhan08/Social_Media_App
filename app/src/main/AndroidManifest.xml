@@ -15,6 +15,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Social_Media_App">
         <activity
+            android:name=".PostDetailsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PostLikedByActivity"
+            android:exported="false" />
+        <activity
             android:name=".ChatActivity"
             android:exported="false" />
         <activity
