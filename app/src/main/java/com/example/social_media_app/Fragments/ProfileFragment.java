@@ -32,6 +32,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -39,14 +41,14 @@ import com.google.firebase.database.ValueEventListener;
 public class ProfileFragment extends Fragment {
 
     private FirebaseAuth firebaseAuth;
-    FirebaseUser firebaseUser;
-    FirebaseDatabase firebaseDatabase;
-    DatabaseReference databaseReference;
-    ImageView mAvatar, mCover;
-    TextView name, email;
-    RecyclerView postrecycle;
-    FloatingActionButton fab;
-    ProgressDialog progressDialog;
+    private FirebaseUser firebaseUser;
+    private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference databaseReference;
+    private ImageView mCover;
+    CircleImageView mAvatar;
+    private TextView name, email;
+    private FloatingActionButton editProfile;
+    private ProgressDialog progressDialog;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -65,14 +67,15 @@ public class ProfileFragment extends Fragment {
         databaseReference = firebaseDatabase.getReference("Users");
 
         // Initialising the text view and imageview
-        mAvatar = view.findViewById(R.id.avatarIV);
-        mCover = view.findViewById(R.id.coverIV);
-        name = view.findViewById(R.id.nametv);
-        email = view.findViewById(R.id.emailtv);
-        fab = view.findViewById(R.id.fab);
+        mAvatar = (CircleImageView) view.findViewById(R.id.avatarIV);
+        mCover = (ImageView) view.findViewById(R.id.coverIV);
+        name = (TextView) view.findViewById(R.id.nametv);
+        email = (TextView) view.findViewById(R.id.emailtv);
+        editProfile = (FloatingActionButton) view.findViewById(R.id.fab);
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage("Logging out...");
         progressDialog.setCanceledOnTouchOutside(false);
+
         Query query = databaseReference.orderByChild("email").equalTo(firebaseUser.getEmail());
 
         query.addValueEventListener(new ValueEventListener() {
@@ -103,7 +106,7 @@ public class ProfileFragment extends Fragment {
         });
 
         // On click we will open EditProfileActiity
-        fab.setOnClickListener(new View.OnClickListener() {
+        editProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getActivity(), EditProfilePage.class));

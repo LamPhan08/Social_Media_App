@@ -9,9 +9,9 @@
         android:icon="@drawable/ic_users"
         android:title="Users" />
     <item
-        android:id="@+id/menuAddBlog"
+        android:id="@+id/menuCreatePost"
         android:icon="@drawable/ic_add"
-        android:title="Add Blog" />
+        android:title="Create Post" />
 
     <item
         android:id="@+id/menuChatList"

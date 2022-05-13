@@ -16,7 +16,7 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:id="@+id/coverIV"
+                android:id="@+id/otherCoverIV"
                 android:layout_width="match_parent"
                 android:layout_height="180dp"
                 android:background="@color/colorPrimaryDark"
@@ -30,7 +30,7 @@
                 android:orientation="horizontal">
 
                 <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/avatarIV"
+                    android:id="@+id/otherAvatarIV"
                     android:layout_width="120dp"
                     android:layout_height="120dp"
                     android:layout_gravity="center_horizontal"
@@ -45,7 +45,7 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/nametv"
+                        android:id="@+id/otherNameTV"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"
@@ -55,7 +55,7 @@
                         android:textSize="25sp" />
 
                     <TextView
-                        android:id="@+id/emailtv"
+                        android:id="@+id/otherEmailTV"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"
@@ -70,7 +70,7 @@
     </ScrollView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
+        android:id="@+id/chatButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
@@ -81,7 +81,7 @@
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="10dp"
         android:backgroundTint="@color/colorGreen1"
-        android:src="@drawable/ic_edit_white"
+        android:src="@drawable/ic_chat"
         tools:ignore="SpeakableTextPresentCheck" />
 
 </RelativeLayout>

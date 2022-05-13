@@ -66,54 +66,60 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 
 public class ChatActivity extends AppCompatActivity {
-    RecyclerView recyclerView;
-    ImageView profile, block;
-    TextView name, userstatus;
-    EditText msg;
-    ImageButton send, attach;
-    FirebaseAuth firebaseAuth;
-    String uid, myuid, avatar;
-    List<ModelChat> chatList;
-    AdapterChat adapterChat;
+    private RecyclerView recyclerView;
+    private CircleImageView profile;
+    private TextView name, userstatus;
+    private EditText msg;
+    private ImageButton sendMessage, sendImages;
+    private FirebaseAuth firebaseAuth;
+    private String uid, myuid, avatar;
+    private List<ModelChat> chatList;
+    private AdapterChat adapterChat;
+    private ActionBar actionBar;
 
     private static final int IMAGEPICK_GALLERY_REQUEST = 300;
     private static final int IMAGE_PICKCAMERA_REQUEST = 400;
     private static final int CAMERA_REQUEST = 100;
     private static final int STORAGE_REQUEST = 200;
 
-    String cameraPermission[];
-    String storagePermission[];
+    private String cameraPermission[];
+    private String storagePermission[];
 
-    Uri imageuri = null;
+    private Uri imageuri = null;
 
-    FirebaseDatabase firebaseDatabase;
-    DatabaseReference users;
+    private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference users;
 
-    boolean notify=false;
+    private boolean notify=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().hide();
         setContentView(R.layout.activity_chat);
+
+        actionBar = getSupportActionBar();
+        actionBar.setTitle("Profile");
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
         firebaseAuth = FirebaseAuth.getInstance();
 
-        profile = findViewById(R.id.profiletv);
-        name = findViewById(R.id.nameptv);
-        userstatus = findViewById(R.id.onlinetv);
-        msg = findViewById(R.id.messaget);
-        send = findViewById(R.id.sendmsg);
-        attach = findViewById(R.id.attachbtn);
+        profile = (CircleImageView) findViewById(R.id.profiletv);
+        name = (TextView) findViewById(R.id.nameptv);
+        userstatus = (TextView) findViewById(R.id.onlinetv);
+        msg = (EditText) findViewById(R.id.messaget);
+        sendMessage = (ImageButton) findViewById(R.id.sendmsg);
+        sendImages = (ImageButton) findViewById(R.id.attachbtn);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setStackFromEnd(true);
-        recyclerView = findViewById(R.id.chatrecycle);
+        recyclerView = (RecyclerView) findViewById(R.id.chatrecycle);
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(linearLayoutManager);
-        uid = getIntent().getStringExtra("uid");
+        uid = getIntent().getStringExtra("UID");
 
         firebaseDatabase = FirebaseDatabase.getInstance();
         cameraPermission = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
@@ -123,14 +129,14 @@ public class ChatActivity extends AppCompatActivity {
         users = firebaseDatabase.getReference("Users");
 
 
-        attach.setOnClickListener(new View.OnClickListener() {
+        sendImages.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showImagePicDialog();
             }
         });
 
-        send.setOnClickListener(new View.OnClickListener() {
+        sendMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 notify = true;
@@ -190,7 +196,6 @@ public class ChatActivity extends AppCompatActivity {
 
         readMessages();
     }
-
 
     @Override
     protected void onPause() {
@@ -255,7 +260,10 @@ public class ChatActivity extends AppCompatActivity {
 
                     adapterChat = new AdapterChat(ChatActivity.this,chatList,avatar);
                     adapterChat.notifyDataSetChanged();
+
                     recyclerView.setAdapter(adapterChat);
+
+                    recyclerView.smoothScrollToPosition(recyclerView.getAdapter().getItemCount());
                 }
             }
 

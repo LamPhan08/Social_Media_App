@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
@@ -47,44 +48,51 @@ import com.google.firebase.storage.UploadTask;
 
 import java.util.HashMap;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class EditProfilePage extends AppCompatActivity {
 
     private FirebaseAuth firebaseAuth;
-    FirebaseUser firebaseUser;
-    FirebaseDatabase firebaseDatabase;
-    DatabaseReference databaseReference;
-    StorageReference storageReference;
-    String avatarStorage = "Users_Profile_Image/";
-    String coverStorage = "Users_Cover_Image/";
-    String uid;
-    ImageView avatar, cover;
-    TextView editAvatar, editCover, editname, editpassword, name;
-    ProgressDialog pd;
+    private FirebaseUser firebaseUser;
+    private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference databaseReference;
+    private StorageReference storageReference;
+    private String avatarStorage = "Users_Profile_Image/";
+    private String coverStorage = "Users_Cover_Image/";
+    private String uid;
+    private CircleImageView avatar;
+    private ImageView cover;
+    private TextView editAvatar, editCover, editname, editpassword, name;
+    private ProgressDialog progressDialog;
     private static final int CAMERA_REQUEST = 100;
     private static final int STORAGE_REQUEST = 200;
     private static final int IMAGEPICK_GALLERY_REQUEST = 300;
     private static final int IMAGE_PICKCAMERA_REQUEST = 400;
-    String cameraPermission[];
-    String storagePermission[];
-    Uri imageuri;
-    String profileOrCoverPhoto;
+    private String cameraPermission[];
+    private String storagePermission[];
+    private Uri imageuri;
+    private String profileOrCoverPhoto;
     private static int update = -1;
+    private ActionBar actionBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().hide();
         setContentView(R.layout.activity_edit_profile_page);
 
-        editAvatar = findViewById(R.id.avatarEdit);
-        editCover = findViewById(R.id.coverEdit);
-        editname = findViewById(R.id.editname);
-        name = findViewById(R.id.tvName);
-        avatar =  findViewById(R.id.avatarPic);
-        cover = findViewById(R.id.coverPic);
-        pd = new ProgressDialog(this);
-        pd.setCanceledOnTouchOutside(false);
+        actionBar = getSupportActionBar();
+        actionBar.setTitle("Edit Profile");
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
+        editAvatar = (TextView) findViewById(R.id.avatarEdit);
+        editCover = (TextView) findViewById(R.id.coverEdit);
+        editname = (TextView) findViewById(R.id.editname);
         editpassword = findViewById(R.id.changepassword);
+        name = (TextView) findViewById(R.id.tvName);
+        avatar = (CircleImageView) findViewById(R.id.avatarPic);
+        cover = (ImageView) findViewById(R.id.coverPic);
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setCanceledOnTouchOutside(false);
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
         firebaseDatabase = FirebaseDatabase.getInstance();
@@ -123,7 +131,7 @@ public class EditProfilePage extends AppCompatActivity {
         editpassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pd.setMessage("Changing Password");
+                progressDialog.setMessage("Changing Password");
                 showPasswordChangeDailog();
             }
         });
@@ -131,7 +139,7 @@ public class EditProfilePage extends AppCompatActivity {
         editAvatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pd.setMessage("Updating Avatar");
+                progressDialog.setMessage("Updating Avatar");
                 profileOrCoverPhoto = "avatar";
                 update = 0;
                 showImagePicDialog();
@@ -141,7 +149,7 @@ public class EditProfilePage extends AppCompatActivity {
         editCover.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                pd.setMessage("Updating Cover Photo");
+                progressDialog.setMessage("Updating Cover Photo");
                 profileOrCoverPhoto = "cover";
                 update = 1;
                 showImagePicDialog();
@@ -151,10 +159,16 @@ public class EditProfilePage extends AppCompatActivity {
         editname.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pd.setMessage("Updating Name");
+                progressDialog.setMessage("Updating Name");
                 showNameUpdate("name");
             }
         });
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return super.onSupportNavigateUp();
     }
 
     @Override
@@ -189,7 +203,7 @@ public class EditProfilePage extends AppCompatActivity {
         editpassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pd.setMessage("Changing Password");
+                progressDialog.setMessage("Changing Password");
                 showPasswordChangeDailog();
             }
         });
@@ -226,7 +240,7 @@ public class EditProfilePage extends AppCompatActivity {
         editpassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pd.setMessage("Changing Password");
+                progressDialog.setMessage("Changing Password");
                 showPasswordChangeDailog();
             }
         });
@@ -291,7 +305,7 @@ public class EditProfilePage extends AppCompatActivity {
     // Now we will check that if old password was authenticated
     // correctly then we will update the new password
     private void updatePassword(String oldp, final String newp) {
-        pd.show();
+        progressDialog.show();
         final FirebaseUser user = firebaseAuth.getCurrentUser();
         AuthCredential authCredential = EmailAuthProvider.getCredential(user.getEmail(), oldp);
         user.reauthenticate(authCredential)
@@ -302,13 +316,13 @@ public class EditProfilePage extends AppCompatActivity {
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
-                                        pd.dismiss();
+                                        progressDialog.dismiss();
                                         Toast.makeText(EditProfilePage.this, "Password changed!", Toast.LENGTH_SHORT).show();
                                     }
                                 }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                pd.dismiss();
+                                progressDialog.dismiss();
                                 Toast.makeText(EditProfilePage.this, "Failed!", Toast.LENGTH_SHORT).show();
                             }
                         });
@@ -316,7 +330,7 @@ public class EditProfilePage extends AppCompatActivity {
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                pd.dismiss();
+                progressDialog.dismiss();
                 Toast.makeText(EditProfilePage.this, "Failed!", Toast.LENGTH_SHORT).show();
             }
         });
@@ -341,7 +355,7 @@ public class EditProfilePage extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 final String value = editText.getText().toString().trim();
                 if (!TextUtils.isEmpty(value)) {
-                    pd.show();
+                    progressDialog.show();
 
                     // Here we are updating the new name
                     HashMap<String, Object> result = new HashMap<>();
@@ -349,7 +363,7 @@ public class EditProfilePage extends AppCompatActivity {
                     databaseReference.child(firebaseUser.getUid()).updateChildren(result).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            pd.dismiss();
+                            progressDialog.dismiss();
 
                             // after updated we will show updated
                             Toast.makeText(EditProfilePage.this, " Updated! ", Toast.LENGTH_SHORT).show();
@@ -357,7 +371,7 @@ public class EditProfilePage extends AppCompatActivity {
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            pd.dismiss();
+                            progressDialog.dismiss();
                             Toast.makeText(EditProfilePage.this, "Unable to update!", Toast.LENGTH_SHORT).show();
                         }
                     });
@@ -388,7 +402,7 @@ public class EditProfilePage extends AppCompatActivity {
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                pd.dismiss();
+                progressDialog.dismiss();
             }
         });
         builder.create().show();
@@ -487,7 +501,7 @@ public class EditProfilePage extends AppCompatActivity {
     // We will upload the image from here.
     private void uploadProfileCoverPhoto(final Uri uri) {
         if (update == 0) {
-            pd.show();
+            progressDialog.show();
             String filepathname = avatarStorage + "" + profileOrCoverPhoto + "_" + firebaseUser.getUid();
             StorageReference storageReference1 = storageReference.child(filepathname);
             storageReference1.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -502,31 +516,31 @@ public class EditProfilePage extends AppCompatActivity {
                         databaseReference.child(firebaseUser.getUid()).updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-                                pd.dismiss();
+                                progressDialog.dismiss();
                                 Toast.makeText(EditProfilePage.this, "Updated!", Toast.LENGTH_SHORT).show();
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                pd.dismiss();
+                                progressDialog.dismiss();
                                 Toast.makeText(EditProfilePage.this, "Error Updating! ", Toast.LENGTH_SHORT).show();
                             }
                         });
                     } else {
-                        pd.dismiss();
+                        progressDialog.dismiss();
                         Toast.makeText(EditProfilePage.this, "Error!", Toast.LENGTH_SHORT).show();
                     }
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    pd.dismiss();
+                    progressDialog.dismiss();
                     Toast.makeText(EditProfilePage.this, "Error!", Toast.LENGTH_SHORT).show();
                 }
             });
         }
         else {
-            pd.show();
+            progressDialog.show();
             String filepathname = coverStorage + "" + profileOrCoverPhoto + "_" + firebaseUser.getUid();
             StorageReference storageReference1 = storageReference.child(filepathname);
             storageReference1.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -541,25 +555,25 @@ public class EditProfilePage extends AppCompatActivity {
                         databaseReference.child(firebaseUser.getUid()).updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-                                pd.dismiss();
+                                progressDialog.dismiss();
                                 Toast.makeText(EditProfilePage.this, "Updated!", Toast.LENGTH_SHORT).show();
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                pd.dismiss();
+                                progressDialog.dismiss();
                                 Toast.makeText(EditProfilePage.this, "Error Updating! ", Toast.LENGTH_SHORT).show();
                             }
                         });
                     } else {
-                        pd.dismiss();
+                        progressDialog.dismiss();
                         Toast.makeText(EditProfilePage.this, "Error!", Toast.LENGTH_SHORT).show();
                     }
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    pd.dismiss();
+                    progressDialog.dismiss();
                     Toast.makeText(EditProfilePage.this, "Error!", Toast.LENGTH_SHORT).show();
                 }
             });

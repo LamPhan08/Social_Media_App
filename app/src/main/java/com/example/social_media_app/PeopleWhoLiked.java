@@ -4,11 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-public class PostLikedByActivity extends AppCompatActivity {
+public class PeopleWhoLiked extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_post_liked_by);
+        setContentView(R.layout.activity_people_who_liked);
     }
 }

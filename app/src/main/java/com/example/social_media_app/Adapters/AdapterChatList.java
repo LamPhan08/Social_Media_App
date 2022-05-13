@@ -22,9 +22,9 @@ import java.util.List;
 
 public class AdapterChatList extends RecyclerView.Adapter<AdapterChatList.Myholder> {
 
-    Context context;
-    FirebaseAuth firebaseAuth;
-    String uid;
+    private Context context;
+    private FirebaseAuth firebaseAuth;
+    private String uid;
 
     public AdapterChatList(Context context, List<ModelUsers> users) {
         this.context = context;
@@ -34,7 +34,7 @@ public class AdapterChatList extends RecyclerView.Adapter<AdapterChatList.Myhold
         uid = firebaseAuth.getUid();
     }
 
-    List<ModelUsers> usersList;
+    private List<ModelUsers> usersList;
     private HashMap<String, String> lastMessageMap;
 
     @NonNull
@@ -52,7 +52,6 @@ public class AdapterChatList extends RecyclerView.Adapter<AdapterChatList.Myhold
         String username = usersList.get(position).getName();
         String lastmess = lastMessageMap.get(hisuid);
         holder.name.setText(username);
-        holder.block.setImageResource(R.drawable.ic_unblock);
 
         // if no last message then Hide the layout
         if (lastmess == null || lastmess.equals("default")) {
@@ -75,7 +74,7 @@ public class AdapterChatList extends RecyclerView.Adapter<AdapterChatList.Myhold
                 Intent intent = new Intent(context, ChatActivity.class);
 
                 // putting uid of user in extras
-                intent.putExtra("uid", hisuid);
+                intent.putExtra("UID", hisuid);
                 context.startActivity(intent);
             }
         });
@@ -93,18 +92,16 @@ public class AdapterChatList extends RecyclerView.Adapter<AdapterChatList.Myhold
     }
 
     class Myholder extends RecyclerView.ViewHolder {
-        ImageView profile, status, block, seen;
+        ImageView profile, status;
         TextView name, lastmessage;
 
         public Myholder(@NonNull View itemView) {
             super(itemView);
 
-            profile = itemView.findViewById(R.id.profileimage);
-            status = itemView.findViewById(R.id.onlinestatus);
-            name = itemView.findViewById(R.id.nameonline);
-            lastmessage = itemView.findViewById(R.id.lastmessge);
-            block = itemView.findViewById(R.id.blocking);
-            seen = itemView.findViewById(R.id.seen);
+            profile = (ImageView) itemView.findViewById(R.id.profileimage);
+            status = (ImageView) itemView.findViewById(R.id.onlinestatus);
+            name = (TextView) itemView.findViewById(R.id.nameonline);
+            lastmessage = (TextView) itemView.findViewById(R.id.lastmessge);
         }
     }
 }

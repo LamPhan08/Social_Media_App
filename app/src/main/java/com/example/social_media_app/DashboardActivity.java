@@ -3,14 +3,12 @@ package com.example.social_media_app;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MenuItem;
 
-import com.example.social_media_app.Fragments.AddBlogFragment;
+import com.example.social_media_app.Fragments.CreatePostFragment;
 import com.example.social_media_app.Fragments.ChatListFragment;
 import com.example.social_media_app.Fragments.HomeFragment;
 import com.example.social_media_app.Fragments.ProfileFragment;
@@ -22,23 +20,25 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class DashboardActivity extends AppCompatActivity {
     private FirebaseAuth auth;
-    FirebaseUser user;
-    String myUID;
-    BottomNavigationView bottomNavigationView;
-    ActionBar actionBar;
+    private FirebaseUser user;
+    private String myUID;
+    private BottomNavigationView bottomNavigationView;
+    private ActionBar actionBar;
 
     private static int homeFragment = 0,
             usersFragment = 1,
-            addBlogFragment = 2,
+            createPostFragment = 2,
             chatListFragment = 3,
             profileFragment = 4;
 
-    private static int currentFragment = homeFragment;
+    private static int currentFragment = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
+
+        currentFragment = homeFragment;
 
         actionBar = getSupportActionBar();
         actionBar.setTitle("Home");
@@ -88,12 +88,12 @@ public class DashboardActivity extends AppCompatActivity {
                         return true;
                     }
 
-                    case R.id.menuAddBlog: {
-                        if (currentFragment != addBlogFragment) {
-                            actionBar.setTitle("Add blog");
+                    case R.id.menuCreatePost: {
+                        if (currentFragment != createPostFragment) {
+                            actionBar.setTitle("Create Post");
                             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                            transaction.replace(R.id.content, new AddBlogFragment());
-                            currentFragment = addBlogFragment;
+                            transaction.replace(R.id.content, new CreatePostFragment());
+                            currentFragment = createPostFragment;
                             transaction.commit();
                         }
                         return true;

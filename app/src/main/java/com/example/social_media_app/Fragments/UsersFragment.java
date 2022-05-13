@@ -36,10 +36,10 @@ import java.util.List;
  */
 public class UsersFragment extends Fragment {
 
-    RecyclerView recyclerView;
-    AdapterUsers adapterUsers;
-    List<ModelUsers> usersList;
-    FirebaseAuth firebaseAuth;
+    private RecyclerView recyclerView;
+    private AdapterUsers adapterUsers;
+    private List<ModelUsers> usersList;
+    private FirebaseAuth firebaseAuth;
 
     public UsersFragment() {
         // Required empty public constructor
@@ -50,7 +50,7 @@ public class UsersFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_users, container, false);
-        recyclerView = view.findViewById(R.id.recyclep);
+        recyclerView = (RecyclerView) view.findViewById(R.id.recyclep);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         usersList = new ArrayList<>();
@@ -62,6 +62,7 @@ public class UsersFragment extends Fragment {
     private void getAllUsers() {
         final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

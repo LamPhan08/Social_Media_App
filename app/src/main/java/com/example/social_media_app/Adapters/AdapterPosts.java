@@ -1,5 +1,6 @@
 package com.example.social_media_app.Adapters;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -22,9 +23,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.social_media_app.Models.ModelPost;
-import com.example.social_media_app.PostDetailsActivity;
-import com.example.social_media_app.PostLikedByActivity;
+import com.example.social_media_app.CommentPost;
+import com.example.social_media_app.Models.ModelPosts;
+import com.example.social_media_app.PeopleWhoLiked;
+import com.example.social_media_app.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -41,16 +43,15 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
-import com.example.social_media_app.R;
+public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
 
-public class AdapterPost extends RecyclerView.Adapter<AdapterPost.MyHolder> {
 
     Context context;
     String myuid;
     private DatabaseReference liekeref, postref;
     boolean mprocesslike = false;
 
-    public AdapterPost(Context context, List<ModelPost> modelPosts) {
+    public AdapterPosts(Context context, List<ModelPosts> modelPosts) {
         this.context = context;
         this.modelPosts = modelPosts;
         myuid = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -58,20 +59,19 @@ public class AdapterPost extends RecyclerView.Adapter<AdapterPost.MyHolder> {
         postref = FirebaseDatabase.getInstance().getReference().child("Posts");
     }
 
-    List<ModelPost> modelPosts;
+    List<ModelPosts> modelPosts;
 
     @NonNull
     @Override
     public MyHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.row_post, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.row_posts, parent, false);
         return new MyHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final MyHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final MyHolder holder, @SuppressLint("RecyclerView") final int position) {
         final String uid = modelPosts.get(position).getUid();
         String nameh = modelPosts.get(position).getUname();
-        final String titlee = modelPosts.get(position).getTitle();
         final String descri = modelPosts.get(position).getDescription();
         final String ptime = modelPosts.get(position).getPtime();
         String dp = modelPosts.get(position).getUdp();
@@ -84,7 +84,6 @@ public class AdapterPost extends RecyclerView.Adapter<AdapterPost.MyHolder> {
         calendar.setTimeInMillis(Long.parseLong(ptime));
         String timedate = DateFormat.format("dd/MM/yyyy hh:mm aa", calendar).toString();
         holder.name.setText(nameh);
-        holder.title.setText(titlee);
         holder.description.setText(descri);
         holder.time.setText(timedate);
         holder.like.setText(plike + " Likes");
@@ -104,7 +103,7 @@ public class AdapterPost extends RecyclerView.Adapter<AdapterPost.MyHolder> {
         holder.like.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(holder.itemView.getContext(), PostLikedByActivity.class);
+                Intent intent = new Intent(holder.itemView.getContext(), PeopleWhoLiked.class);
                 intent.putExtra("pid", pid);
                 holder.itemView.getContext().startActivity(intent);
             }
@@ -118,6 +117,7 @@ public class AdapterPost extends RecyclerView.Adapter<AdapterPost.MyHolder> {
                 liekeref.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
                         if (mprocesslike) {
                             if (dataSnapshot.child(postid).hasChild(myuid)) {
                                 postref.child(postid).child("plike").setValue("" + (plike - 1));
@@ -147,7 +147,7 @@ public class AdapterPost extends RecyclerView.Adapter<AdapterPost.MyHolder> {
         holder.comment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, PostDetailsActivity.class);
+                Intent intent = new Intent(context, CommentPost.class);
                 intent.putExtra("pid", ptime);
                 context.startActivity(intent);
             }
@@ -155,6 +155,7 @@ public class AdapterPost extends RecyclerView.Adapter<AdapterPost.MyHolder> {
     }
 
     private void showMoreOptions(ImageButton more, String uid, String myuid, final String pid, final String image) {
+
         PopupMenu popupMenu = new PopupMenu(context, more, Gravity.END);
         if (uid.equals(myuid)) {
             popupMenu.getMenu().add(Menu.NONE, 0, 0, "DELETE");
@@ -186,9 +187,11 @@ public class AdapterPost extends RecyclerView.Adapter<AdapterPost.MyHolder> {
                         for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                             dataSnapshot1.getRef().removeValue();
                         }
+
                         pd.dismiss();
                         Toast.makeText(context, "Deleted Successfully", Toast.LENGTH_LONG).show();
                     }
+
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
 
@@ -207,6 +210,7 @@ public class AdapterPost extends RecyclerView.Adapter<AdapterPost.MyHolder> {
         liekeref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
                 if (dataSnapshot.child(pid).hasChild(myuid)) {
                     holder.likebtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_liked, 0, 0, 0);
                     holder.likebtn.setText("Liked");
@@ -221,6 +225,7 @@ public class AdapterPost extends RecyclerView.Adapter<AdapterPost.MyHolder> {
 
             }
         });
+
     }
 
     @Override
@@ -242,12 +247,11 @@ public class AdapterPost extends RecyclerView.Adapter<AdapterPost.MyHolder> {
             name = itemView.findViewById(R.id.unametv);
             time = itemView.findViewById(R.id.utimetv);
             more = itemView.findViewById(R.id.morebtn);
-            title = itemView.findViewById(R.id.ptitletv);
             description = itemView.findViewById(R.id.descript);
             like = itemView.findViewById(R.id.plikeb);
             comments = itemView.findViewById(R.id.pcommentco);
-            likebtn = itemView.findViewById(R.id.like);
-            comment = itemView.findViewById(R.id.comment);
+            likebtn = itemView.findViewById(R.id.btnLike);
+            comment = itemView.findViewById(R.id.btnComment);
             profile = itemView.findViewById(R.id.profilelayout);
         }
     }

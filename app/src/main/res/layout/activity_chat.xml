@@ -84,7 +84,7 @@
             android:layout_weight="1"
             android:id="@+id/messaget"
             android:background="@null"
-            android:hint="Start Typing"
+            android:hint="Type here"
             android:inputType="textCapSentences|textMultiLine"
             android:padding="15dp"/>
 
@@ -92,7 +92,8 @@
             android:id="@+id/sendmsg"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:background="@null"
-            android:src="@drawable/ic_send_messages" />
+            android:background="@drawable/ic_circle"
+            android:backgroundTint="@color/colorGreen"
+            android:src="@drawable/ic_send_white" />
     </LinearLayout>
 </RelativeLayout>

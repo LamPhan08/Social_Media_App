@@ -37,10 +37,10 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class AdapterChat extends RecyclerView.Adapter<AdapterChat.Myholder>{
     private static final int MSG_TYPE_LEFT = 0;
     private static final int MSG_TYPR_RIGHT = 1;
-    Context context;
-    List<ModelChat> list;
-    String imageurl;
-    FirebaseUser firebaseUser;
+    private Context context;
+    private List<ModelChat> list;
+    private String imageurl;
+    private FirebaseUser firebaseUser;
 
     public AdapterChat(Context context, List<ModelChat> list, String imageurl) {
         this.context = context;
@@ -123,7 +123,9 @@ public class AdapterChat extends RecyclerView.Adapter<AdapterChat.Myholder>{
 
     private void deleteMessage(int position) {
         final String myuid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
         String msgtimestmp = list.get(position).getTimestamp();
+
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Chats");
 
         Query query = databaseReference.orderByChild("timestamp").equalTo(msgtimestmp);
@@ -168,20 +170,19 @@ public class AdapterChat extends RecyclerView.Adapter<AdapterChat.Myholder>{
 
     class Myholder extends RecyclerView.ViewHolder{
 
-        CircleImageView image;
-        ImageView mimage;
-        TextView message,time,isSee;
-        LinearLayout msgLayout;
+        private CircleImageView image;
+        private ImageView mimage;
+        private TextView message,time;
+        private LinearLayout msgLayout;
 
         public Myholder(@NonNull View itemView) {
             super(itemView);
 
-            image=itemView.findViewById(R.id.profilec);
-            message=itemView.findViewById(R.id.msgc);
-            time=itemView.findViewById(R.id.timetv);
-            isSee=itemView.findViewById(R.id.isSeen);
-            msgLayout=itemView.findViewById(R.id.msglayout);
-            mimage=itemView.findViewById(R.id.images);
+            image = (CircleImageView) itemView.findViewById(R.id.profilec);
+            message = (TextView) itemView.findViewById(R.id.msgc);
+            time = (TextView) itemView.findViewById(R.id.timetv);
+            msgLayout = (LinearLayout) itemView.findViewById(R.id.msglayout);
+            mimage = (ImageView) itemView.findViewById(R.id.images);
         }
     }
 }

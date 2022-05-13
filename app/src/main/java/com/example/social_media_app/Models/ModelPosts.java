@@ -1,11 +1,10 @@
 package com.example.social_media_app.Models;
 
-public class ModelPost {
-    public ModelPost() {
+public class ModelPosts {
+    public ModelPosts() {
     }
 
     String description;
-
     public String getDescription() {
         return description;
     }
@@ -28,14 +27,6 @@ public class ModelPost {
 
     public void setPtime(String ptime) {
         this.ptime = ptime;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public String getUdp() {
@@ -96,12 +87,12 @@ public class ModelPost {
         this.pcomments = pcomments;
     }
 
-    public ModelPost(String description, String pid, String ptime, String pcomments, String title, String udp, String uemail, String uid, String uimage, String uname, String plike) {
+    public ModelPosts(String description, String pid, String ptime, String pcomments, String udp, String uemail, String uid, String uimage, String uname, String plike) {
         this.description = description;
         this.pid = pid;
         this.ptime = ptime;
         this.pcomments = pcomments;
-        this.title = title;
+
         this.udp = udp;
         this.uemail = uemail;
         this.uid = uid;
@@ -110,15 +101,16 @@ public class ModelPost {
         this.plike = plike;
     }
 
-    String ptime, pcomments;
+    String ptime,pcomments;
 
-    String title;
 
     String udp;
     String uemail;
     String uid;
     String uimage;
 
-    String uname, plike;
+
+    String uname,plike;
+
 
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.social_media_app">
+    package="com.example.social_media_app" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -13,12 +13,15 @@
         android:label="Social Media"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Social_Media_App">
+        android:theme="@style/Theme.Social_Media_App" >
         <activity
-            android:name=".PostDetailsActivity"
+            android:name=".CommentPost"
             android:exported="false" />
         <activity
-            android:name=".PostLikedByActivity"
+            android:name=".PeopleWhoLiked"
+            android:exported="false" />
+        <activity
+            android:name=".Other_Profile_Page"
             android:exported="false" />
         <activity
             android:name=".ChatActivity"
@@ -36,11 +39,8 @@
             android:name=".RegistrationActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
-            android:exported="false" />
-        <activity
             android:name=".SplashScreen"
-            android:exported="true">
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

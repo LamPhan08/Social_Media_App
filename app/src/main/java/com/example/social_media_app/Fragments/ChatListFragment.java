@@ -34,14 +34,14 @@ import java.util.List;
  */
 public class ChatListFragment extends Fragment {
 
-    FirebaseAuth firebaseAuth;
-    RecyclerView recyclerView;
-    List<ModelChatList> chatListList;
-    List<ModelUsers> usersList;
-    DatabaseReference reference;
-    FirebaseUser firebaseUser;
-    AdapterChatList adapterChatList;
-    List<ModelChat> chatList;
+    private FirebaseAuth firebaseAuth;
+    private RecyclerView recyclerView;
+    private List<ModelChatList> chatListList;
+    private List<ModelUsers> usersList;
+    private DatabaseReference reference;
+    private FirebaseUser firebaseUser;
+    private AdapterChatList adapterChatList;
+    private List<ModelChat> chatList;
     public ChatListFragment() {
         // Required empty public constructor
     }
@@ -56,7 +56,7 @@ public class ChatListFragment extends Fragment {
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        recyclerView = view.findViewById(R.id.chatlistrecycle);
+        recyclerView = (RecyclerView) view.findViewById(R.id.chatlistrecycle);
         chatListList = new ArrayList<>();
         chatList = new ArrayList<>();
         reference = FirebaseDatabase.getInstance().getReference("ChatList").child(firebaseUser.getUid());
@@ -103,7 +103,7 @@ public class ChatListFragment extends Fragment {
                         }
                     }
 
-                    adapterChatList=new AdapterChatList(getActivity(),usersList);
+                    adapterChatList = new AdapterChatList(getActivity(),usersList);
                     recyclerView.setAdapter(adapterChatList);
 
                     for (int i = 0; i < usersList.size(); i++){

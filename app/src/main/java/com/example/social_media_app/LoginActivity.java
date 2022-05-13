@@ -34,7 +34,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText email, password;
     private Button logInBtn;
     private TextView forgetPassword, newAccount;
-    FirebaseUser currentUser;
+    private FirebaseUser currentUser;
     private ProgressDialog loadingBar;
     private FirebaseAuth auth;
 

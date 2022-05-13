@@ -4,22 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/background"
     android:orientation="vertical"
     tools:context=".EditProfilePage">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="Edit Profile"
-        android:textStyle="bold"
-        android:textAlignment="center"
-        android:textColor="@color/btnedit"
-        android:textSize="26sp" />
-
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_marginTop="20dp"
         android:layout_height="wrap_content">
 
         <ImageView

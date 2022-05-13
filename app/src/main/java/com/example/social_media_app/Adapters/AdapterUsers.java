@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.social_media_app.ChatActivity;
+import com.example.social_media_app.Other_Profile_Page;
 import com.example.social_media_app.Models.ModelUsers;
 import com.example.social_media_app.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -22,9 +22,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder> {
 
-    Context context;
-    FirebaseAuth firebaseAuth;
-    String uid;
+    private Context context;
+    private FirebaseAuth firebaseAuth;
+    private String uid;
 
     public AdapterUsers(Context context, List<ModelUsers> list) {
         this.context = context;
@@ -33,7 +33,7 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder> {
         uid = firebaseAuth.getUid();
     }
 
-    List<ModelUsers> list;
+    private List<ModelUsers> list;
 
     @NonNull
     @Override
@@ -58,8 +58,7 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder> {
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                Intent intent=new Intent(context, ChatActivity.class);
+                Intent intent = new Intent(context, Other_Profile_Page.class);
                 intent.putExtra("uid",hisuid);
                 context.startActivity(intent);
             }
@@ -78,9 +77,9 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder> {
 
         public MyHolder(@NonNull View itemView) {
             super(itemView);
-            profiletv = itemView.findViewById(R.id.imagep);
-            name = itemView.findViewById(R.id.namep);
-            email = itemView.findViewById(R.id.emailp);
+            profiletv = (CircleImageView) itemView.findViewById(R.id.imagep);
+            name = (TextView) itemView.findViewById(R.id.namep);
+            email = (TextView) itemView.findViewById(R.id.emailp);
         }
     }
 }
