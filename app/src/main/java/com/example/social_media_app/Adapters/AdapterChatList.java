@@ -46,11 +46,11 @@ public class AdapterChatList extends RecyclerView.Adapter<AdapterChatList.Myhold
 
     @Override
     public void onBindViewHolder(@NonNull Myholder holder, final int position) {
-
         final String hisuid = usersList.get(position).getUid();
         String userAvatar = usersList.get(position).getAvatar();
         String username = usersList.get(position).getName();
         String lastmess = lastMessageMap.get(hisuid);
+
         holder.name.setText(username);
 
         // if no last message then Hide the layout
@@ -60,10 +60,12 @@ public class AdapterChatList extends RecyclerView.Adapter<AdapterChatList.Myhold
             holder.lastmessage.setVisibility(View.VISIBLE);
             holder.lastmessage.setText(lastmess);
         }
+
         try {
             // loading profile pic of user
             Glide.with(context).load(userAvatar).into(holder.profile);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
 
         }
 

@@ -41,6 +41,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Name"
+                    android:textStyle="bold"
                     android:textColor="@color/colorBlack"
                     android:textSize="20sp" />
 
@@ -53,7 +54,7 @@
             </LinearLayout>
 
             <ImageButton
-                android:id="@+id/morebtn"
+                android:id="@+id/btnMore"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@null"
@@ -67,10 +68,12 @@
             android:layout_height="wrap_content"
             android:text="Description"
             android:textSize="20dp"
+            android:layout_marginTop="10dp"
             android:textColor="@color/colorBlack" />
 
         <ImageView
             android:id="@+id/pimagetv"
+            android:layout_marginTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorWhite" />
@@ -78,6 +81,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
             android:orientation="horizontal">
 
             <TextView

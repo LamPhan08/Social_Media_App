@@ -21,7 +21,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.social_media_app.Adapters.AdapterPosts;
+import com.example.social_media_app.Adapters.AdapterUsers;
 import com.example.social_media_app.Models.ModelPosts;
+import com.example.social_media_app.Models.ModelUsers;
 import com.example.social_media_app.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -32,6 +34,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -40,11 +43,11 @@ import java.util.List;
  */
 public class HomeFragment extends Fragment {
 
-    FirebaseAuth firebaseAuth;
-    String myuid;
-    RecyclerView recyclerView;
-    List<ModelPosts> posts;
-    AdapterPosts adapterPosts;
+    private FirebaseAuth firebaseAuth;
+    private String myuid;
+    private RecyclerView recyclerView;
+    private ArrayList<ModelPosts> modelPostsList;
+    private AdapterPosts adapterPosts;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -55,32 +58,44 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view= inflater.inflate(R.layout.fragment_home, container, false);
-        firebaseAuth= FirebaseAuth.getInstance();
-        recyclerView=view.findViewById(R.id.postRecyclerView);
+        loadPosts();
+
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
+
+        firebaseAuth = FirebaseAuth.getInstance();
+
+        recyclerView = (RecyclerView) view.findViewById(R.id.postRecyclerView);
         recyclerView.setHasFixedSize(true);
-        LinearLayoutManager layoutManager=new LinearLayoutManager(getActivity());
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setReverseLayout(true);
         layoutManager.setStackFromEnd(true);
+
         recyclerView.setLayoutManager(layoutManager);
-        posts=new ArrayList<>();
+
+        modelPostsList = new ArrayList<>();
+
         loadPosts();
+
         return view;
     }
 
     private void loadPosts() {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Posts");
 
-        DatabaseReference databaseReference= FirebaseDatabase.getInstance().getReference("Posts");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                posts.clear();
-                for (DataSnapshot dataSnapshot1:dataSnapshot.getChildren()){
-                    ModelPosts modelPost=dataSnapshot1.getValue(ModelPosts.class);
-                    posts.add(modelPost);
-                    adapterPosts=new AdapterPosts(getActivity(),posts);
-                    recyclerView.setAdapter(adapterPosts);
+                modelPostsList.clear();
 
+                for (DataSnapshot dataSnapshot1:dataSnapshot.getChildren()) {
+                    ModelPosts modelPost = dataSnapshot1.getValue(ModelPosts.class);
+
+                    modelPostsList.add(modelPost);
+
+                    adapterPosts = new AdapterPosts(getActivity(), modelPostsList);
+
+                    recyclerView.setAdapter(adapterPosts);
                 }
             }
 
@@ -90,32 +105,6 @@ public class HomeFragment extends Fragment {
             }
         });
     }
-//    private void searchPosts(final String search) {
-//
-//        DatabaseReference databaseReference= FirebaseDatabase.getInstance().getReference("Posts");
-//        databaseReference.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                posts.clear();
-//                for (DataSnapshot dataSnapshot1:dataSnapshot.getChildren()){
-//                    ModelPosts modelPost=dataSnapshot1.getValue(ModelPosts.class);
-//                    if(modelPost.getTitle().toLowerCase().contains(search.toLowerCase())||
-//                            modelPost.getDescription().toLowerCase().contains(search.toLowerCase())) {
-//                        posts.add(modelPost);
-//                    }
-//                    adapterPosts=new AdapterPosts(getActivity(),posts);
-//                    recyclerView.setAdapter(adapterPosts);
-//
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//                Toast.makeText(getActivity(),databaseError.getMessage(),Toast.LENGTH_LONG).show();
-//            }
-//        });
-//    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -123,48 +112,62 @@ public class HomeFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
-//    @Override
-//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//        inflater.inflate(R.menu.main_menu,menu);
-//        MenuItem item=menu.findItem(R.id.search);
-//        SearchView searchView=(SearchView) MenuItemCompat.getActionView(item);
-//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//            @Override
-//            public boolean onQueryTextSubmit(String query) {
-//                if(!TextUtils.isEmpty(query)){
-//                    searchPosts(query);
-//                }
-//                else {
-//                    loadPosts();
-//                }
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean onQueryTextChange(String newText) {
-//                if(!TextUtils.isEmpty(newText)){
-//                    searchPosts(newText);
-//                }
-//                else {
-//                    loadPosts();
-//                }
-//                return false;
-//            }
-//        });
-//
-//        super.onCreateOptionsMenu(menu,inflater);
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-//
-//        if(item.getItemId()==R.id.logout){
-//            firebaseAuth.signOut();
-//            startActivity(new Intent(getContext(), SpalshScreen.class));
-//            getActivity().finish();
-//        }
-//
-//        return super.onOptionsItemSelected(item);
-//    }
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_users,menu);
+        MenuItem item=menu.findItem(R.id.search);
+        SearchView searchView=(SearchView) MenuItemCompat.getActionView(item);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                if(!TextUtils.isEmpty(query)){
+                    searchPosts(query);
+                }
+                else {
+                    loadPosts();
+                }
+                return false;
+            }
 
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if(!TextUtils.isEmpty(newText)){
+                    searchPosts(newText);
+                }
+                else {
+                    loadPosts();
+                }
+                return false;
+            }
+        });
+
+        super.onCreateOptionsMenu(menu,inflater);
+    }
+
+    private void searchPosts(String query) {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Posts");
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                modelPostsList.clear();
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                    ModelPosts modelPost = dataSnapshot1.getValue(ModelPosts.class);
+
+                    if (modelPost.getDescription().toLowerCase().contains(query.toLowerCase())
+                            || modelPost.getUserName().toLowerCase().contains(query.toLowerCase())) {
+                        modelPostsList.add(modelPost);
+                    }
+
+                    adapterPosts = new AdapterPosts(getActivity(), modelPostsList);
+                    recyclerView.setAdapter(adapterPosts);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(getActivity(), databaseError.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+
+    }
 }

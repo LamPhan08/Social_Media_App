@@ -46,8 +46,9 @@ public class RegistrationActivity extends AppCompatActivity {
         signIn = (TextView) findViewById(R.id.txvHaveAnAccount);
 
         auth = FirebaseAuth.getInstance();
+
         loadingBar = new ProgressDialog(this);
-        loadingBar.setMessage("Register");
+        loadingBar.setMessage("Registering...");
 
         registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override

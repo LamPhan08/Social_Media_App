@@ -13,6 +13,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -29,6 +30,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
+import com.example.social_media_app.Models.ModelPosts;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -47,6 +49,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.util.HashMap;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -54,8 +57,10 @@ public class EditProfilePage extends AppCompatActivity {
 
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
-    private FirebaseDatabase firebaseDatabase;
-    private DatabaseReference databaseReference;
+    private FirebaseDatabase usersDatabase;
+    private FirebaseDatabase postDatabase;
+    private DatabaseReference usersReference;
+    private DatabaseReference postReference;
     private StorageReference storageReference;
     private String avatarStorage = "Users_Profile_Image/";
     private String coverStorage = "Users_Cover_Image/";
@@ -95,13 +100,16 @@ public class EditProfilePage extends AppCompatActivity {
         progressDialog.setCanceledOnTouchOutside(false);
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
-        firebaseDatabase = FirebaseDatabase.getInstance();
+        uid = firebaseUser.getUid();
+        usersDatabase = FirebaseDatabase.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
-        databaseReference = firebaseDatabase.getReference("Users");
+        postDatabase = FirebaseDatabase.getInstance();
+        usersReference = usersDatabase.getReference("Users");
+        postReference = postDatabase.getReference("Posts");
         cameraPermission = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
         storagePermission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
-        Query query = databaseReference.orderByChild("email").equalTo(firebaseUser.getEmail());
+        Query query = usersReference.orderByChild("email").equalTo(firebaseUser.getEmail());
 
         query.addValueEventListener(new ValueEventListener() {
             @Override
@@ -174,7 +182,7 @@ public class EditProfilePage extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        Query query = databaseReference.orderByChild("email").equalTo(firebaseUser.getEmail());
+        Query query = usersReference.orderByChild("email").equalTo(firebaseUser.getEmail());
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -212,7 +220,7 @@ public class EditProfilePage extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        Query query = databaseReference.orderByChild("email").equalTo(firebaseUser.getEmail());
+        Query query = usersReference.orderByChild("email").equalTo(firebaseUser.getEmail());
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -339,14 +347,14 @@ public class EditProfilePage extends AppCompatActivity {
     // Updating name
     private void showNameUpdate(final String key) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Update" + key);
+        builder.setTitle("Update new " + key);
 
         // creating a layout to write the new name
         LinearLayout layout = new LinearLayout(this);
         layout.setOrientation(LinearLayout.VERTICAL);
         layout.setPadding(10, 10, 10, 10);
         final EditText editText = new EditText(this);
-        editText.setHint("Enter" + key);
+        editText.setHint("Enter new " + key);
         layout.addView(editText);
         builder.setView(layout);
 
@@ -360,7 +368,7 @@ public class EditProfilePage extends AppCompatActivity {
                     // Here we are updating the new name
                     HashMap<String, Object> result = new HashMap<>();
                     result.put(key, value);
-                    databaseReference.child(firebaseUser.getUid()).updateChildren(result).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    usersReference.child(firebaseUser.getUid()).updateChildren(result).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
                             progressDialog.dismiss();
@@ -375,15 +383,18 @@ public class EditProfilePage extends AppCompatActivity {
                             Toast.makeText(EditProfilePage.this, "Unable to update!", Toast.LENGTH_SHORT).show();
                         }
                     });
+
+                    HashMap<String, Object> hashMap = new HashMap<>();
+                    hashMap.put("userName", value);
+
                     if (key.equals("name")) {
-                        final DatabaseReference databaser = FirebaseDatabase.getInstance().getReference("Posts");
-                        Query query = databaser.orderByChild("uid").equalTo(uid);
+                        Query query = postReference.orderByChild("uid").equalTo(uid);
+
                         query.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                                    String child = databaser.getKey();
-                                    dataSnapshot1.getRef().child("uname").setValue(value);
+                                    dataSnapshot1.getRef().updateChildren(hashMap);
                                 }
                             }
 
@@ -498,22 +509,28 @@ public class EditProfilePage extends AppCompatActivity {
         startActivityForResult(galleryIntent, IMAGEPICK_GALLERY_REQUEST);
     }
 
+    private List<ModelPosts> modelPostsList;
+
     // We will upload the image from here.
     private void uploadProfileCoverPhoto(final Uri uri) {
         if (update == 0) {
             progressDialog.show();
+
             String filepathname = avatarStorage + "" + profileOrCoverPhoto + "_" + firebaseUser.getUid();
+
             StorageReference storageReference1 = storageReference.child(filepathname);
+
             storageReference1.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
                     while (!uriTask.isSuccessful()) ;
+
                     final Uri downloadUri = uriTask.getResult();
                     if (uriTask.isSuccessful()) {
-                        HashMap<String, Object> hashMap = new HashMap<>();
-                        hashMap.put(profileOrCoverPhoto, downloadUri.toString());
-                        databaseReference.child(firebaseUser.getUid()).updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        HashMap<String, Object> userNameHashMap = new HashMap<>();
+                        userNameHashMap.put(profileOrCoverPhoto, downloadUri.toString());
+                        usersReference.child(firebaseUser.getUid()).updateChildren(userNameHashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
                                 progressDialog.dismiss();
@@ -524,6 +541,25 @@ public class EditProfilePage extends AppCompatActivity {
                             public void onFailure(@NonNull Exception e) {
                                 progressDialog.dismiss();
                                 Toast.makeText(EditProfilePage.this, "Error Updating! ", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
+                        HashMap<String, Object> avatarHashMap = new HashMap<>();
+                        avatarHashMap.put("userAvatar", downloadUri.toString());
+
+                        Query query = postReference.orderByChild("uid").equalTo(uid);
+
+                        query.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                                    dataSnapshot1.getRef().updateChildren(avatarHashMap);
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
                             }
                         });
                     } else {
@@ -541,18 +577,22 @@ public class EditProfilePage extends AppCompatActivity {
         }
         else {
             progressDialog.show();
+
             String filepathname = coverStorage + "" + profileOrCoverPhoto + "_" + firebaseUser.getUid();
+
             StorageReference storageReference1 = storageReference.child(filepathname);
+
             storageReference1.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
+
                     while (!uriTask.isSuccessful()) ;
                     final Uri downloadUri = uriTask.getResult();
                     if (uriTask.isSuccessful()) {
                         HashMap<String, Object> hashMap = new HashMap<>();
                         hashMap.put(profileOrCoverPhoto, downloadUri.toString());
-                        databaseReference.child(firebaseUser.getUid()).updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        usersReference.child(firebaseUser.getUid()).updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
                                 progressDialog.dismiss();

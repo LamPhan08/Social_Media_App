@@ -94,7 +94,7 @@ public class ChatActivity extends AppCompatActivity {
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference users;
 
-    private boolean notify=false;
+    private boolean notify = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,7 +102,7 @@ public class ChatActivity extends AppCompatActivity {
         setContentView(R.layout.activity_chat);
 
         actionBar = getSupportActionBar();
-        actionBar.setTitle("Profile");
+        actionBar.setTitle("Chat");
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         firebaseAuth = FirebaseAuth.getInstance();
@@ -291,7 +291,8 @@ public class ChatActivity extends AppCompatActivity {
                     else {
                         pickFromCamera();
                     }
-                } else if (which==1) {
+                }
+                else if (which == 1) {
                     if (!checkStoragePermission()) {
                         requestStoragePermission();
                     }
@@ -345,7 +346,8 @@ public class ChatActivity extends AppCompatActivity {
 
                 try {
                     sendImageMessage(imageuri);
-                } catch (IOException e) {
+                }
+                catch (IOException e) {
                     e.printStackTrace();
                 }
             }
@@ -353,7 +355,8 @@ public class ChatActivity extends AppCompatActivity {
             if (requestCode == IMAGE_PICKCAMERA_REQUEST) {
                 try {
                     sendImageMessage(imageuri);
-                } catch (IOException e) {
+                }
+                catch (IOException e) {
                     e.printStackTrace();
                 }
             }
@@ -392,12 +395,12 @@ public class ChatActivity extends AppCompatActivity {
                     hashMap.put("sender",myuid);
                     hashMap.put("receiver",uid);
                     hashMap.put("message",downloadUri);
-                    hashMap.put("timestamp",timestamp);
-                    hashMap.put("dilihat",false);
+                    hashMap.put("timeStamp",timestamp);
                     hashMap.put("type","images");
 
                     databaseReference.child("Chats").push().setValue(hashMap);
-                    final DatabaseReference ref1= FirebaseDatabase.getInstance().getReference("ChatList").child(uid).child(myuid);
+
+                    final DatabaseReference ref1 = FirebaseDatabase.getInstance().getReference("ChatList").child(uid).child(myuid);
 
                     ref1.addValueEventListener(new ValueEventListener() {
                         @Override
@@ -413,7 +416,7 @@ public class ChatActivity extends AppCompatActivity {
                         }
                     });
 
-                    final DatabaseReference ref2= FirebaseDatabase.getInstance().getReference("ChatList").child(myuid).child(uid);
+                    final DatabaseReference ref2 = FirebaseDatabase.getInstance().getReference("ChatList").child(myuid).child(uid);
 
                     ref2.addValueEventListener(new ValueEventListener() {
                         @Override
@@ -492,8 +495,7 @@ public class ChatActivity extends AppCompatActivity {
         hashMap.put("sender",myuid);
         hashMap.put("receiver",uid);
         hashMap.put("message",message);
-        hashMap.put("timestamp",timestamp);
-        hashMap.put("dilihat",false);
+        hashMap.put("timeStamp",timestamp);
         hashMap.put("type","text");
 
         databaseReference.child("Chats").push().setValue(hashMap);

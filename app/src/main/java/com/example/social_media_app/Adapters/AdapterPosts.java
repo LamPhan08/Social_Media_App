@@ -1,8 +1,10 @@
 package com.example.social_media_app.Adapters;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.text.format.DateFormat;
 import android.view.Gravity;
@@ -43,89 +45,107 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
 
 
-    Context context;
-    String myuid;
-    private DatabaseReference liekeref, postref;
+    private Context context;
+    private String myuid;
+    private DatabaseReference likeDatabaseReference, postDatabaseReference;
     boolean mprocesslike = false;
 
     public AdapterPosts(Context context, List<ModelPosts> modelPosts) {
         this.context = context;
         this.modelPosts = modelPosts;
         myuid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        liekeref = FirebaseDatabase.getInstance().getReference().child("Likes");
-        postref = FirebaseDatabase.getInstance().getReference().child("Posts");
+        likeDatabaseReference = FirebaseDatabase.getInstance().getReference().child("Likes");
+        postDatabaseReference = FirebaseDatabase.getInstance().getReference().child("Posts");
     }
 
-    List<ModelPosts> modelPosts;
+    private List<ModelPosts> modelPosts;
 
     @NonNull
     @Override
     public MyHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.row_posts, parent, false);
+
         return new MyHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull final MyHolder holder, @SuppressLint("RecyclerView") final int position) {
         final String uid = modelPosts.get(position).getUid();
-        String nameh = modelPosts.get(position).getUname();
-        final String descri = modelPosts.get(position).getDescription();
-        final String ptime = modelPosts.get(position).getPtime();
-        String dp = modelPosts.get(position).getUdp();
-        String plike = modelPosts.get(position).getPlike();
-        final String image = modelPosts.get(position).getUimage();
-        String email = modelPosts.get(position).getUemail();
-        String comm = modelPosts.get(position).getPcomments();
-        final String pid = modelPosts.get(position).getPtime();
+        String mName = modelPosts.get(position).getUserName();
+        String mEmail = modelPosts.get(position).getUserEmail();
+        final String mDescription = modelPosts.get(position).getDescription();
+        final String mPostTime = modelPosts.get(position).getPostTime();
+        String mAvatar = modelPosts.get(position).getUserAvatar();
+        String mPostLikes = modelPosts.get(position).getPostLikes();
+        final String mPostImage = modelPosts.get(position).getPostImage();
+        String mPostComments = modelPosts.get(position).getPostComments();
+        final String postId = modelPosts.get(position).getPostTime();
+
         Calendar calendar = Calendar.getInstance(Locale.ENGLISH);
-        calendar.setTimeInMillis(Long.parseLong(ptime));
+        calendar.setTimeInMillis(Long.parseLong(mPostTime));
+
         String timedate = DateFormat.format("dd/MM/yyyy hh:mm aa", calendar).toString();
-        holder.name.setText(nameh);
-        holder.description.setText(descri);
+
+        holder.name.setText(mName);
+        holder.description.setText(mDescription);
         holder.time.setText(timedate);
-        holder.like.setText(plike + " Likes");
-        holder.comments.setText(comm + " Comments");
-        setLikes(holder, ptime);
+        holder.likes.setText(mPostLikes + " Likes");
+        holder.comments.setText(mPostComments + " Comments");
+
+        setLikes(holder, mPostTime);
+
         try {
-            Glide.with(context).load(dp).into(holder.picture);
-        } catch (Exception e) {
+            Glide.with(context).load(mAvatar).into(holder.avatar);
+        }
+        catch (Exception e) {
 
         }
+
         holder.image.setVisibility(View.VISIBLE);
+
         try {
-            Glide.with(context).load(image).into(holder.image);
-        } catch (Exception e) {
+            Glide.with(context).load(mPostImage).into(holder.image);
+        }
+        catch (Exception e) {
 
         }
-        holder.like.setOnClickListener(new View.OnClickListener() {
+
+        holder.likes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(holder.itemView.getContext(), PeopleWhoLiked.class);
-                intent.putExtra("pid", pid);
+                intent.putExtra("pid", postId);
                 holder.itemView.getContext().startActivity(intent);
             }
         });
-        holder.likebtn.setOnClickListener(new View.OnClickListener() {
+
+        holder.likeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final int plike = Integer.parseInt(modelPosts.get(position).getPlike());
+                final int plike = Integer.parseInt(modelPosts.get(position).getPostLikes());
+
                 mprocesslike = true;
-                final String postid = modelPosts.get(position).getPtime();
-                liekeref.addValueEventListener(new ValueEventListener() {
+
+                final String postid = modelPosts.get(position).getPostTime();
+
+                likeDatabaseReference.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
                         if (mprocesslike) {
                             if (dataSnapshot.child(postid).hasChild(myuid)) {
-                                postref.child(postid).child("plike").setValue("" + (plike - 1));
-                                liekeref.child(postid).child(myuid).removeValue();
+                                postDatabaseReference.child(postid).child("postLikes").setValue("" + (plike - 1));
+                                likeDatabaseReference.child(postid).child(myuid).removeValue();
+
                                 mprocesslike = false;
                             } else {
-                                postref.child(postid).child("plike").setValue("" + (plike + 1));
-                                liekeref.child(postid).child(myuid).setValue("Liked");
+                                postDatabaseReference.child(postid).child("postLikes").setValue("" + (plike + 1));
+                                likeDatabaseReference.child(postid).child(myuid).setValue("Liked");
+
                                 mprocesslike = false;
                             }
                         }
@@ -138,49 +158,75 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
                 });
             }
         });
-        holder.more.setOnClickListener(new View.OnClickListener() {
+
+        holder.moreBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showMoreOptions(holder.more, uid, myuid, ptime, image);
+                showMoreOptions(holder.moreBtn, uid, myuid, mPostTime, mPostImage);
             }
         });
-        holder.comment.setOnClickListener(new View.OnClickListener() {
+
+        holder.commentBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, CommentPost.class);
-                intent.putExtra("pid", ptime);
+                intent.putExtra("pid", mPostTime);
                 context.startActivity(intent);
             }
         });
     }
 
     private void showMoreOptions(ImageButton more, String uid, String myuid, final String pid, final String image) {
-
         PopupMenu popupMenu = new PopupMenu(context, more, Gravity.END);
+
         if (uid.equals(myuid)) {
-            popupMenu.getMenu().add(Menu.NONE, 0, 0, "DELETE");
+            popupMenu.getMenu().add(Menu.NONE, 0, 0, "Delete this post");
         }
+
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 if (item.getItemId() == 0) {
-                    deltewithImage(pid, image);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
+                    builder.setTitle("Delete Post");
+                    builder.setMessage("Are you sure to delete this post?");
+
+                    builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            deletePost(pid, image);
+                        }
+                    });
+
+                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+
+                    builder.create().show();
                 }
 
                 return false;
             }
         });
+
         popupMenu.show();
     }
 
-    private void deltewithImage(final String pid, String image) {
-        final ProgressDialog pd = new ProgressDialog(context);
-        pd.setMessage("Deleting");
-        StorageReference picref = FirebaseStorage.getInstance().getReferenceFromUrl(image);
-        picref.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+    private void deletePost(final String pid, String image) {
+        final ProgressDialog progressDialog = new ProgressDialog(context);
+        progressDialog.setMessage("Deleting this post");
+
+        StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(image);
+
+        storageReference.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                Query query = FirebaseDatabase.getInstance().getReference("Posts").orderByChild("ptime").equalTo(pid);
+                Query query = FirebaseDatabase.getInstance().getReference("Posts").orderByChild("postTime").equalTo(pid);
+
                 query.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -188,8 +234,8 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
                             dataSnapshot1.getRef().removeValue();
                         }
 
-                        pd.dismiss();
-                        Toast.makeText(context, "Deleted Successfully", Toast.LENGTH_LONG).show();
+                        progressDialog.dismiss();
+                        Toast.makeText(context, "Delete successfully!", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
@@ -207,16 +253,16 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
     }
 
     private void setLikes(final MyHolder holder, final String pid) {
-        liekeref.addValueEventListener(new ValueEventListener() {
+        likeDatabaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 if (dataSnapshot.child(pid).hasChild(myuid)) {
-                    holder.likebtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_liked, 0, 0, 0);
-                    holder.likebtn.setText("Liked");
+                    holder.likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_liked, 0, 0, 0);
+                    holder.likeBtn.setText("Liked");
                 } else {
-                    holder.likebtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like, 0, 0, 0);
-                    holder.likebtn.setText("Like");
+                    holder.likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like, 0, 0, 0);
+                    holder.likeBtn.setText("Like");
                 }
             }
 
@@ -234,24 +280,26 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
     }
 
     class MyHolder extends RecyclerView.ViewHolder {
-        ImageView picture, image;
-        TextView name, time, title, description, like, comments;
-        ImageButton more;
-        Button likebtn, comment;
+        CircleImageView avatar;
+        ImageView image;
+        TextView name, time, description, likes, comments;
+        ImageButton moreBtn;
+        Button likeBtn, commentBtn;
         LinearLayout profile;
 
         public MyHolder(@NonNull View itemView) {
             super(itemView);
-            picture = itemView.findViewById(R.id.picturetv);
+
+            avatar = itemView.findViewById(R.id.picturetv);
             image = itemView.findViewById(R.id.pimagetv);
             name = itemView.findViewById(R.id.unametv);
             time = itemView.findViewById(R.id.utimetv);
-            more = itemView.findViewById(R.id.morebtn);
+            moreBtn = itemView.findViewById(R.id.btnMore);
             description = itemView.findViewById(R.id.descript);
-            like = itemView.findViewById(R.id.plikeb);
+            likes = itemView.findViewById(R.id.plikeb);
             comments = itemView.findViewById(R.id.pcommentco);
-            likebtn = itemView.findViewById(R.id.btnLike);
-            comment = itemView.findViewById(R.id.btnComment);
+            likeBtn = itemView.findViewById(R.id.btnLike);
+            commentBtn = itemView.findViewById(R.id.btnComment);
             profile = itemView.findViewById(R.id.profilelayout);
         }
     }

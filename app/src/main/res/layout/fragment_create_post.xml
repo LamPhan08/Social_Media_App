@@ -13,7 +13,7 @@
         android:orientation="vertical">
 
         <EditText
-            android:id="@+id/pdes"
+            android:id="@+id/descriptionEDT"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
@@ -26,7 +26,7 @@
             android:singleLine="true" />
 
         <ImageView
-            android:id="@+id/imagep"
+            android:id="@+id/uploadImage"
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:layout_marginTop="15dp"
@@ -34,7 +34,7 @@
             android:src="@drawable/ic_images" />
 
         <Button
-            android:id="@+id/pupload"
+            android:id="@+id/uploadBtn"
             style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

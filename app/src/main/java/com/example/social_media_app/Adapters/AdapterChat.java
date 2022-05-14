@@ -64,7 +64,7 @@ public class AdapterChat extends RecyclerView.Adapter<AdapterChat.Myholder>{
     @Override
     public void onBindViewHolder(@NonNull Myholder holder, @SuppressLint("RecyclerView") final int position) {
         String message = list.get(position).getMessage();
-        String timeStamp = list.get(position).getTimestamp();
+        String timeStamp = list.get(position).getTimeStamp();
         String type = list.get(position).getType();
         Calendar calendar = Calendar.getInstance(Locale.ENGLISH);
 
@@ -74,12 +74,14 @@ public class AdapterChat extends RecyclerView.Adapter<AdapterChat.Myholder>{
 
         holder.message.setText(message);
         holder.time.setText(timedate);
+
         try {
             Glide.with(context).load(imageurl).into(holder.image);
         }
         catch (Exception e){
 
         }
+
         if(type.equals("text")){
             holder.message.setVisibility(View.VISIBLE);
             holder.mimage.setVisibility(View.GONE);
@@ -124,11 +126,11 @@ public class AdapterChat extends RecyclerView.Adapter<AdapterChat.Myholder>{
     private void deleteMessage(int position) {
         final String myuid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        String msgtimestmp = list.get(position).getTimestamp();
+        String msgtimestmp = list.get(position).getTimeStamp();
 
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Chats");
 
-        Query query = databaseReference.orderByChild("timestamp").equalTo(msgtimestmp);
+        Query query = databaseReference.orderByChild("timeStamp").equalTo(msgtimestmp);
 
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

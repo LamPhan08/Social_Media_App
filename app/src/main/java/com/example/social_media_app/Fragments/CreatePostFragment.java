@@ -71,48 +71,52 @@ public class CreatePostFragment extends Fragment {
     public CreatePostFragment() {
         // Required empty public constructor
     }
-    FirebaseAuth firebaseAuth;
-    EditText des;
+    private FirebaseAuth firebaseAuth;
+    private EditText description;
     private static final int CAMERA_REQUEST = 100;
     private static final int STORAGE_REQUEST = 200;
-    String cameraPermission[];
-    String storagePermission[];
-    ProgressDialog pd;
-    ImageView image;
+    private String cameraPermission[];
+    private String storagePermission[];
+    private ProgressDialog progressDialog;
+    private ImageView image;
     private static final int IMAGEPICK_GALLERY_REQUEST = 300;
     private static final int IMAGE_PICKCAMERA_REQUEST = 400;
 
-    Uri imageuri = null;
-    String name, email, uid, dp;
-    DatabaseReference databaseReference;
-    Button upload;
+    private Uri imageuri = null;
+    private String name, email, uid, avatar;
+    private DatabaseReference databaseReference;
+    private Button upload;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         firebaseAuth = FirebaseAuth.getInstance();
+
         View view= inflater.inflate(R.layout.fragment_create_post, container, false);
 
-        des = view.findViewById(R.id.pdes);
-        image = view.findViewById(R.id.imagep);
-        upload = view.findViewById(R.id.pupload);
-        uid=FirebaseAuth.getInstance().getUid();
-        pd = new ProgressDialog(getContext());
-        pd.setCanceledOnTouchOutside(false);
-        email=FirebaseAuth.getInstance().getCurrentUser().getEmail();
-        Intent intent = getActivity().getIntent();
+        description = (EditText) view.findViewById(R.id.descriptionEDT);
+        image = (ImageView) view.findViewById(R.id.uploadImage);
+        upload = (Button) view.findViewById(R.id.uploadBtn);
+
+        uid = FirebaseAuth.getInstance().getUid();
+
+        progressDialog = new ProgressDialog(getContext());
+        progressDialog.setCanceledOnTouchOutside(false);
+
+        email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
 
         databaseReference = FirebaseDatabase.getInstance().getReference("Users");
+
         Query query = databaseReference.orderByChild("email").equalTo(email);
+
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                     name = dataSnapshot1.child("name").getValue().toString();
                     email = "" + dataSnapshot1.child("email").getValue();
-                    dp = "" + dataSnapshot1.child("avatar").getValue().toString();
+                    avatar = "" + dataSnapshot1.child("avatar").getValue().toString();
                 }
             }
 
@@ -134,41 +138,49 @@ public class CreatePostFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                String description = ""+des.getText().toString().trim();
+                String mDescription = "" + description.getText().toString().trim();
 
-                if (TextUtils.isEmpty(description)) {
-                    des.setError("Description Cant be empty");
-                    Toast.makeText(getContext(), "Description can't be left empty", Toast.LENGTH_LONG).show();
+                if (TextUtils.isEmpty(mDescription)) {
+                    description.setError("Description can not be empty!");
+                    Toast.makeText(getContext(), "Description can not be empty!", Toast.LENGTH_SHORT).show();
+
                     return;
                 }
-                if(imageuri==null){
-                    Toast.makeText(getContext(), "Select an Image", Toast.LENGTH_LONG).show();
-                    return;
-                }else{
-                    uploadData(description);
-                }
 
+                if (imageuri == null) {
+                    Toast.makeText(getContext(), "Select an image", Toast.LENGTH_SHORT).show();
+
+                    return;
+                }
+                else{
+                    uploadData(mDescription);
+                }
             }
         });
+
         return view;
     }
+
     private void showImagePicDialog() {
-        String options[]={ "Camera","Gallery"};
-        AlertDialog.Builder builder=new AlertDialog.Builder(getContext());
+        String options[] = { "Camera","Gallery"};
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+
         builder.setTitle("Pick Image From");
+
         builder.setItems(options, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                if(which==0){
-                    if(!checkCameraPermission()){
+                if (which == 0) {
+                    if (!checkCameraPermission()) {
                         requestCameraPermission();
                     }
                     else {
                         pickFromCamera();
                     }
-                }else if(which==1){
-                    if(!checkStoragePermission()){
+                }
+                else if (which == 1) {
+                    if (!checkStoragePermission()) {
                         requestStoragePermission();
                     }
                     else {
@@ -178,120 +190,147 @@ public class CreatePostFragment extends Fragment {
                 }
             }
         });
+
         builder.create().show();
     }
-    private Boolean checkStoragePermission(){
-        boolean result= ContextCompat.checkSelfPermission(getContext(),Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                ==(PackageManager.PERMISSION_GRANTED);
+
+    private Boolean checkStoragePermission() {
+        boolean result = ContextCompat.checkSelfPermission(getContext(),Manifest.permission.WRITE_EXTERNAL_STORAGE) == (PackageManager.PERMISSION_GRANTED);
+
         return result;
     }
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode){
-            case CAMERA_REQUEST:{
-                if(grantResults.length>0){
-                    boolean camera_accepted=grantResults[0]==PackageManager.PERMISSION_GRANTED;
-                    boolean writeStorageaccepted=grantResults[1]==PackageManager.PERMISSION_GRANTED;
-                    if(camera_accepted&&writeStorageaccepted){
+            case CAMERA_REQUEST: {
+                if (grantResults.length > 0) {
+                    boolean camera_accepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                    boolean writeStorageaccepted = grantResults[1] == PackageManager.PERMISSION_GRANTED;
+                    if (camera_accepted && writeStorageaccepted) {
                         pickFromCamera();
-                    }
-                    else {
-                        Toast.makeText(getContext(),"Please Enable Camera and Storage Permissions",Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(getContext(), "Please enable camera permission!", Toast.LENGTH_SHORT).show();
                     }
                 }
+
+                break;
             }
-            //function end
-            break;
-            case STORAGE_REQUEST:{
-                if(grantResults.length>0){
-                    boolean writeStorageaccepted=grantResults[0]==PackageManager.PERMISSION_GRANTED;
-                    if(writeStorageaccepted){
+
+            case STORAGE_REQUEST: {
+                if (grantResults.length > 0) {
+                    boolean writeStorageaccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+
+                    if (writeStorageaccepted) {
                         pickFromGallery();
                     }
                     else {
-                        Toast.makeText(getContext(),"Please Enable Storage Permissions",Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(),"Please enable storage permission!",Toast.LENGTH_SHORT).show();
                     }
                 }
+
+                break;
             }
-            break;
         }
 
     }
-    private void requestStoragePermission(){
+
+    private void requestStoragePermission() {
         requestPermissions(storagePermission,STORAGE_REQUEST);
     }
-    private Boolean checkCameraPermission(){
-        boolean result= ContextCompat.checkSelfPermission(getContext(),Manifest.permission.CAMERA)
-                ==(PackageManager.PERMISSION_GRANTED);
-        boolean result1= ContextCompat.checkSelfPermission(getContext(),Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                ==(PackageManager.PERMISSION_GRANTED);
+
+    private Boolean checkCameraPermission() {
+        boolean result = ContextCompat.checkSelfPermission(getContext(),Manifest.permission.CAMERA) == (PackageManager.PERMISSION_GRANTED);
+        boolean result1 = ContextCompat.checkSelfPermission(getContext(),Manifest.permission.WRITE_EXTERNAL_STORAGE) == (PackageManager.PERMISSION_GRANTED);
+
         return result && result1;
     }
-    private void requestCameraPermission(){
+
+    private void requestCameraPermission() {
         requestPermissions(cameraPermission,CAMERA_REQUEST);
     }
-    private void pickFromCamera(){
-        ContentValues contentValues=new ContentValues();
+
+    private void pickFromCamera() {
+        ContentValues contentValues = new ContentValues();
+
         contentValues.put(MediaStore.Images.Media.TITLE,"Temp_pic");
         contentValues.put(MediaStore.Images.Media.DESCRIPTION,"Temp Description");
-        imageuri=getActivity().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,contentValues);
-        Intent camerIntent=new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        camerIntent.putExtra(MediaStore.EXTRA_OUTPUT,imageuri);
-        startActivityForResult(camerIntent,IMAGE_PICKCAMERA_REQUEST);
+
+        imageuri = getActivity().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,contentValues);
+
+        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT,imageuri);
+
+        startActivityForResult(cameraIntent,IMAGE_PICKCAMERA_REQUEST);
     }
-    private void pickFromGallery(){
+
+    private void pickFromGallery() {
         Intent galleryIntent = new Intent(Intent.ACTION_PICK);
+
         galleryIntent.setType("image/*");
+
         startActivityForResult(galleryIntent, IMAGEPICK_GALLERY_REQUEST);
     }
-    private void uploadData(final String description) {
 
-        pd.setMessage("Publishing Post");
-        pd.show();
-        final String timestamp=String.valueOf(System.currentTimeMillis());
-        String filepathname=  "Posts/" + "post" +timestamp;
-        Bitmap bitmap=((BitmapDrawable)image.getDrawable()).getBitmap();
-        ByteArrayOutputStream byteArrayOutputStream=new ByteArrayOutputStream();
+    private void uploadData(final String mDescription) {
+        progressDialog.setMessage("Publishing Post");
+        progressDialog.show();
+
+        final String timeStamp = String.valueOf(System.currentTimeMillis());
+        String filepathname = "Posts/" + "post" + timeStamp;
+
+        Bitmap bitmap = ((BitmapDrawable)image.getDrawable()).getBitmap();
+
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+
         bitmap.compress(Bitmap.CompressFormat.PNG,100,byteArrayOutputStream);
-        byte[] data=byteArrayOutputStream.toByteArray();
+        byte[] data = byteArrayOutputStream.toByteArray();
 
-        StorageReference storageReference1= FirebaseStorage.getInstance().getReference().child(filepathname);
-        storageReference1.putBytes(data).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+        StorageReference storageReference= FirebaseStorage.getInstance().getReference().child(filepathname);
+
+        storageReference.putBytes(data).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Task<Uri> uriTask=taskSnapshot.getStorage().getDownloadUrl();
+                Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
                 while (!uriTask.isSuccessful());
-                String downloadUri=uriTask.getResult().toString();
+
+                String downloadUri = uriTask.getResult().toString();
+
                 if(uriTask.isSuccessful()){
-                    HashMap<Object,String > hashMap=new HashMap<>();
-                    hashMap.put("uid",uid);
-                    hashMap.put("uname",name);
-                    hashMap.put("uemail",email);
-                    hashMap.put("udp",dp);
-                    hashMap.put("description",description);
-                    hashMap.put("uimage",downloadUri);
-                    hashMap.put("ptime",timestamp);
-                    hashMap.put("plike","0");
-                    hashMap.put("pcomments","0");
-                    DatabaseReference databaseReference=FirebaseDatabase.getInstance().getReference("Posts");
-                    databaseReference.child(timestamp).setValue(hashMap)
+                    HashMap<Object,String > hashMap = new HashMap<>();
+                    hashMap.put("uid", uid);
+                    hashMap.put("userName", name);
+                    hashMap.put("userEmail", email);
+                    hashMap.put("userAvatar", avatar);
+                    hashMap.put("description", mDescription);
+                    hashMap.put("postImage", downloadUri);
+                    hashMap.put("postTime", timeStamp);
+                    hashMap.put("postLikes", "0");
+                    hashMap.put("postComments", "0");
+
+                    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Posts");
+
+                    databaseReference.child(timeStamp).setValue(hashMap)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
-                                    pd.dismiss();
-                                    Toast.makeText(getContext(),"Published",Toast.LENGTH_LONG).show();
+                                    progressDialog.dismiss();
+                                    Toast.makeText(getContext(),"Published",Toast.LENGTH_SHORT).show();
 
-                                    des.setText("");
+                                    description.setText("");
+
                                     image.setImageURI(null);
-                                    imageuri=null;
+                                    imageuri = null;
+
                                     startActivity(new Intent(getContext(), DashboardActivity.class));
+
                                     getActivity().finish();
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            pd.dismiss();
-                            Toast.makeText(getContext(),"Failed",Toast.LENGTH_LONG).show();
+                            progressDialog.dismiss();
+                            Toast.makeText(getContext(),"Failed",Toast.LENGTH_SHORT).show();
                         }
                     });
 
@@ -301,8 +340,8 @@ public class CreatePostFragment extends Fragment {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                pd.dismiss();
-                Toast.makeText(getContext(),"Failed",Toast.LENGTH_LONG).show();
+                progressDialog.dismiss();
+                Toast.makeText(getContext(),"Failed",Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -312,14 +351,15 @@ public class CreatePostFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if(resultCode == getActivity().RESULT_OK){
-            if(requestCode==IMAGEPICK_GALLERY_REQUEST){
-                imageuri=data.getData();
+            if(requestCode == IMAGEPICK_GALLERY_REQUEST){
+                imageuri = data.getData();
                 image.setImageURI(imageuri);
             }
-            if(requestCode==IMAGE_PICKCAMERA_REQUEST){
+            if(requestCode == IMAGE_PICKCAMERA_REQUEST){
                 image.setImageURI(imageuri);
             }
         }
+
         super.onActivityResult(requestCode, resultCode, data);
     }
 

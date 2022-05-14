@@ -1,48 +1,21 @@
 package com.example.social_media_app.Models;
 
 public class ModelPosts {
+    String uid, description, userName, userEmail, userAvatar, postLikes, postComments, postTime, postImage;
+
     public ModelPosts() {
     }
 
-    String description;
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
+    public ModelPosts(String uid, String description, String userName, String userEmail, String userAvatar, String postLikes, String postComments, String postTime, String postImage) {
+        this.uid = uid;
         this.description = description;
-    }
-
-    public String getPid() {
-        return pid;
-    }
-
-    public void setPid(String pid) {
-        this.pid = pid;
-    }
-
-    public String getPtime() {
-        return ptime;
-    }
-
-    public void setPtime(String ptime) {
-        this.ptime = ptime;
-    }
-
-    public String getUdp() {
-        return udp;
-    }
-
-    public void setUdp(String udp) {
-        this.udp = udp;
-    }
-
-    public String getUemail() {
-        return uemail;
-    }
-
-    public void setUemail(String uemail) {
-        this.uemail = uemail;
+        this.userName = userName;
+        this.userEmail = userEmail;
+        this.userAvatar = userAvatar;
+        this.postLikes = postLikes;
+        this.postComments = postComments;
+        this.postTime = postTime;
+        this.postImage = postImage;
     }
 
     public String getUid() {
@@ -53,64 +26,67 @@ public class ModelPosts {
         this.uid = uid;
     }
 
-    public String getUimage() {
-        return uimage;
+    public String getDescription() {
+        return description;
     }
 
-    public void setUimage(String uimage) {
-        this.uimage = uimage;
-    }
-
-    public String getUname() {
-        return uname;
-    }
-
-    public void setUname(String uname) {
-        this.uname = uname;
-    }
-
-    public String getPlike() {
-        return plike;
-    }
-
-    public void setPlike(String plike) {
-        this.plike = plike;
-    }
-
-    String pid;
-
-    public String getPcomments() {
-        return pcomments;
-    }
-
-    public void setPcomments(String pcomments) {
-        this.pcomments = pcomments;
-    }
-
-    public ModelPosts(String description, String pid, String ptime, String pcomments, String udp, String uemail, String uid, String uimage, String uname, String plike) {
+    public void setDescription(String description) {
         this.description = description;
-        this.pid = pid;
-        this.ptime = ptime;
-        this.pcomments = pcomments;
-
-        this.udp = udp;
-        this.uemail = uemail;
-        this.uid = uid;
-        this.uimage = uimage;
-        this.uname = uname;
-        this.plike = plike;
     }
 
-    String ptime,pcomments;
+    public String getUserName() {
+        return userName;
+    }
 
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 
-    String udp;
-    String uemail;
-    String uid;
-    String uimage;
+    public String getUserEmail() {
+        return userEmail;
+    }
 
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
+    }
 
-    String uname,plike;
+    public String getUserAvatar() {
+        return userAvatar;
+    }
 
+    public void setUserAvatar(String userAvatar) {
+        this.userAvatar = userAvatar;
+    }
 
+    public String getPostLikes() {
+        return postLikes;
+    }
+
+    public void setPostLikes(String postLikes) {
+        this.postLikes = postLikes;
+    }
+
+    public String getPostComments() {
+        return postComments;
+    }
+
+    public void setPostComments(String postComments) {
+        this.postComments = postComments;
+    }
+
+    public String getPostTime() {
+        return postTime;
+    }
+
+    public void setPostTime(String postTime) {
+        this.postTime = postTime;
+    }
+
+    public String getPostImage() {
+        return postImage;
+    }
+
+    public void setPostImage(String postImage) {
+        this.postImage = postImage;
+    }
 }

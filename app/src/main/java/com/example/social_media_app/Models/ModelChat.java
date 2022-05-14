@@ -1,8 +1,7 @@
 package com.example.social_media_app.Models;
 
 public class ModelChat {
-    String message, receiver, sender, type, timestamp;
-    boolean dilihat;
+    String message, receiver, sender, type, timeStamp;
 
     public String getMessage() {
         return message;
@@ -28,20 +27,12 @@ public class ModelChat {
         this.sender = sender;
     }
 
-    public String getTimestamp() {
-        return timestamp;
+    public String getTimeStamp() {
+        return timeStamp;
     }
 
-    public void setTimestamp(String timestamp) {
-        this.timestamp = timestamp;
-    }
-
-    public boolean isDilihat() {
-        return dilihat;
-    }
-
-    public void setDilihat(boolean dilihat) {
-        this.dilihat = dilihat;
+    public void setTimeStamp(String timeStamp) {
+        this.timeStamp = timeStamp;
     }
 
 
@@ -56,12 +47,11 @@ public class ModelChat {
         this.type = type;
     }
 
-    public ModelChat(String message, String receiver, String sender, String type, String timestamp, boolean dilihat) {
+    public ModelChat(String message, String receiver, String sender, String type, String timeStamp) {
         this.message = message;
         this.receiver = receiver;
         this.sender = sender;
         this.type = type;
-        this.timestamp = timestamp;
-        this.dilihat = dilihat;
+        this.timeStamp = timeStamp;
     }
 }

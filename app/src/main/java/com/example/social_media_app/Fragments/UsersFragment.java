@@ -34,7 +34,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class UsersFragment extends Fragment {
+public class    UsersFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private AdapterUsers adapterUsers;
@@ -50,12 +50,16 @@ public class UsersFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_users, container, false);
+
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclep);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
         usersList = new ArrayList<>();
         firebaseAuth = FirebaseAuth.getInstance();
+
         getAllUsers();
+
         return view;
     }
 
@@ -92,6 +96,7 @@ public class UsersFragment extends Fragment {
     private void searchusers(final String s) {
         final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -127,7 +132,7 @@ public class UsersFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_users, menu);
-//        menu.findItem(R.id.logout).setVisible(false);
+
         MenuItem item = menu.findItem(R.id.search);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -135,9 +140,11 @@ public class UsersFragment extends Fragment {
             public boolean onQueryTextSubmit(String query) {
                 if (!TextUtils.isEmpty(query.trim())) {
                     searchusers(query);
-                } else {
+                }
+                else {
                     getAllUsers();
                 }
+
                 return false;
             }
 
@@ -145,9 +152,11 @@ public class UsersFragment extends Fragment {
             public boolean onQueryTextChange(String newText) {
                 if (!TextUtils.isEmpty(newText.trim())) {
                     searchusers(newText);
-                } else {
+                }
+                else {
                     getAllUsers();
                 }
+
                 return false;
             }
         });
