@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/chat"
     tools:context=".ChatActivity">
 
     <androidx.appcompat.widget.Toolbar
@@ -57,12 +58,13 @@
 
         </LinearLayout>
     </androidx.appcompat.widget.Toolbar>
+
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/chatrecycle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/chatrecycle"
         android:layout_above="@id/chatlayout"
-        android:layout_below="@id/toolbar"/>
+        android:layout_below="@id/toolbar" />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -82,10 +84,11 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:id="@+id/messaget"
-            android:background="@null"
-            android:hint="Type here"
+            android:id="@+id/messageType"
+            android:background="@drawable/type_chat"
+            android:hint="Type here..."
             android:inputType="textCapSentences|textMultiLine"
+            android:drawableRight="@drawable/ic_emoji_emotions"
             android:padding="15dp"/>
 
         <ImageButton
@@ -93,7 +96,6 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:background="@drawable/ic_circle"
-            android:backgroundTint="@color/colorGreen"
             android:src="@drawable/ic_send_white" />
     </LinearLayout>
 </RelativeLayout>

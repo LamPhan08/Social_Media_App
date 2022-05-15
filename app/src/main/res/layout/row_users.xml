@@ -33,7 +33,7 @@
                 android:id="@+id/namep"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Person NAme"
+                android:text="Person Name"
                 android:textColor="@color/colorBlack"
                 android:textSize="18sp" />
 

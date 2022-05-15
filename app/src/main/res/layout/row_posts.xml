@@ -87,17 +87,18 @@
             <TextView
                 android:id="@+id/plikeb"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="1.2K Likes"
+                android:text="1.2K"
+                android:drawableLeft="@drawable/ic_liked"
                 android:textColor="@color/colorPrimary" />
 
             <TextView
                 android:id="@+id/pcommentco"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="1.2K Comment"
+                android:text="1.2K Comments"
                 android:textAlignment="textEnd"
                 android:textColor="@color/colorPrimary" />
         </LinearLayout>
@@ -113,29 +114,28 @@
             android:gravity="center"
             android:orientation="horizontal">
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnLike"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:autoLink="all"
+                android:layout_marginRight="5dp"
                 android:backgroundTint="@color/colorWhite"
                 android:textColor="@color/colorBlack"
-                android:drawableStart="@drawable/ic_like"
                 android:drawableLeft="@drawable/ic_like"
                 android:padding="5dp"
                 android:text="Like" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnComment"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:autoLink="all"
                 android:layout_marginLeft="5dp"
+                android:autoLink="all"
                 android:backgroundTint="@color/colorWhite"
                 android:textColor="@color/colorBlack"
-                android:drawableStart="@drawable/ic_comment"
                 android:drawableLeft="@drawable/ic_comment"
                 android:padding="5dp"
                 android:text="COMMENT" />

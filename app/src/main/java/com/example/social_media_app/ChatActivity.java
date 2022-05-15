@@ -19,6 +19,7 @@ import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -30,6 +31,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.EmojiCompatConfigurationView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -53,7 +55,10 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-
+import com.vanniktech.emoji.Emoji;
+import com.vanniktech.emoji.EmojiEditText;
+import com.vanniktech.emoji.EmojiPopup;
+import com.vanniktech.emoji.EmojiTextView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -94,8 +99,6 @@ public class ChatActivity extends AppCompatActivity {
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference users;
 
-    private boolean notify = false;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -110,7 +113,7 @@ public class ChatActivity extends AppCompatActivity {
         profile = (CircleImageView) findViewById(R.id.profiletv);
         name = (TextView) findViewById(R.id.nameptv);
         userstatus = (TextView) findViewById(R.id.onlinetv);
-        msg = (EditText) findViewById(R.id.messaget);
+        msg = (EditText) findViewById(R.id.messageType);
         sendMessage = (ImageButton) findViewById(R.id.sendmsg);
         sendImages = (ImageButton) findViewById(R.id.attachbtn);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -132,14 +135,13 @@ public class ChatActivity extends AppCompatActivity {
         sendImages.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showImagePicDialog();
+                showPickImageDialog();
             }
         });
 
         sendMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                notify = true;
                 String message = msg.getText().toString().trim();
                 if (TextUtils.isEmpty(message)) {
                     Toast.makeText(ChatActivity.this,"Please Write Something Here",Toast.LENGTH_LONG).show();
@@ -274,7 +276,7 @@ public class ChatActivity extends AppCompatActivity {
         });
     }
 
-    private void showImagePicDialog() {
+    private void showPickImageDialog() {
         String options[] = { "Camera","Gallery"};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(ChatActivity.this);
@@ -338,6 +340,7 @@ public class ChatActivity extends AppCompatActivity {
         }
 
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (resultCode == RESULT_OK) {
@@ -366,7 +369,6 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void sendImageMessage(Uri imageuri) throws IOException {
-        notify = true;
         final ProgressDialog dialog = new ProgressDialog(this);
         dialog.setMessage("Sending Image");
         dialog.show();
@@ -391,14 +393,14 @@ public class ChatActivity extends AppCompatActivity {
                 if (uriTask.isSuccessful()) {
                     DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
 
-                    HashMap<String,Object> hashMap=new HashMap<>();
+                    HashMap<String,Object> hashMap = new HashMap<>();
                     hashMap.put("sender",myuid);
                     hashMap.put("receiver",uid);
                     hashMap.put("message",downloadUri);
                     hashMap.put("timeStamp",timestamp);
                     hashMap.put("type","images");
 
-                    databaseReference.child("Chats").push().setValue(hashMap);
+                    databaseReference.child("Comments").push().setValue(hashMap);
 
                     final DatabaseReference ref1 = FirebaseDatabase.getInstance().getReference("ChatList").child(uid).child(myuid);
 
@@ -481,9 +483,9 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void requestStoragePermission(){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            requestPermissions(storagePermission,STORAGE_REQUEST);
-        }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissions(storagePermission,STORAGE_REQUEST);
+            }
     }
 
     private void sendMessage(final String message) {

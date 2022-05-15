@@ -27,10 +27,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.social_media_app.CommentPost;
 import com.example.social_media_app.Models.ModelPosts;
+import com.example.social_media_app.Other_Profile_Page;
 import com.example.social_media_app.PeopleWhoLiked;
 import com.example.social_media_app.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -48,8 +50,6 @@ import java.util.Locale;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
-
-
     private Context context;
     private String myuid;
     private DatabaseReference likeDatabaseReference, postDatabaseReference;
@@ -94,8 +94,8 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
         holder.name.setText(mName);
         holder.description.setText(mDescription);
         holder.time.setText(timedate);
-        holder.likes.setText(mPostLikes + " Likes");
-        holder.comments.setText(mPostComments + " Comments");
+        holder.likes.setText(mPostLikes);
+        holder.comments.setText(mPostComments + " comments");
 
         setLikes(holder, mPostTime);
 
@@ -169,9 +169,27 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
         holder.commentBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, CommentPost.class);
+                Intent intent = new Intent(holder.itemView.getContext(), CommentPost.class);
                 intent.putExtra("pid", mPostTime);
-                context.startActivity(intent);
+                holder.itemView.getContext().startActivity(intent);
+            }
+        });
+
+        holder.avatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent profileIntent = new Intent(holder.itemView.getContext(), Other_Profile_Page.class);
+                profileIntent.putExtra("uid", uid);
+                holder.itemView.getContext().startActivity(profileIntent);
+            }
+        });
+
+        holder.name.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent profileIntent = new Intent(context, Other_Profile_Page.class);
+                profileIntent.putExtra("uid", uid);
+                holder.itemView.getContext().startActivity(profileIntent);
             }
         });
     }
@@ -218,7 +236,8 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
 
     private void deletePost(final String pid, String image) {
         final ProgressDialog progressDialog = new ProgressDialog(context);
-        progressDialog.setMessage("Deleting this post");
+        progressDialog.setMessage("Deleting this post...");
+        progressDialog.show();
 
         StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(image);
 
@@ -284,23 +303,23 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
         ImageView image;
         TextView name, time, description, likes, comments;
         ImageButton moreBtn;
-        Button likeBtn, commentBtn;
+        MaterialButton likeBtn, commentBtn;
         LinearLayout profile;
 
         public MyHolder(@NonNull View itemView) {
             super(itemView);
 
-            avatar = itemView.findViewById(R.id.picturetv);
-            image = itemView.findViewById(R.id.pimagetv);
-            name = itemView.findViewById(R.id.unametv);
-            time = itemView.findViewById(R.id.utimetv);
-            moreBtn = itemView.findViewById(R.id.btnMore);
-            description = itemView.findViewById(R.id.descript);
-            likes = itemView.findViewById(R.id.plikeb);
-            comments = itemView.findViewById(R.id.pcommentco);
-            likeBtn = itemView.findViewById(R.id.btnLike);
-            commentBtn = itemView.findViewById(R.id.btnComment);
-            profile = itemView.findViewById(R.id.profilelayout);
+            avatar = (CircleImageView) itemView.findViewById(R.id.picturetv);
+            image = (ImageView) itemView.findViewById(R.id.pimagetv);
+            name = (TextView) itemView.findViewById(R.id.unametv);
+            time = (TextView) itemView.findViewById(R.id.utimetv);
+            description = (TextView) itemView.findViewById(R.id.descript);
+            likes = (TextView) itemView.findViewById(R.id.plikeb);
+            comments = (TextView) itemView.findViewById(R.id.pcommentco);
+            moreBtn = (ImageButton) itemView.findViewById(R.id.btnMore);
+            likeBtn = (MaterialButton) itemView.findViewById(R.id.btnLike);
+            commentBtn = (MaterialButton) itemView.findViewById(R.id.btnComment);
+            profile = (LinearLayout) itemView.findViewById(R.id.profilelayout);
         }
     }
 }

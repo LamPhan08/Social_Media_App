@@ -524,12 +524,13 @@ public class EditProfilePage extends AppCompatActivity {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
-                    while (!uriTask.isSuccessful()) ;
+                    while (!uriTask.isSuccessful());
 
                     final Uri downloadUri = uriTask.getResult();
                     if (uriTask.isSuccessful()) {
                         HashMap<String, Object> userNameHashMap = new HashMap<>();
                         userNameHashMap.put(profileOrCoverPhoto, downloadUri.toString());
+
                         usersReference.child(firebaseUser.getUid()).updateChildren(userNameHashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {

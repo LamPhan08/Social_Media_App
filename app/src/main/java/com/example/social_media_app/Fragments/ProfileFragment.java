@@ -16,11 +16,14 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.social_media_app.Adapters.AdapterPosts;
 import com.example.social_media_app.EditProfilePage;
 import com.example.social_media_app.LoginActivity;
+import com.example.social_media_app.Models.ModelPosts;
 import com.example.social_media_app.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -31,6 +34,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -49,6 +54,11 @@ public class ProfileFragment extends Fragment {
     private TextView name, email;
     private FloatingActionButton editProfile;
     private ProgressDialog progressDialog;
+    private RecyclerView postRecyclerView;
+    private ArrayList<ModelPosts> modelPostsArrayList;
+    private AdapterPosts adapterPosts;
+
+    private String uid;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -72,6 +82,13 @@ public class ProfileFragment extends Fragment {
         name = (TextView) view.findViewById(R.id.nametv);
         email = (TextView) view.findViewById(R.id.emailtv);
         editProfile = (FloatingActionButton) view.findViewById(R.id.fab);
+        postRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerPosts);
+
+        uid = FirebaseAuth.getInstance().getUid();
+        modelPostsArrayList = new ArrayList<>();
+
+        loadMyPosts();
+
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage("Logging out...");
         progressDialog.setCanceledOnTouchOutside(false);
@@ -113,6 +130,39 @@ public class ProfileFragment extends Fragment {
             }
         });
         return view;
+    }
+
+    private void loadMyPosts() {
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        layoutManager.setReverseLayout(true);
+        layoutManager.setStackFromEnd(true);
+
+        postRecyclerView.setLayoutManager(layoutManager);
+
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Posts");
+        Query query = databaseReference.orderByChild("uid").equalTo(uid);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                modelPostsArrayList.clear();
+
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                    ModelPosts modelPost = dataSnapshot1.getValue(ModelPosts.class);
+
+                    modelPostsArrayList.add(modelPost);
+
+                    adapterPosts = new AdapterPosts(getActivity(), modelPostsArrayList);
+
+                    postRecyclerView.setAdapter(adapterPosts);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                Toast.makeText(getActivity(), databaseError.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     @Override

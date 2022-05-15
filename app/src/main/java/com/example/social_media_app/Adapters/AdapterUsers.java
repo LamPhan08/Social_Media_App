@@ -60,7 +60,7 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder> {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, Other_Profile_Page.class);
-                intent.putExtra("uid",hisuid);
+                intent.putExtra("uid", hisuid);
                 context.startActivity(intent);
             }
         });

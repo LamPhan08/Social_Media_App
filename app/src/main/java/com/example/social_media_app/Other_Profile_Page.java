@@ -3,14 +3,19 @@ package com.example.social_media_app;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.social_media_app.Adapters.AdapterPosts;
+import com.example.social_media_app.Models.ModelPosts;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -20,6 +25,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -34,6 +41,9 @@ public class Other_Profile_Page extends AppCompatActivity {
     private FloatingActionButton btnChat;
     private String uid;
     private ActionBar actionBar;
+    private ArrayList<ModelPosts> modelPostsArrayList;
+    private AdapterPosts adapterPosts;
+    private RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,8 +63,17 @@ public class Other_Profile_Page extends AppCompatActivity {
         name = (TextView) findViewById(R.id.otherNameTV);
         email = (TextView) findViewById(R.id.otherEmailTV);
         btnChat = (FloatingActionButton) findViewById(R.id.chatButton);
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerPostsOtherProfile);
 
         uid = getIntent().getStringExtra("uid");
+
+        modelPostsArrayList = new ArrayList<>();
+
+        loadOthersPosts();
+
+        if (firebaseUser.getUid().equals(uid)) {
+            btnChat.setVisibility(View.GONE);
+        }
 
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("Users");
@@ -95,6 +114,39 @@ public class Other_Profile_Page extends AppCompatActivity {
                 Intent chatIntent = new Intent(Other_Profile_Page.this, ChatActivity.class);
                 chatIntent.putExtra("UID", uid);
                 startActivity(chatIntent);
+            }
+        });
+    }
+
+    private void loadOthersPosts() {
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setReverseLayout(true);
+        layoutManager.setStackFromEnd(true);
+
+        recyclerView.setLayoutManager(layoutManager);
+
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Posts");
+        Query query = databaseReference.orderByChild("uid").equalTo(uid);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                modelPostsArrayList.clear();
+
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                    ModelPosts modelPost = dataSnapshot1.getValue(ModelPosts.class);
+
+                    modelPostsArrayList.add(modelPost);
+
+                    adapterPosts = new AdapterPosts(Other_Profile_Page.this, modelPostsArrayList);
+
+                    recyclerView.setAdapter(adapterPosts);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                Toast.makeText(Other_Profile_Page.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
