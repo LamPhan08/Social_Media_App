@@ -17,6 +17,7 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.format.DateFormat;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -84,7 +85,6 @@ public class ChatActivity extends AppCompatActivity {
     private String uid, myuid, avatar;
     private List<ModelChat> chatList;
     private AdapterChat adapterChat;
-    private ActionBar actionBar;
 
     private static final int IMAGEPICK_GALLERY_REQUEST = 300;
     private static final int IMAGE_PICKCAMERA_REQUEST = 400;
@@ -104,9 +104,7 @@ public class ChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
-        actionBar = getSupportActionBar();
-        actionBar.setTitle("Chat");
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().hide();
 
         firebaseAuth = FirebaseAuth.getInstance();
 
@@ -116,8 +114,10 @@ public class ChatActivity extends AppCompatActivity {
         msg = (EditText) findViewById(R.id.messageType);
         sendMessage = (ImageButton) findViewById(R.id.sendmsg);
         sendImages = (ImageButton) findViewById(R.id.attachbtn);
+
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setStackFromEnd(true);
+
         recyclerView = (RecyclerView) findViewById(R.id.chatrecycle);
 
         recyclerView.setHasFixedSize(true);
@@ -130,6 +130,7 @@ public class ChatActivity extends AppCompatActivity {
 
         checkUserStatus();
         users = firebaseDatabase.getReference("Users");
+
 
 
         sendImages.setOnClickListener(new View.OnClickListener() {
@@ -169,7 +170,7 @@ public class ChatActivity extends AppCompatActivity {
                         userstatus.setText("Typing....");
                     }
                     else {
-                        if (onlinestatus.equals("online")) {
+                        if (onlinestatus.equals("Online")) {
                             userstatus.setText(onlinestatus);
                         }
                         else {
@@ -400,7 +401,7 @@ public class ChatActivity extends AppCompatActivity {
                     hashMap.put("timeStamp",timestamp);
                     hashMap.put("type","images");
 
-                    databaseReference.child("Comments").push().setValue(hashMap);
+                    databaseReference.child("Chats").push().setValue(hashMap);
 
                     final DatabaseReference ref1 = FirebaseDatabase.getInstance().getReference("ChatList").child(uid).child(myuid);
 

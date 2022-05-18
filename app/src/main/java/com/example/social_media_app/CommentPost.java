@@ -247,7 +247,7 @@ public class CommentPost extends AppCompatActivity {
                 String downloadUri = uriTask.getResult().toString();
 
                 if (uriTask.isSuccessful()) {
-                    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Posts").child(postId).child("Comments");
+                    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Comments");
 
                     HashMap<String,Object> hashMap = new HashMap<>();
 
@@ -255,6 +255,7 @@ public class CommentPost extends AppCompatActivity {
                     hashMap.put("comment", "");
                     hashMap.put("commentTime", timeStamp);
                     hashMap.put("uid", myUid);
+                    hashMap.put("postId", postId);
                     hashMap.put("imageComment", downloadUri);
                     hashMap.put("commentUserEmail", myEmail);
                     hashMap.put("commentUserAvatar", myAvatar);
@@ -338,7 +339,7 @@ public class CommentPost extends AppCompatActivity {
 
         modelCommentsList = new ArrayList<>();
 
-        DatabaseReference commentDatabase = FirebaseDatabase.getInstance().getReference("Posts").child(postId).child("Comments");
+        DatabaseReference commentDatabase = FirebaseDatabase.getInstance().getReference("Comments");
 
         commentDatabase.addValueEventListener(new ValueEventListener() {
             @Override
@@ -347,9 +348,10 @@ public class CommentPost extends AppCompatActivity {
 
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                     ModelComments modelComments = dataSnapshot1.getValue(ModelComments.class);
+
                     modelCommentsList.add(modelComments);
 
-                    adapterComment = new AdapterComments(getApplicationContext(), modelCommentsList, myUid, postId);
+                    adapterComment = new AdapterComments(CommentPost.this, modelCommentsList, myUid, postId);
 
                     recyclerView.setAdapter(adapterComment);
                 }
@@ -427,12 +429,13 @@ public class CommentPost extends AppCompatActivity {
 
         String timeStamp = String.valueOf(System.currentTimeMillis());
 
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Posts").child(postId).child("Comments");
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Comments");
 
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("commentId", timeStamp);
         hashMap.put("comment", mComments);
         hashMap.put("commentTime", timeStamp);
+        hashMap.put("postId", postId);
         hashMap.put("uid", myUid);
         hashMap.put("commentUserEmail", myEmail);
         hashMap.put("commentUserAvatar", myAvatar);
@@ -520,7 +523,13 @@ public class CommentPost extends AppCompatActivity {
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                     postLikes = dataSnapshot1.child("postLikes").getValue().toString();
 
-                    like.setText(postLikes);
+                    if (postLikes.equals("0")) {
+                        like.setVisibility(View.INVISIBLE);
+                    }
+                    else {
+                        like.setVisibility(View.VISIBLE);
+                        like.setText(postLikes);
+                    }
                 }
             }
 

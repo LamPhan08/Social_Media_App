@@ -94,8 +94,24 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
         holder.name.setText(mName);
         holder.description.setText(mDescription);
         holder.time.setText(timedate);
-        holder.likes.setText(mPostLikes);
-        holder.comments.setText(mPostComments + " comments");
+
+        if (mPostLikes.equals("0")) {
+            holder.likes.setVisibility(View.INVISIBLE);
+        }
+        else {
+            holder.likes.setVisibility(View.VISIBLE);
+            holder.likes.setText(mPostLikes);
+        }
+
+        if (mPostComments.equals("0")) {
+            holder.comments.setText("");
+        }
+        else if (mPostComments.equals("1")) {
+            holder.comments.setText(mPostComments + " comment");
+        }
+        else {
+            holder.comments.setText(mPostComments + " comments");
+        }
 
         setLikes(holder, mPostTime);
 
@@ -159,10 +175,14 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
             }
         });
 
+        if (!myuid.equals(uid)) {
+            holder.moreBtn.setVisibility(View.GONE);
+        }
+
         holder.moreBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showMoreOptions(holder.moreBtn, uid, myuid, mPostTime, mPostImage);
+                showMoreOptions(holder.moreBtn, mPostTime, mPostImage);
             }
         });
 
@@ -187,19 +207,26 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
         holder.name.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent profileIntent = new Intent(context, Other_Profile_Page.class);
+                Intent profileIntent = new Intent(holder.itemView.getContext(), Other_Profile_Page.class);
                 profileIntent.putExtra("uid", uid);
                 holder.itemView.getContext().startActivity(profileIntent);
             }
         });
+
+        holder.comments.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent commentIntent = new Intent(holder.itemView.getContext(), CommentPost.class);
+                commentIntent.putExtra("pid", mPostTime);
+                holder.itemView.getContext().startActivity(commentIntent);
+            }
+        });
     }
 
-    private void showMoreOptions(ImageButton more, String uid, String myuid, final String pid, final String image) {
+    private void showMoreOptions(ImageButton more, final String pid, final String image) {
         PopupMenu popupMenu = new PopupMenu(context, more, Gravity.END);
 
-        if (uid.equals(myuid)) {
-            popupMenu.getMenu().add(Menu.NONE, 0, 0, "Delete this post");
-        }
+        popupMenu.getMenu().add(Menu.NONE, 0, 0, "Delete this post");
 
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
@@ -239,36 +266,58 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
         progressDialog.setMessage("Deleting this post...");
         progressDialog.show();
 
-        StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(image);
+        if (image.equals("")) {
+            Query query = FirebaseDatabase.getInstance().getReference("Posts").orderByChild("postTime").equalTo(pid);
 
-        storageReference.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                Query query = FirebaseDatabase.getInstance().getReference("Posts").orderByChild("postTime").equalTo(pid);
+            query.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                        dataSnapshot1.getRef().removeValue();
+                    }
 
-                query.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                            dataSnapshot1.getRef().removeValue();
+                    progressDialog.dismiss();
+                    Toast.makeText(context, "Delete successfully!", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+        }
+        else {
+            StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(image);
+
+            storageReference.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    Query query = FirebaseDatabase.getInstance().getReference("Posts").orderByChild("postTime").equalTo(pid);
+
+                    query.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                                dataSnapshot1.getRef().removeValue();
+                            }
+
+                            progressDialog.dismiss();
+                            Toast.makeText(context, "Delete successfully!", Toast.LENGTH_SHORT).show();
                         }
 
-                        progressDialog.dismiss();
-                        Toast.makeText(context, "Delete successfully!", Toast.LENGTH_SHORT).show();
-                    }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        }
+                    });
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
 
-                    }
-                });
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-
-            }
-        });
+                }
+            });
+        }
     }
 
     private void setLikes(final MyHolder holder, final String pid) {
@@ -279,7 +328,8 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
                 if (dataSnapshot.child(pid).hasChild(myuid)) {
                     holder.likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_liked, 0, 0, 0);
                     holder.likeBtn.setText("Liked");
-                } else {
+                }
+                else {
                     holder.likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like, 0, 0, 0);
                     holder.likeBtn.setText("Like");
                 }
@@ -317,9 +367,9 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
             likes = (TextView) itemView.findViewById(R.id.plikeb);
             comments = (TextView) itemView.findViewById(R.id.pcommentco);
             moreBtn = (ImageButton) itemView.findViewById(R.id.btnMore);
+            profile = (LinearLayout) itemView.findViewById(R.id.profilelayout);
             likeBtn = (MaterialButton) itemView.findViewById(R.id.btnLike);
             commentBtn = (MaterialButton) itemView.findViewById(R.id.btnComment);
-            profile = (LinearLayout) itemView.findViewById(R.id.profilelayout);
         }
     }
 }

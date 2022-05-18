@@ -1,16 +1,17 @@
 package com.example.social_media_app.Models;
 
 public class ModelComments {
-    String uid, comment, commentId, imageComment, commentTime, commentUserAvatar, commentUserName, commentUserEmail;
+    String uid, comment, commentId, postId, imageComment, commentTime, commentUserAvatar, commentUserName, commentUserEmail;
 
     public ModelComments() {
 
     }
 
-    public ModelComments(String uid, String comment, String commentId, String imageComment, String commentTime, String commentUserAvatar, String commentUserName, String commentUserEmail) {
+    public ModelComments(String uid, String comment, String commentId, String postId, String imageComment, String commentTime, String commentUserAvatar, String commentUserName, String commentUserEmail) {
         this.uid = uid;
         this.comment = comment;
         this.commentId = commentId;
+        this.postId = postId;
         this.imageComment = imageComment;
         this.commentTime = commentTime;
         this.commentUserAvatar = commentUserAvatar;
@@ -32,6 +33,14 @@ public class ModelComments {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public String getPostId() {
+        return postId;
+    }
+
+    public void setPostId(String postId) {
+        this.postId = postId;
     }
 
     public String getCommentId() {

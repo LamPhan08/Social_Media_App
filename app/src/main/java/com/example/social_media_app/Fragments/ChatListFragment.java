@@ -192,10 +192,10 @@ public class ChatListFragment extends Fragment {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 if (!TextUtils.isEmpty(query.trim())) {
-                    searchUsers(query);
+                    searchChats(query);
                 }
                 else {
-                    getAllUsers();
+                    getAllChats();
                 }
 
                 return false;
@@ -204,10 +204,10 @@ public class ChatListFragment extends Fragment {
             @Override
             public boolean onQueryTextChange(String newText) {
                 if (!TextUtils.isEmpty(newText.trim())) {
-                    searchUsers(newText);
+                    searchChats(newText);
                 }
                 else {
-                    getAllUsers();
+                    getAllChats();
                 }
 
                 return false;
@@ -217,7 +217,7 @@ public class ChatListFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-    private void searchUsers(String query) {
+    private void searchChats(String query) {
         final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
@@ -249,7 +249,7 @@ public class ChatListFragment extends Fragment {
         });
     }
 
-    private void getAllUsers() {
+    private void getAllChats() {
         final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");

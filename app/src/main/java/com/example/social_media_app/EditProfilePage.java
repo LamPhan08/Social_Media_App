@@ -50,6 +50,7 @@ import com.google.firebase.storage.UploadTask;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -59,6 +60,8 @@ public class EditProfilePage extends AppCompatActivity {
     private FirebaseUser firebaseUser;
     private FirebaseDatabase usersDatabase;
     private FirebaseDatabase postDatabase;
+    private FirebaseDatabase commentsDatabase;
+    private DatabaseReference commentsReference;
     private DatabaseReference usersReference;
     private DatabaseReference postReference;
     private StorageReference storageReference;
@@ -102,10 +105,12 @@ public class EditProfilePage extends AppCompatActivity {
         firebaseUser = firebaseAuth.getCurrentUser();
         uid = firebaseUser.getUid();
         usersDatabase = FirebaseDatabase.getInstance();
+        commentsDatabase = FirebaseDatabase.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
         postDatabase = FirebaseDatabase.getInstance();
         usersReference = usersDatabase.getReference("Users");
         postReference = postDatabase.getReference("Posts");
+        commentsReference = commentsDatabase.getReference("Comments");
         cameraPermission = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
         storagePermission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
@@ -139,7 +144,7 @@ public class EditProfilePage extends AppCompatActivity {
         editpassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                progressDialog.setMessage("Changing Password");
+                progressDialog.setMessage("Changing Password...");
                 showPasswordChangeDailog();
             }
         });
@@ -147,7 +152,7 @@ public class EditProfilePage extends AppCompatActivity {
         editAvatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                progressDialog.setMessage("Updating Avatar");
+                progressDialog.setMessage("Updating Profile Picture...");
                 profileOrCoverPhoto = "avatar";
                 update = 0;
                 showImagePicDialog();
@@ -157,7 +162,7 @@ public class EditProfilePage extends AppCompatActivity {
         editCover.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                progressDialog.setMessage("Updating Cover Photo");
+                progressDialog.setMessage("Updating Cover Photo...");
                 profileOrCoverPhoto = "cover";
                 update = 1;
                 showImagePicDialog();
@@ -167,7 +172,7 @@ public class EditProfilePage extends AppCompatActivity {
         editname.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                progressDialog.setMessage("Updating Name");
+                progressDialog.setMessage("Updating Name...");
                 showNameUpdate("name");
             }
         });
@@ -220,7 +225,9 @@ public class EditProfilePage extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+
         Query query = usersReference.orderByChild("email").equalTo(firebaseUser.getEmail());
+
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -312,15 +319,18 @@ public class EditProfilePage extends AppCompatActivity {
 
     // Now we will check that if old password was authenticated
     // correctly then we will update the new password
-    private void updatePassword(String oldp, final String newp) {
+    private void updatePassword(String oldpass, final String newpass) {
         progressDialog.show();
+
         final FirebaseUser user = firebaseAuth.getCurrentUser();
-        AuthCredential authCredential = EmailAuthProvider.getCredential(user.getEmail(), oldp);
+
+        AuthCredential authCredential = EmailAuthProvider.getCredential(user.getEmail(), oldpass);
+
         user.reauthenticate(authCredential)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        user.updatePassword(newp)
+                        user.updatePassword(newpass)
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
@@ -368,6 +378,7 @@ public class EditProfilePage extends AppCompatActivity {
                     // Here we are updating the new name
                     HashMap<String, Object> result = new HashMap<>();
                     result.put(key, value);
+
                     usersReference.child(firebaseUser.getUid()).updateChildren(result).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
@@ -384,26 +395,43 @@ public class EditProfilePage extends AppCompatActivity {
                         }
                     });
 
-                    HashMap<String, Object> hashMap = new HashMap<>();
-                    hashMap.put("userName", value);
+                    HashMap<String, Object> postHashMap = new HashMap<>();
+                    postHashMap.put("userName", value);
 
-                    if (key.equals("name")) {
-                        Query query = postReference.orderByChild("uid").equalTo(uid);
+                    Query postQuery = postReference.orderByChild("uid").equalTo(uid);
 
-                        query.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                                    dataSnapshot1.getRef().updateChildren(hashMap);
-                                }
+                    postQuery.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                                dataSnapshot1.getRef().updateChildren(postHashMap);
                             }
+                        }
 
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
 
+                        }
+                    });
+
+                    HashMap<String, Object> commentHashMap = new HashMap<>();
+                    commentHashMap.put("commentUserName", value);
+
+                    Query commentQuery = commentsReference.orderByChild("uid").equalTo(uid);
+
+                    commentQuery.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                dataSnapshot.getRef().updateChildren(commentHashMap);
                             }
-                        });
-                    }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
                 } else {
                     Toast.makeText(EditProfilePage.this, "Unable to update!", Toast.LENGTH_SHORT).show();
                 }
@@ -560,6 +588,25 @@ public class EditProfilePage extends AppCompatActivity {
 
                             @Override
                             public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+
+                        HashMap<String, Object> commentHashMap = new HashMap<>();
+                        commentHashMap.put("commentUserAvatar", downloadUri.toString());
+
+                        Query commentQuery = commentsReference.orderByChild("uid").equalTo(uid);
+
+                        commentQuery.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                    dataSnapshot.getRef().updateChildren(commentHashMap);
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
 
                             }
                         });

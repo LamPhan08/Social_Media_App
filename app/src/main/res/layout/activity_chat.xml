@@ -88,7 +88,6 @@
             android:background="@drawable/type_chat"
             android:hint="Type here..."
             android:inputType="textCapSentences|textMultiLine"
-            android:drawableRight="@drawable/ic_emoji_emotions"
             android:padding="15dp"/>
 
         <ImageButton

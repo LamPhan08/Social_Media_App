@@ -134,6 +134,7 @@ public class CreatePostFragment extends Fragment {
                 showImagePicDialog();
             }
         });
+
         upload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -141,20 +142,17 @@ public class CreatePostFragment extends Fragment {
                 String mDescription = "" + description.getText().toString().trim();
 
                 if (TextUtils.isEmpty(mDescription)) {
-                    description.setError("Description can not be empty!");
-                    Toast.makeText(getContext(), "Description can not be empty!", Toast.LENGTH_SHORT).show();
-
-                    return;
+                    if (imageuri == null) {
+                        return;
+                    }
+                    else {
+                        uploadData(mDescription);
+                    }
                 }
-
-                if (imageuri == null) {
-                    Toast.makeText(getContext(), "Select an image", Toast.LENGTH_SHORT).show();
-
-                    return;
-                }
-                else{
+                else {
                     uploadData(mDescription);
                 }
+
             }
         });
 
@@ -273,79 +271,122 @@ public class CreatePostFragment extends Fragment {
     }
 
     private void uploadData(final String mDescription) {
-        progressDialog.setMessage("Publishing Post");
-        progressDialog.show();
+        if (imageuri == null && !TextUtils.isEmpty(mDescription)) {
+            progressDialog.setMessage("Posting...");
+            progressDialog.show();
 
-        final String timeStamp = String.valueOf(System.currentTimeMillis());
-        String filepathname = "Posts/" + "post" + timeStamp;
+            final String timeStamp = String.valueOf(System.currentTimeMillis());
 
-        Bitmap bitmap = ((BitmapDrawable)image.getDrawable()).getBitmap();
+            HashMap<Object, String> hashMap = new HashMap<>();
+            hashMap.put("uid", uid);
+            hashMap.put("userName", name);
+            hashMap.put("userEmail", email);
+            hashMap.put("userAvatar", avatar);
+            hashMap.put("description", mDescription);
+            hashMap.put("title", name + " updated status");
+            hashMap.put("postImage", "");
+            hashMap.put("postTime", timeStamp);
+            hashMap.put("postLikes", "0");
+            hashMap.put("postComments", "0");
 
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Posts");
 
-        bitmap.compress(Bitmap.CompressFormat.PNG,100,byteArrayOutputStream);
-        byte[] data = byteArrayOutputStream.toByteArray();
-
-        StorageReference storageReference= FirebaseStorage.getInstance().getReference().child(filepathname);
-
-        storageReference.putBytes(data).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
-                while (!uriTask.isSuccessful());
-
-                String downloadUri = uriTask.getResult().toString();
-
-                if(uriTask.isSuccessful()){
-                    HashMap<Object,String > hashMap = new HashMap<>();
-                    hashMap.put("uid", uid);
-                    hashMap.put("userName", name);
-                    hashMap.put("userEmail", email);
-                    hashMap.put("userAvatar", avatar);
-                    hashMap.put("description", mDescription);
-                    hashMap.put("postImage", downloadUri);
-                    hashMap.put("postTime", timeStamp);
-                    hashMap.put("postLikes", "0");
-                    hashMap.put("postComments", "0");
-
-                    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Posts");
-
-                    databaseReference.child(timeStamp).setValue(hashMap)
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    progressDialog.dismiss();
-                                    Toast.makeText(getContext(),"Published",Toast.LENGTH_SHORT).show();
-
-                                    description.setText("");
-
-                                    image.setImageURI(null);
-                                    imageuri = null;
-
-                                    startActivity(new Intent(getContext(), DashboardActivity.class));
-
-                                    getActivity().finish();
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
+            databaseReference.child(timeStamp).setValue(hashMap)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
-                        public void onFailure(@NonNull Exception e) {
+                        public void onSuccess(Void aVoid) {
                             progressDialog.dismiss();
-                            Toast.makeText(getContext(),"Failed",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "Posted!", Toast.LENGTH_SHORT).show();
+
+                            description.setText("");
+
+                            startActivity(new Intent(getContext(), DashboardActivity.class));
+
+                            getActivity().finish();
                         }
-                    });
+                    }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    progressDialog.dismiss();
+                    Toast.makeText(getContext(), "Failed", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+        else if ((imageuri != null && !TextUtils.isEmpty(mDescription)) || (imageuri != null && TextUtils.isEmpty(mDescription))) {
+            progressDialog.setMessage("Posting...");
+            progressDialog.show();
+
+            final String timeStamp = String.valueOf(System.currentTimeMillis());
+            String filepathname = "Posts/" + "post" + timeStamp;
+
+            Bitmap bitmap = ((BitmapDrawable) image.getDrawable()).getBitmap();
+
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+            byte[] data = byteArrayOutputStream.toByteArray();
+
+            StorageReference storageReference = FirebaseStorage.getInstance().getReference().child(filepathname);
+
+            storageReference.putBytes(data).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
+
+                    while (!uriTask.isSuccessful()) ;
+
+                    String downloadUri = uriTask.getResult().toString();
+
+                    if (uriTask.isSuccessful()) {
+                        HashMap<Object, String> hashMap = new HashMap<>();
+                        hashMap.put("uid", uid);
+                        hashMap.put("userName", name);
+                        hashMap.put("userEmail", email);
+                        hashMap.put("userAvatar", avatar);
+                        hashMap.put("description", mDescription);
+                        hashMap.put("title", name + " updated status");
+                        hashMap.put("postImage", downloadUri);
+                        hashMap.put("postTime", timeStamp);
+                        hashMap.put("postLikes", "0");
+                        hashMap.put("postComments", "0");
+
+                        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Posts");
+
+                        databaseReference.child(timeStamp).setValue(hashMap)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        progressDialog.dismiss();
+                                        Toast.makeText(getContext(), "Posted!", Toast.LENGTH_SHORT).show();
+
+                                        description.setText("");
+
+                                        image.setImageURI(null);
+                                        imageuri = null;
+
+                                        startActivity(new Intent(getContext(), DashboardActivity.class));
+
+                                        getActivity().finish();
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                progressDialog.dismiss();
+                                Toast.makeText(getContext(), "Failed", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
+                    }
 
                 }
-
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                progressDialog.dismiss();
-                Toast.makeText(getContext(),"Failed",Toast.LENGTH_SHORT).show();
-            }
-        });
-
-
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    progressDialog.dismiss();
+                    Toast.makeText(getContext(), "Failed", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 
     @Override
