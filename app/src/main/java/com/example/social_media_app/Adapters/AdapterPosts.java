@@ -157,6 +157,7 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
                                 postDatabaseReference.child(postid).child("postLikes").setValue("" + (plike - 1));
                                 likeDatabaseReference.child(postid).child(myuid).removeValue();
 
+
                                 mprocesslike = false;
                             } else {
                                 postDatabaseReference.child(postid).child("postLikes").setValue("" + (plike + 1));
@@ -276,6 +277,8 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
                         dataSnapshot1.getRef().removeValue();
                     }
 
+                    notifyDataSetChanged();
+
                     progressDialog.dismiss();
                     Toast.makeText(context, "Delete successfully!", Toast.LENGTH_SHORT).show();
                 }
@@ -301,6 +304,8 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
                                 dataSnapshot1.getRef().removeValue();
                             }
 
+                            notifyDataSetChanged();
+
                             progressDialog.dismiss();
                             Toast.makeText(context, "Delete successfully!", Toast.LENGTH_SHORT).show();
                         }
@@ -318,6 +323,7 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
                 }
             });
         }
+
     }
 
     private void setLikes(final MyHolder holder, final String pid) {
@@ -354,7 +360,6 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
         TextView name, time, description, likes, comments;
         ImageButton moreBtn;
         MaterialButton likeBtn, commentBtn;
-        LinearLayout profile;
 
         public MyHolder(@NonNull View itemView) {
             super(itemView);
@@ -367,9 +372,8 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
             likes = (TextView) itemView.findViewById(R.id.plikeb);
             comments = (TextView) itemView.findViewById(R.id.pcommentco);
             moreBtn = (ImageButton) itemView.findViewById(R.id.btnMore);
-            profile = (LinearLayout) itemView.findViewById(R.id.profilelayout);
             likeBtn = (MaterialButton) itemView.findViewById(R.id.btnLike);
             commentBtn = (MaterialButton) itemView.findViewById(R.id.btnComment);
         }
-    }
+    }   
 }

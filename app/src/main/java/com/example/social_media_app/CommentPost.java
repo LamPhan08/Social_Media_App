@@ -341,7 +341,9 @@ public class CommentPost extends AppCompatActivity {
 
         DatabaseReference commentDatabase = FirebaseDatabase.getInstance().getReference("Comments");
 
-        commentDatabase.addValueEventListener(new ValueEventListener() {
+        Query query = commentDatabase.orderByChild("postId").equalTo(postId);
+
+        query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 modelCommentsList.clear();

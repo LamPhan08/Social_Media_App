@@ -283,7 +283,6 @@ public class CreatePostFragment extends Fragment {
             hashMap.put("userEmail", email);
             hashMap.put("userAvatar", avatar);
             hashMap.put("description", mDescription);
-            hashMap.put("title", name + " updated status");
             hashMap.put("postImage", "");
             hashMap.put("postTime", timeStamp);
             hashMap.put("postLikes", "0");
@@ -344,7 +343,6 @@ public class CreatePostFragment extends Fragment {
                         hashMap.put("userEmail", email);
                         hashMap.put("userAvatar", avatar);
                         hashMap.put("description", mDescription);
-                        hashMap.put("title", name + " updated status");
                         hashMap.put("postImage", downloadUri);
                         hashMap.put("postTime", timeStamp);
                         hashMap.put("postLikes", "0");

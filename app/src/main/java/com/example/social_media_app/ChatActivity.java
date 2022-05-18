@@ -205,12 +205,12 @@ public class ChatActivity extends AppCompatActivity {
         super.onPause();
         String timestamp = String.valueOf(System.currentTimeMillis());
         checkOnlineStatus(timestamp);
-        checkTypingStatus("noOne");
+        checkTypingStatus("No One");
     }
 
     @Override
     protected void onResume() {
-        checkOnlineStatus("online");
+        checkOnlineStatus("Online");
         super.onResume();
     }
 
@@ -237,7 +237,7 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         checkUserStatus();
-        checkOnlineStatus("online");
+        checkOnlineStatus("Online");
         super.onStart();
     }
 
@@ -538,20 +538,11 @@ public class ChatActivity extends AppCompatActivity {
         });
     }
 
-//    @Override
-//    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-//        if(item.getItemId()==R.id.logout){
-//            firebaseAuth.signOut();
-//            checkUserStatus();
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
-
     private void checkUserStatus() {
         FirebaseUser user = firebaseAuth.getCurrentUser();
 
-        if (user!=null) {
-            myuid=user.getUid();
+        if (user != null) {
+            myuid = user.getUid();
         }
     }
 }

@@ -139,6 +139,8 @@ public class AdapterChat extends RecyclerView.Adapter<AdapterChat.Myholder>{
                     if(dataSnapshot1.child("sender").getValue().equals(myuid)) {
                         dataSnapshot1.getRef().removeValue();
 
+                        notifyDataSetChanged();
+
                         Toast.makeText(context,"Message Deleted!",Toast.LENGTH_SHORT).show();
                     }
                     else {

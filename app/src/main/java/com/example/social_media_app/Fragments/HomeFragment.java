@@ -43,8 +43,6 @@ import java.util.List;
  */
 public class HomeFragment extends Fragment {
 
-    private FirebaseAuth firebaseAuth;
-    private String myuid;
     private RecyclerView recyclerView;
     private ArrayList<ModelPosts> modelPostsList;
     private AdapterPosts adapterPosts;
@@ -58,11 +56,8 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        loadPosts();
 
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-
-        firebaseAuth = FirebaseAuth.getInstance();
 
         recyclerView = (RecyclerView) view.findViewById(R.id.postRecyclerView);
         recyclerView.setHasFixedSize(true);
@@ -116,7 +111,7 @@ public class HomeFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_users,menu);
         MenuItem item=menu.findItem(R.id.search);
-        SearchView searchView=(SearchView) MenuItemCompat.getActionView(item);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {

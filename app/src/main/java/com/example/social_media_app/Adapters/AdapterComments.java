@@ -185,6 +185,8 @@ public class AdapterComments extends RecyclerView.Adapter<AdapterComments.MyHold
                         dataSnapshot1.getRef().removeValue();
                     }
 
+                    notifyDataSetChanged();
+
                     updateCommentsCount();
 
                     progressDialog.dismiss();
@@ -212,6 +214,8 @@ public class AdapterComments extends RecyclerView.Adapter<AdapterComments.MyHold
                             for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                                 dataSnapshot1.getRef().removeValue();
                             }
+
+                            notifyDataSetChanged();
 
                             updateCommentsCount();
 
