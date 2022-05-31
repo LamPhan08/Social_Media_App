@@ -17,11 +17,18 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 public class DashboardActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     private FirebaseUser user;
     private String myUID;
+    private DatabaseReference databaseReference;
     private BottomNavigationView bottomNavigationView;
     private ActionBar actionBar;
 
@@ -33,12 +40,20 @@ public class DashboardActivity extends AppCompatActivity {
 
     private static int currentFragment = -1;
 
+    private String myName;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
         currentFragment = homeFragment;
+
+        auth = FirebaseAuth.getInstance();
+
+        user = auth.getCurrentUser();
+
+        myUID = user.getUid();
 
         actionBar = getSupportActionBar();
         actionBar.setTitle("Home");
@@ -50,6 +65,24 @@ public class DashboardActivity extends AppCompatActivity {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.content, new HomeFragment());
         fragmentTransaction.commit();
+
+        databaseReference = FirebaseDatabase.getInstance().getReference("Users");
+
+        Query query = databaseReference.orderByChild("uid").equalTo(myUID);
+
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    myName = dataSnapshot.child("name").getValue().toString();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
@@ -68,7 +101,7 @@ public class DashboardActivity extends AppCompatActivity {
 
                     case R.id.menuProfile: {
                         if (currentFragment != profileFragment) {
-                            actionBar.setTitle("Profile");
+                            actionBar.setTitle(myName);
                             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                             transaction.replace(R.id.content, new ProfileFragment());
                             currentFragment = profileFragment;

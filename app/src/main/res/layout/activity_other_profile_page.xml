@@ -16,52 +16,49 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:id="@+id/otherCoverIV"
+                android:id="@+id/otherCoverPhoto"
                 android:layout_width="match_parent"
                 android:layout_height="180dp"
-                android:background="@color/colorPrimaryDark"
+                android:background="@color/colorGreen"
                 android:scaleType="fitXY"></ImageView>
 
             <LinearLayout
                 android:id="@+id/linearLayout"
                 android:layout_width="match_parent"
-                android:layout_height="120dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="100dp"
-                android:orientation="horizontal">
+                android:gravity="center"
+                android:orientation="vertical">
 
                 <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/otherAvatarIV"
+                    android:id="@+id/otherAvatarPicture"
                     android:layout_width="120dp"
                     android:layout_height="120dp"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginStart="20dp"
                     android:padding="5dp"
                     android:src="@drawable/profile_image" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="#77000000"
-                    android:orientation="vertical">
+                <TextView
+                    android:id="@+id/otherName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="5dp"
+                    android:text="Name"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="22dp"
+                    android:textStyle="bold" />
 
-                    <TextView
-                        android:id="@+id/otherNameTV"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginTop="5dp"
-                        android:textColor="@color/colorWhite"
-                        android:textSize="25sp" />
-
-                    <TextView
-                        android:id="@+id/otherEmailTV"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:layout_marginLeft="5dp"
-                        android:textColor="@color/colorWhite" />
-                </LinearLayout>
+                <TextView
+                    android:id="@+id/otherBio"
+                    android:layout_width="300dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="5dp"
+                    android:gravity="center"
+                    android:text="Biography"
+                    android:textSize="17dp"
+                    android:textStyle="bold" />
 
             </LinearLayout>
 

@@ -79,6 +79,7 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
         String mName = modelPosts.get(position).getUserName();
         String mEmail = modelPosts.get(position).getUserEmail();
         final String mDescription = modelPosts.get(position).getDescription();
+        String mTitle = modelPosts.get(position).getTitle();
         final String mPostTime = modelPosts.get(position).getPostTime();
         String mAvatar = modelPosts.get(position).getUserAvatar();
         String mPostLikes = modelPosts.get(position).getPostLikes();
@@ -94,6 +95,7 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
         holder.name.setText(mName);
         holder.description.setText(mDescription);
         holder.time.setText(timedate);
+        holder.title.setText(mTitle);
 
         if (mPostLikes.equals("0")) {
             holder.likes.setVisibility(View.INVISIBLE);
@@ -357,7 +359,7 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
     class MyHolder extends RecyclerView.ViewHolder {
         CircleImageView avatar;
         ImageView image;
-        TextView name, time, description, likes, comments;
+        TextView name, time, description, title, likes, comments;
         ImageButton moreBtn;
         MaterialButton likeBtn, commentBtn;
 
@@ -369,6 +371,7 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
             name = (TextView) itemView.findViewById(R.id.unametv);
             time = (TextView) itemView.findViewById(R.id.utimetv);
             description = (TextView) itemView.findViewById(R.id.descript);
+            title = (TextView) itemView.findViewById(R.id.postTitle);
             likes = (TextView) itemView.findViewById(R.id.plikeb);
             comments = (TextView) itemView.findViewById(R.id.pcommentco);
             moreBtn = (ImageButton) itemView.findViewById(R.id.btnMore);

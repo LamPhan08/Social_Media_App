@@ -131,7 +131,14 @@ public class ChatActivity extends AppCompatActivity {
         checkUserStatus();
         users = firebaseDatabase.getReference("Users");
 
-
+        profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(ChatActivity.this, Other_Profile_Page.class);
+                intent.putExtra("uid", uid);
+                startActivity(intent);
+            }
+        });
 
         sendImages.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -145,7 +152,7 @@ public class ChatActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String message = msg.getText().toString().trim();
                 if (TextUtils.isEmpty(message)) {
-                    Toast.makeText(ChatActivity.this,"Please Write Something Here",Toast.LENGTH_LONG).show();
+                    Toast.makeText(ChatActivity.this,"Please Write Something Here!",Toast.LENGTH_LONG).show();
                 }
                 else {
                     sendMessage(message);
@@ -371,7 +378,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private void sendImageMessage(Uri imageuri) throws IOException {
         final ProgressDialog dialog = new ProgressDialog(this);
-        dialog.setMessage("Sending Image");
+        dialog.setMessage("Sending Image...");
         dialog.show();
 
         final String timestamp = ""+System.currentTimeMillis();

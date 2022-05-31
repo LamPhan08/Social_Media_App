@@ -8,6 +8,8 @@ import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -48,6 +50,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -67,10 +70,10 @@ public class EditProfilePage extends AppCompatActivity {
     private StorageReference storageReference;
     private String avatarStorage = "Users_Profile_Image/";
     private String coverStorage = "Users_Cover_Image/";
-    private String uid;
+    private String uid, mName, mAvatar, mBio;
     private CircleImageView avatar;
     private ImageView cover;
-    private TextView editAvatar, editCover, editname, editpassword, name;
+    private TextView editAvatar, editCover, editname, editpassword, editBio, name, bio;
     private ProgressDialog progressDialog;
     private static final int CAMERA_REQUEST = 100;
     private static final int STORAGE_REQUEST = 200;
@@ -95,8 +98,10 @@ public class EditProfilePage extends AppCompatActivity {
         editAvatar = (TextView) findViewById(R.id.avatarEdit);
         editCover = (TextView) findViewById(R.id.coverEdit);
         editname = (TextView) findViewById(R.id.editname);
+        editBio = (TextView) findViewById(R.id.updateBio);
         editpassword = findViewById(R.id.changepassword);
         name = (TextView) findViewById(R.id.tvName);
+        bio = (TextView) findViewById(R.id.tvBio);
         avatar = (CircleImageView) findViewById(R.id.avatarPic);
         cover = (ImageView) findViewById(R.id.coverPic);
         progressDialog = new ProgressDialog(this);
@@ -121,11 +126,14 @@ public class EditProfilePage extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
 
-                    String mAvatar = "" + dataSnapshot1.child("avatar").getValue();
+                    mAvatar = "" + dataSnapshot1.child("avatar").getValue();
                     String mCover = "" + dataSnapshot1.child("cover").getValue();
-                    String mName = "" + dataSnapshot1.child("name").getValue();
+                    mName = "" + dataSnapshot1.child("name").getValue();
+                    mBio = "" + dataSnapshot1.child("bio").getValue();
 
                     name.setText(mName);
+                    bio.setText(mBio);
+
                     try {
                         Glide.with(EditProfilePage.this).load(mAvatar).into(avatar);
                         Glide.with(EditProfilePage.this).load(mCover).into(cover);
@@ -176,6 +184,70 @@ public class EditProfilePage extends AppCompatActivity {
                 showNameUpdate("name");
             }
         });
+
+        editBio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                progressDialog.setMessage("Updating Biography...");
+                showBioUpdate();
+            }
+        });
+    }
+
+    private void showBioUpdate() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Describe yourself...");
+
+        // creating a layout to update your biography
+        LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        layout.setPadding(10, 10, 10, 10);
+        final EditText editText = new EditText(this);
+        editText.setHint("What's new?");
+        layout.addView(editText);
+        builder.setView(layout);
+
+        builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                final String value = editText.getText().toString().trim();
+                if (!TextUtils.isEmpty(value)) {
+                    progressDialog.show();
+
+                    // Here we are updating the new name
+                    HashMap<String, Object> result = new HashMap<>();
+                    result.put("bio", value);
+
+                    usersReference.child(firebaseUser.getUid()).updateChildren(result).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            progressDialog.dismiss();
+
+                            // after updated we will show updated
+                            Toast.makeText(EditProfilePage.this, " Saved! ", Toast.LENGTH_SHORT).show();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            progressDialog.dismiss();
+                            Toast.makeText(EditProfilePage.this, "Unable to update!", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+                else {
+                    Toast.makeText(EditProfilePage.this, "Unable to update!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                progressDialog.dismiss();
+            }
+        });
+
+        builder.create().show();
     }
 
     @Override
@@ -573,6 +645,8 @@ public class EditProfilePage extends AppCompatActivity {
                             }
                         });
 
+                        CreatePost(downloadUri.toString(), "updated profile picture.");
+
                         HashMap<String, Object> avatarHashMap = new HashMap<>();
                         avatarHashMap.put("userAvatar", downloadUri.toString());
 
@@ -610,6 +684,8 @@ public class EditProfilePage extends AppCompatActivity {
 
                             }
                         });
+
+
                     } else {
                         progressDialog.dismiss();
                         Toast.makeText(EditProfilePage.this, "Error!", Toast.LENGTH_SHORT).show();
@@ -653,6 +729,8 @@ public class EditProfilePage extends AppCompatActivity {
                                 Toast.makeText(EditProfilePage.this, "Error Updating! ", Toast.LENGTH_SHORT).show();
                             }
                         });
+
+                        CreatePost(downloadUri.toString(), "updated cover photo.");
                     } else {
                         progressDialog.dismiss();
                         Toast.makeText(EditProfilePage.this, "Error!", Toast.LENGTH_SHORT).show();
@@ -666,5 +744,54 @@ public class EditProfilePage extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    private void CreatePost(String image, String title) {
+        final String timeStamp = String.valueOf(System.currentTimeMillis());
+        String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+
+        String filepathname = "Posts/" + "post" + timeStamp;
+
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+
+        byte[] data = byteArrayOutputStream.toByteArray();
+
+        StorageReference storageReference = FirebaseStorage.getInstance().getReference().child(filepathname);
+
+        storageReference.putBytes(data).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                HashMap<Object, String> hashMap = new HashMap<>();
+                hashMap.put("uid", uid);
+                hashMap.put("userName", mName);
+                hashMap.put("userEmail", email);
+                hashMap.put("userAvatar", mAvatar);
+                hashMap.put("description", "");
+                hashMap.put("title", title);
+                hashMap.put("postImage", image);
+                hashMap.put("postTime", timeStamp);
+                hashMap.put("postLikes", "0");
+                hashMap.put("postComments", "0");
+
+                DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Posts");
+
+                databaseReference.child(timeStamp).setValue(hashMap)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                    }
+                });
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
+        });
     }
 }

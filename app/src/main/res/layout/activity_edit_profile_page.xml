@@ -22,7 +22,7 @@
         <LinearLayout
             android:id="@+id/linearLayout"
             android:layout_width="match_parent"
-            android:layout_height="170dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="100dp"
             android:gravity="center"
             android:orientation="vertical">
@@ -36,14 +36,26 @@
                 android:src="@drawable/profile_image" />
 
             <TextView
-                android:layout_width="wrap_content"
                 android:id="@+id/tvName"
-                android:layout_marginTop="20dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="Name"
-                android:textStyle="bold"
                 android:layout_gravity="center_horizontal"
-                android:textSize="20dp"/>
+                android:layout_marginTop="20dp"
+                android:text="Name"
+                android:textColor="@color/colorBlack"
+                android:textSize="22dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvBio"
+                android:layout_width="300dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:text="Biography"
+                android:textSize="17dp"
+                android:textStyle="bold" />
 
         </LinearLayout>
 
@@ -54,7 +66,7 @@
         android:id="@+id/avatarEdit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="20dp"
         android:text="Update Profile Picture"
         android:textAlignment="center"
         android:textColor="@android:color/white"
@@ -93,11 +105,11 @@
         android:textSize="20sp" />
 
     <TextView
-        android:id="@+id/changepassword"
+        android:id="@+id/updateBio"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="Change Password "
+        android:text="Update Biography"
         android:textAlignment="center"
         android:textColor="@android:color/white"
         android:textStyle="bold"
@@ -105,5 +117,19 @@
         android:layout_marginRight="30dp"
         android:layout_marginLeft="30dp"
         android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/changepassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="30dp"
+        android:background="@drawable/update_buttons"
+        android:text="Change Password "
+        android:textAlignment="center"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
 </LinearLayout>

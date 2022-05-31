@@ -51,7 +51,7 @@ public class ProfileFragment extends Fragment {
     private DatabaseReference databaseReference;
     private ImageView mCover;
     CircleImageView mAvatar;
-    private TextView name, email;
+    private TextView name, email, bio;
     private FloatingActionButton editProfile;
     private ProgressDialog progressDialog;
     private RecyclerView postRecyclerView;
@@ -81,6 +81,7 @@ public class ProfileFragment extends Fragment {
         mCover = (ImageView) view.findViewById(R.id.coverIV);
         name = (TextView) view.findViewById(R.id.nametv);
         email = (TextView) view.findViewById(R.id.emailtv);
+        bio = (TextView) view.findViewById(R.id.bioTV);
         editProfile = (FloatingActionButton) view.findViewById(R.id.fab);
         postRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerPosts);
 
@@ -101,16 +102,21 @@ public class ProfileFragment extends Fragment {
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                     // Retrieving Data from firebase
                     String mName = "" + dataSnapshot1.child("name").getValue();
-                    String emaill = "" + dataSnapshot1.child("email").getValue();
+                    String mEmail = "" + dataSnapshot1.child("email").getValue();
+                    String mBio = "" + dataSnapshot1.child("bio").getValue();
                     String avatar = "" + dataSnapshot1.child("avatar").getValue();
                     String cover = "" + dataSnapshot1.child("cover").getValue();
+
                     // setting data to our text view
                     name.setText(mName);
-                    email.setText(emaill);
+                    email.setText(mEmail);
+                    bio.setText(mBio);
+
                     try {
                         Glide.with(getActivity()).load(avatar).into(mAvatar);
                         Glide.with(getActivity()).load(cover).into(mCover);
-                    } catch (Exception e) {
+                    }
+                    catch (Exception e) {
 
                     }
                 }

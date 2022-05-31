@@ -1,7 +1,7 @@
 package com.example.social_media_app.Models;
 
 public class    ModelUsers {
-    private String name, email, avatar, cover, uid, onlineStatus, typingTo;
+    private String name, email, bio, avatar, cover, uid, onlineStatus, typingTo;
 
     public ModelUsers() {
     }
@@ -38,6 +38,14 @@ public class    ModelUsers {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
     }
 
     public String getUid() {

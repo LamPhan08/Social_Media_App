@@ -48,9 +48,8 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder> {
         final String hisuid = list.get(position).getUid();
         String userAvatar = list.get(position).getAvatar();
         String username = list.get(position).getName();
-        String usermail = list.get(position).getEmail();
         holder.name.setText(username);
-        holder.email.setText(usermail);
+
         try {
             Glide.with(context).load(userAvatar).into(holder.profiletv);
         } catch (Exception e) {
@@ -74,13 +73,12 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder> {
     class MyHolder extends RecyclerView.ViewHolder {
 
         CircleImageView profiletv;
-        TextView name, email;
+        TextView name;
 
         public MyHolder(@NonNull View itemView) {
             super(itemView);
             profiletv = (CircleImageView) itemView.findViewById(R.id.imagep);
             name = (TextView) itemView.findViewById(R.id.namep);
-            email = (TextView) itemView.findViewById(R.id.emailp);
         }
     }
 }

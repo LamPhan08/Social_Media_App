@@ -1,7 +1,7 @@
 package com.example.social_media_app.Models;
 
 public class ModelPosts {
-    String uid, description, userName, userEmail, userAvatar, postLikes, postComments, postTime, postImage;
+    String uid, description, title, userName, userEmail, userAvatar, postLikes, postComments, postTime, postImage;
 
     public ModelPosts() {
     }
@@ -32,6 +32,14 @@ public class ModelPosts {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getUserName() {

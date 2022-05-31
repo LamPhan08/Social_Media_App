@@ -37,13 +37,14 @@ public class Other_Profile_Page extends AppCompatActivity {
     private DatabaseReference databaseReference;
     private ImageView mCover;
     private CircleImageView mAvatar;
-    private TextView name, email;
+    private TextView name, bio;
     private FloatingActionButton btnChat;
     private String uid;
     private ActionBar actionBar;
     private ArrayList<ModelPosts> modelPostsArrayList;
     private AdapterPosts adapterPosts;
     private RecyclerView recyclerView;
+    private String mName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,17 +52,16 @@ public class Other_Profile_Page extends AppCompatActivity {
         setContentView(R.layout.activity_other_profile_page);
 
         actionBar = getSupportActionBar();
-        actionBar.setTitle("Profile");
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         firebaseAuth = FirebaseAuth.getInstance();
 
         firebaseUser = firebaseAuth.getCurrentUser();
 
-        mAvatar = (CircleImageView) findViewById(R.id.otherAvatarIV);
-        mCover = (ImageView) findViewById(R.id.otherCoverIV);
-        name = (TextView) findViewById(R.id.otherNameTV);
-        email = (TextView) findViewById(R.id.otherEmailTV);
+        mAvatar = (CircleImageView) findViewById(R.id.otherAvatarPicture);
+        mCover = (ImageView) findViewById(R.id.otherCoverPhoto);
+        name = (TextView) findViewById(R.id.otherName);
+        bio = (TextView) findViewById(R.id.otherBio);
         btnChat = (FloatingActionButton) findViewById(R.id.chatButton);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerPostsOtherProfile);
 
@@ -84,13 +84,14 @@ public class Other_Profile_Page extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    String mName = "" + dataSnapshot.child("name").getValue();
-                    String mEmail = "" + dataSnapshot.child("email").getValue();
+                    mName = "" + dataSnapshot.child("name").getValue();
+                    String mBio = "" + dataSnapshot.child("bio").getValue();
                     String avatar = "" + dataSnapshot.child("avatar").getValue();
                     String cover = "" + dataSnapshot.child("cover").getValue();
 
                     name.setText(mName);
-                    email.setText(mEmail);
+                    bio.setText(mBio);
+                    actionBar.setTitle(mName);
 
                     try {
                         Glide.with(Other_Profile_Page.this).load(avatar).into(mAvatar);
