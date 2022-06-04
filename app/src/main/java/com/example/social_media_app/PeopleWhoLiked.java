@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.social_media_app.Adapters.AdapterUsers;
@@ -37,6 +38,8 @@ public class PeopleWhoLiked extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         recyclerView = findViewById(R.id.likeRecycle);
+
+        recyclerView.setHasFixedSize(true);
 
         Intent intent = getIntent();
         postId = intent.getStringExtra("pid");

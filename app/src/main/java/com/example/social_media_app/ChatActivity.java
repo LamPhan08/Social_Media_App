@@ -78,7 +78,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class ChatActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private CircleImageView profile;
-    private TextView name, userstatus;
+    private TextView name, userstatus, back;
     private EditText msg;
     private ImageButton sendMessage, sendImages;
     private FirebaseAuth firebaseAuth;
@@ -113,6 +113,7 @@ public class ChatActivity extends AppCompatActivity {
         userstatus = (TextView) findViewById(R.id.onlinetv);
         msg = (EditText) findViewById(R.id.messageType);
         sendMessage = (ImageButton) findViewById(R.id.sendmsg);
+        back = (TextView) findViewById(R.id.back);
         sendImages = (ImageButton) findViewById(R.id.attachbtn);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -140,6 +141,13 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
         sendImages.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -162,39 +170,37 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
-        Query userquery = users.orderByChild("uid").equalTo(uid);
+        Query userQuery = users.orderByChild("uid").equalTo(uid);
 
-        userquery.addValueEventListener(new ValueEventListener() {
+        userQuery.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                     String mName = "" + dataSnapshot1.child("name").getValue();
                     avatar = "" + dataSnapshot1.child("avatar").getValue();
-                    String onlinestatus = "" + dataSnapshot1.child("onlineStatus").getValue();
-                    String typingto = "" + dataSnapshot1.child("typingTo").getValue();
+                    String status = "" + dataSnapshot1.child("status").getValue();
 
-                    if (typingto.equals(myuid)) {
-                        userstatus.setText("Typing....");
+                    if (status.equals("Online")) {
+                        userstatus.setText(status);
                     }
                     else {
-                        if (onlinestatus.equals("Online")) {
-                            userstatus.setText(onlinestatus);
-                        }
-                        else {
-                            Calendar calendar = Calendar.getInstance();
-                            calendar.setTimeInMillis(Long.parseLong(onlinestatus));
-                            String timedate = DateFormat.format("dd/MM/yyyy hh:mm aa", calendar).toString();
-                            userstatus.setText("Last Seen: " + timedate);
-                        }
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.setTimeInMillis(Long.parseLong(status));
+                        String dateTime = DateFormat.format("dd/MM/yyyy hh:mm aa", calendar).toString();
+                        userstatus.setText("Last Seen: " + dateTime);
                     }
 
                     name.setText(mName);
 
                     try {
                         Glide.with(ChatActivity.this).load(avatar).placeholder(R.drawable.profile_image).into(profile);
-                    } catch (Exception e) {
+                    }
+                    catch (Exception e) {
 
                     }
+
+                    readMessages();
+                    recyclerView.scrollToPosition(chatList.size());
                 }
             }
 
@@ -204,21 +210,13 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
-        readMessages();
+
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        String timestamp = String.valueOf(System.currentTimeMillis());
-        checkOnlineStatus(timestamp);
-        checkTypingStatus("No One");
-    }
-
-    @Override
-    protected void onResume() {
-        checkOnlineStatus("Online");
-        super.onResume();
+    protected void onStart() {
+        checkUserStatus();
+        super.onStart();
     }
 
     @Override
@@ -227,29 +225,10 @@ public class ChatActivity extends AppCompatActivity {
         return super.onSupportNavigateUp();
     }
 
-    private void checkOnlineStatus(String status){
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(myuid);
-        HashMap<String,Object> hashMap = new HashMap<>();
-        hashMap.put("onlineStatus", status);
-        databaseReference.updateChildren(hashMap);
-    }
-
-    private void checkTypingStatus(String typing){
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(myuid);
-        HashMap<String,Object> hashMap = new HashMap<>();
-        hashMap.put("typingTo", typing);
-        databaseReference.updateChildren(hashMap);
-    }
-
-    @Override
-    protected void onStart() {
-        checkUserStatus();
-        checkOnlineStatus("Online");
-        super.onStart();
-    }
-
     private void readMessages() {
         chatList = new ArrayList<>();
+        adapterChat = new AdapterChat(ChatActivity.this,chatList,avatar);
+        recyclerView.setAdapter(adapterChat);
 
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Chats");
 
@@ -267,14 +246,10 @@ public class ChatActivity extends AppCompatActivity {
                             && modelChat.getSender().equals(uid)) {
                         chatList.add(modelChat);
                     }
-
-                    adapterChat = new AdapterChat(ChatActivity.this,chatList,avatar);
-                    adapterChat.notifyDataSetChanged();
-
-                    recyclerView.setAdapter(adapterChat);
-
-                    recyclerView.smoothScrollToPosition(recyclerView.getAdapter().getItemCount());
                 }
+
+                adapterChat.notifyItemInserted(chatList.size());
+
             }
 
             @Override
@@ -282,6 +257,7 @@ public class ChatActivity extends AppCompatActivity {
 
             }
         });
+
     }
 
     private void showPickImageDialog() {
@@ -441,6 +417,8 @@ public class ChatActivity extends AppCompatActivity {
 
                         }
                     });
+
+                    recyclerView.smoothScrollToPosition(chatList.size());
                 }
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -543,6 +521,8 @@ public class ChatActivity extends AppCompatActivity {
 
             }
         });
+
+        recyclerView.smoothScrollToPosition(chatList.size());
     }
 
     private void checkUserStatus() {

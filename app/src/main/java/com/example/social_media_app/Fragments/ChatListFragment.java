@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.TextUtils;
@@ -64,6 +65,7 @@ public class ChatListFragment extends Fragment {
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
         recyclerView = (RecyclerView) view.findViewById(R.id.chatlistrecycle);
+
         chatListList = new ArrayList<>();
         chatList = new ArrayList<>();
         reference = FirebaseDatabase.getInstance().getReference("ChatList").child(firebaseUser.getUid());

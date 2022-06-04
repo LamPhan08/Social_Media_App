@@ -69,6 +69,10 @@ public class Other_Profile_Page extends AppCompatActivity {
 
         modelPostsArrayList = new ArrayList<>();
 
+        adapterPosts = new AdapterPosts(Other_Profile_Page.this, modelPostsArrayList);
+
+        recyclerView.setAdapter(adapterPosts);
+
         loadOthersPosts();
 
         if (firebaseUser.getUid().equals(uid)) {
@@ -137,11 +141,9 @@ public class Other_Profile_Page extends AppCompatActivity {
                     ModelPosts modelPost = dataSnapshot1.getValue(ModelPosts.class);
 
                     modelPostsArrayList.add(modelPost);
-
-                    adapterPosts = new AdapterPosts(Other_Profile_Page.this, modelPostsArrayList);
-
-                    recyclerView.setAdapter(adapterPosts);
                 }
+
+                adapterPosts.notifyDataSetChanged();
             }
 
             @Override

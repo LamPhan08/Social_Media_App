@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -84,7 +85,6 @@ public class AdapterComments extends RecyclerView.Adapter<AdapterComments.MyHold
 
         holder.name.setText(mName);
         holder.time.setText(timeDate);
-        holder.comment.setText(mComment);
 
         try {
             Glide.with(context).load(mAvatar).into(holder.avatar);
@@ -93,13 +93,21 @@ public class AdapterComments extends RecyclerView.Adapter<AdapterComments.MyHold
 
         }
 
+        holder.comment.setVisibility(View.VISIBLE);
         holder.image.setVisibility(View.VISIBLE);
 
-        try {
-            Glide.with(context).load(mCommentImage).into(holder.image);
+        if (mCommentImage.equals("")) {
+            holder.image.setVisibility(View.GONE);
+            holder.comment.setText(mComment);
         }
-        catch (Exception e) {
+        else {
+            try {
+                holder.comment.setVisibility(View.GONE);
+                Glide.with(context).load(mCommentImage).into(holder.image);
+            }
+            catch (Exception e) {
 
+            }
         }
 
         holder.avatar.setOnClickListener(new View.OnClickListener() {
@@ -127,12 +135,12 @@ public class AdapterComments extends RecyclerView.Adapter<AdapterComments.MyHold
         holder.btnMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showOption(holder.btnMore, mCommentId, mCommentImage);
+                showOption(holder.btnMore, mCommentId, mCommentImage, holder.getAdapterPosition());
             }
         });
     }
 
-    private void showOption(ImageButton btnMore, String mCommentId, String mCommentImage) {
+    private void showOption(ImageButton btnMore, String mCommentId, String mCommentImage, int position) {
         PopupMenu popupMenu = new PopupMenu(context, btnMore, Gravity.END);
 
         popupMenu.getMenu().add(Menu.NONE, 0, 0, "Delete this comment");
@@ -144,12 +152,13 @@ public class AdapterComments extends RecyclerView.Adapter<AdapterComments.MyHold
                     AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
                     builder.setTitle("Delete Comment");
+                    builder.setIcon(R.drawable.ic_delete);
                     builder.setMessage("Are you sure to delete this Comment?");
 
                     builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            deleteComment(mCommentId, mCommentImage);
+                            deleteComment(mCommentId, mCommentImage, position);
                         }
                     });
 
@@ -170,7 +179,7 @@ public class AdapterComments extends RecyclerView.Adapter<AdapterComments.MyHold
         popupMenu.show();
     }
 
-    private void deleteComment(String mCommentId, String mCommentImage) {
+    private void deleteComment(String mCommentId, String mCommentImage, int position) {
         final ProgressDialog progressDialog = new ProgressDialog(context);
         progressDialog.setMessage("Deleting this comment...");
         progressDialog.show();
@@ -183,9 +192,9 @@ public class AdapterComments extends RecyclerView.Adapter<AdapterComments.MyHold
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                         dataSnapshot1.getRef().removeValue();
-                    }
 
-                    notifyDataSetChanged();
+                        modelCommentsList.remove(position);
+                    }
 
                     updateCommentsCount();
 
@@ -213,9 +222,8 @@ public class AdapterComments extends RecyclerView.Adapter<AdapterComments.MyHold
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                                 dataSnapshot1.getRef().removeValue();
+                                modelCommentsList.remove(position);
                             }
-
-                            notifyDataSetChanged();
 
                             updateCommentsCount();
 

@@ -88,6 +88,10 @@ public class ProfileFragment extends Fragment {
         uid = FirebaseAuth.getInstance().getUid();
         modelPostsArrayList = new ArrayList<>();
 
+        adapterPosts = new AdapterPosts(getActivity(), modelPostsArrayList);
+
+        postRecyclerView.setAdapter(adapterPosts);
+
         loadMyPosts();
 
         progressDialog = new ProgressDialog(getActivity());
@@ -156,11 +160,8 @@ public class ProfileFragment extends Fragment {
                     ModelPosts modelPost = dataSnapshot1.getValue(ModelPosts.class);
 
                     modelPostsArrayList.add(modelPost);
-
-                    adapterPosts = new AdapterPosts(getActivity(), modelPostsArrayList);
-
-                    postRecyclerView.setAdapter(adapterPosts);
                 }
+                adapterPosts.notifyDataSetChanged();
             }
 
             @Override

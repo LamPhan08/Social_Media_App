@@ -11,19 +11,13 @@
     app:contentPadding="3dp">
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-
-        >
+        android:layout_height="wrap_content">
 
         <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profileimage"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:id="@+id/profileimage"
-            android:src="@drawable/profile_image"/>
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:id="@+id/onlinestatus"/>
+            android:src="@drawable/profile_image" />
 
         <TextView
             android:id="@+id/nameonline"
@@ -32,39 +26,47 @@
             android:layout_marginStart="4dp"
             android:layout_toEndOf="@id/profileimage"
             android:layout_toRightOf="@id/profileimage"
-            android:textStyle="bold"
             android:text="His Name"
             android:textColor="@color/colorBlack"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+
         <TextView
             android:id="@+id/lastmessge"
-            android:layout_below="@id/nameonline"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginLeft="3dp"
+            android:layout_marginTop="25dp"
+            android:layout_toEndOf="@id/profileimage"
+            android:layout_toRightOf="@id/profileimage"
             android:maxLines="2"
             android:text="Last Message"
-            android:layout_marginStart="4dp"
-            android:textColor="@color/colorBlack"
-            android:layout_toEndOf="@id/profileimage"
-            android:layout_toRightOf="@id/profileimage"/>
+            android:textColor="@color/colorBlack" />
 
-        <ImageView
-            android:id="@+id/blocking"
-            android:layout_width="wrap_content"
-            android:layout_height="14dp"
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            app:civ_border_width="10dp"
+            app:civ_border_color="#05df29"
+            android:id="@+id/img_on"
             android:visibility="gone"
-            android:layout_alignParentEnd="true"
-            android:layout_gravity="center_vertical"
-            android:src="@drawable/ic_unblock" />
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:id="@+id/seen"
-            android:layout_below="@id/blocking"
+            android:src="@mipmap/ic_launcher"
+            android:layout_marginTop="55dp"
+            android:layout_marginLeft="50dp"/>
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            app:civ_border_width="10dp"
+            app:civ_border_color="#bfbfbf"
+            android:id="@+id/img_off"
             android:visibility="gone"
-            android:layout_alignParentEnd="true"
-            android:src="@drawable/ic_unblock"/>
+            android:src="@mipmap/ic_launcher"
+            android:layout_marginTop="55dp"
+            android:layout_marginLeft="50dp"/>
+
     </RelativeLayout>
 
 </androidx.cardview.widget.CardView>

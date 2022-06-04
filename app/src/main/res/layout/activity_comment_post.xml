@@ -21,25 +21,43 @@
 
       <LinearLayout
           android:layout_width="match_parent"
-          android:layout_height="30dp"
+          android:layout_height="wrap_content"
           android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/likecountTV"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
+            android:id="@+id/commentBack"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:drawableLeft="@drawable/ic_liked"
-            android:text="1.2K"
-            android:textColor="@color/colorPrimary" />
+            android:layout_gravity="center"
+            android:layout_marginTop="1dp"
+            android:background="@drawable/ic_back" />
 
-        <com.google.android.material.button.MaterialButton
+        <TextView
+            android:id="@+id/likecountTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_heart_red"
+            android:text=" 1"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="10dp"
+            android:textAlignment="textEnd"
+            android:textColor="@color/colorRed" />
+
+        <View
+            android:layout_width="2dp"
+            android:layout_marginTop="1dp"
+            android:layout_marginLeft="286dp"
+            android:layout_height="match_parent"
+            android:background="#F5F0F0" />
+
+        <TextView
             android:id="@+id/commentLikeBtn"
             android:layout_width="wrap_content"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="5dp"
             android:backgroundTint="@color/colorWhite"
-            android:drawableRight="@drawable/ic_like"/>
+            android:drawableRight="@drawable/ic_heart"/>
 
       </LinearLayout>
 
@@ -50,7 +68,9 @@
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:layout_above="@id/commentLayout"
-      android:layout_below="@+id/layoutLike">
+      android:layout_below="@+id/layoutLike"
+      android:layout_marginTop="1dp"
+      android:layout_marginBottom="0dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -61,6 +81,7 @@
       <androidx.recyclerview.widget.RecyclerView
           android:id="@+id/recycleComment"
           android:layout_width="match_parent"
+          tools:listitem="@layout/row_comments"
           android:layout_height="match_parent" />
     </LinearLayout>
 

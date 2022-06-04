@@ -10,7 +10,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class SplashScreen extends AppCompatActivity {
-    private FirebaseUser currentUser;
     private FirebaseAuth mAuth;
 
     @Override
@@ -20,9 +19,6 @@ public class SplashScreen extends AppCompatActivity {
         setContentView(R.layout.activity_splash_screen);
 
         mAuth = FirebaseAuth.getInstance();
-        if (mAuth != null) {
-            currentUser = mAuth.getCurrentUser();
-        }
 
         /** Kiểm tra nếu USER null thì chuyển tới màn hình LoginActivity còn không thì chuyển tới màn hình DashboardActivity */
         new Handler().postDelayed(new Runnable() {

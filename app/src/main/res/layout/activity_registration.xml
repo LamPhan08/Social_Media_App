@@ -42,7 +42,7 @@
         android:layout_marginRight="30dp"
         android:background="@drawable/edit"
         android:drawableStart="@drawable/name"
-        android:hint="Your Name..."
+        android:hint=" Your Name..."
         android:inputType="text"
         android:minHeight="48dp"
         android:padding="8dp" />
@@ -68,7 +68,7 @@
         android:layout_marginRight="30dp"
         android:background="@drawable/edit"
         android:drawableStart="@drawable/ic_email"
-        android:hint="Email..."
+        android:hint=" Email..."
         android:inputType="textEmailAddress"
         android:minHeight="48dp"
         android:padding="8dp" />
@@ -94,7 +94,7 @@
         android:layout_marginRight="30dp"
         android:background="@drawable/edit"
         android:drawableStart="@drawable/password"
-        android:hint="Password..."
+        android:hint=" Password..."
         android:inputType="textPassword"
         android:minHeight="48dp"
         android:padding="8dp" />

@@ -52,8 +52,8 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder> {
 
         try {
             Glide.with(context).load(userAvatar).into(holder.profiletv);
-        } catch (Exception e) {
         }
+        catch (Exception e) { }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

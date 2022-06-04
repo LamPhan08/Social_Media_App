@@ -19,7 +19,7 @@
                 android:id="@+id/otherCoverPhoto"
                 android:layout_width="match_parent"
                 android:layout_height="180dp"
-                android:background="@color/colorGreen"
+                android:background="@color/colorgray01"
                 android:scaleType="fitXY"></ImageView>
 
             <LinearLayout

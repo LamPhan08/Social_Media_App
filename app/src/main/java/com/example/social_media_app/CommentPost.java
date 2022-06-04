@@ -52,7 +52,7 @@ import java.util.List;
 public class CommentPost extends AppCompatActivity {
     private String myUid, myName, myEmail, myAvatar, postId, postLikes;
     private TextView like;
-    private MaterialButton likeBtn;
+    private TextView likeTV, back;
     private EditText comment;
     private ImageButton sendCommentBtn, commentImageBtn;
     private RecyclerView recyclerView;
@@ -89,12 +89,19 @@ public class CommentPost extends AppCompatActivity {
 
         recyclerView = (RecyclerView) findViewById(R.id.recycleComment);
         like = (TextView) findViewById(R.id.likecountTV);
-        likeBtn = (MaterialButton) findViewById(R.id.commentLikeBtn);
+        back = (TextView) findViewById(R.id.commentBack);
+        likeTV = (TextView) findViewById(R.id.commentLikeBtn);
         comment = (EditText) findViewById(R.id.commentType);
         sendCommentBtn = (ImageButton) findViewById(R.id.sendComment);
         commentImageBtn = (ImageButton) findViewById(R.id.commentImage);
 
         progressDialog = new ProgressDialog(this);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setStackFromEnd(true);
+        layoutManager.setReverseLayout(true);
+
+        recyclerView.setLayoutManager(layoutManager);
 
         loadPostInfo();
         loadUserInfo();
@@ -107,10 +114,17 @@ public class CommentPost extends AppCompatActivity {
             }
         });
 
-        likeBtn.setOnClickListener(new View.OnClickListener() {
+        likeTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 likePost();
+            }
+        });
+
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
             }
         });
 
@@ -333,11 +347,11 @@ public class CommentPost extends AppCompatActivity {
     }
 
     private void loadComments() {
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
-
-        recyclerView.setLayoutManager(layoutManager);
-
         modelCommentsList = new ArrayList<>();
+
+        adapterComment = new AdapterComments(CommentPost.this, modelCommentsList, myUid, postId);
+
+        recyclerView.setAdapter(adapterComment);
 
         DatabaseReference commentDatabase = FirebaseDatabase.getInstance().getReference("Comments");
 
@@ -352,11 +366,9 @@ public class CommentPost extends AppCompatActivity {
                     ModelComments modelComments = dataSnapshot1.getValue(ModelComments.class);
 
                     modelCommentsList.add(modelComments);
-
-                    adapterComment = new AdapterComments(CommentPost.this, modelCommentsList, myUid, postId);
-
-                    recyclerView.setAdapter(adapterComment);
                 }
+
+                adapterComment.notifyDataSetChanged();
             }
 
             @Override
@@ -373,9 +385,9 @@ public class CommentPost extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.child(postId).hasChild(myUid)) {
-                    likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_liked, 0, 0, 0);
+                    likeTV.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_heart_red, 0, 0, 0);
                 } else {
-                    likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like, 0, 0, 0);
+                    likeTV.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_heart, 0, 0, 0);
                 }
             }
 
@@ -462,6 +474,8 @@ public class CommentPost extends AppCompatActivity {
                 Toast.makeText(CommentPost.this, "Failed", Toast.LENGTH_LONG).show();
             }
         });
+
+        recyclerView.smoothScrollToPosition(modelCommentsList.size());
     }
 
     private boolean count = false;
@@ -530,7 +544,7 @@ public class CommentPost extends AppCompatActivity {
                     }
                     else {
                         like.setVisibility(View.VISIBLE);
-                        like.setText(postLikes);
+                        like.setText(" " + postLikes);
                     }
                 }
             }

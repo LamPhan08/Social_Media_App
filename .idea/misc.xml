@@ -26,13 +26,21 @@
         <entry key="..\:/Social_Media_App/app/src/main/res/drawable/bg_receiver.xml" value="0.292" />
         <entry key="..\:/Social_Media_App/app/src/main/res/drawable/bg_sender.xml" value="0.292" />
         <entry key="..\:/Social_Media_App/app/src/main/res/drawable/buttonss.xml" value="0.2115" />
+        <entry key="..\:/Social_Media_App/app/src/main/res/drawable/create_post.xml" value="0.2165" />
         <entry key="..\:/Social_Media_App/app/src/main/res/drawable/edit.xml" value="0.2115" />
         <entry key="..\:/Social_Media_App/app/src/main/res/drawable/ic_account.xml" value="0.2115" />
         <entry key="..\:/Social_Media_App/app/src/main/res/drawable/ic_add.xml" value="0.2115" />
+        <entry key="..\:/Social_Media_App/app/src/main/res/drawable/ic_add_image.xml" value="0.2165" />
+        <entry key="..\:/Social_Media_App/app/src/main/res/drawable/ic_add_photo.xml" value="0.2165" />
+        <entry key="..\:/Social_Media_App/app/src/main/res/drawable/ic_back.xml" value="0.2165" />
         <entry key="..\:/Social_Media_App/app/src/main/res/drawable/ic_chat.xml" value="0.2115" />
+        <entry key="..\:/Social_Media_App/app/src/main/res/drawable/ic_circle.xml" value="0.2165" />
         <entry key="..\:/Social_Media_App/app/src/main/res/drawable/ic_comment.xml" value="0.2115" />
+        <entry key="..\:/Social_Media_App/app/src/main/res/drawable/ic_delete.xml" value="0.2165" />
         <entry key="..\:/Social_Media_App/app/src/main/res/drawable/ic_edit_white.xml" value="0.2115" />
         <entry key="..\:/Social_Media_App/app/src/main/res/drawable/ic_email.xml" value="0.2115" />
+        <entry key="..\:/Social_Media_App/app/src/main/res/drawable/ic_heart.xml" value="0.2165" />
+        <entry key="..\:/Social_Media_App/app/src/main/res/drawable/ic_heart_red.xml" value="0.2165" />
         <entry key="..\:/Social_Media_App/app/src/main/res/drawable/ic_home.xml" value="0.2115" />
         <entry key="..\:/Social_Media_App/app/src/main/res/drawable/ic_images.xml" value="0.2115" />
         <entry key="..\:/Social_Media_App/app/src/main/res/drawable/ic_launcher.xml" value="0.292" />
@@ -41,6 +49,8 @@
         <entry key="..\:/Social_Media_App/app/src/main/res/drawable/ic_liked.xml" value="0.2115" />
         <entry key="..\:/Social_Media_App/app/src/main/res/drawable/ic_menu.xml" value="0.292" />
         <entry key="..\:/Social_Media_App/app/src/main/res/drawable/ic_more.xml" value="0.2115" />
+        <entry key="..\:/Social_Media_App/app/src/main/res/drawable/ic_password.xml" value="0.2165" />
+        <entry key="..\:/Social_Media_App/app/src/main/res/drawable/ic_rename.xml" value="0.1" />
         <entry key="..\:/Social_Media_App/app/src/main/res/drawable/ic_search.xml" value="0.2115" />
         <entry key="..\:/Social_Media_App/app/src/main/res/drawable/ic_send_white.xml" value="0.292" />
         <entry key="..\:/Social_Media_App/app/src/main/res/drawable/ic_unblock.xml" value="0.292" />
@@ -50,9 +60,10 @@
         <entry key="..\:/Social_Media_App/app/src/main/res/drawable/name.xml" value="0.2115" />
         <entry key="..\:/Social_Media_App/app/src/main/res/drawable/password.xml" value="0.2115" />
         <entry key="..\:/Social_Media_App/app/src/main/res/drawable/type_chat.xml" value="0.292" />
+        <entry key="..\:/Social_Media_App/app/src/main/res/drawable/type_linear_layout.xml" value="0.2165" />
         <entry key="..\:/Social_Media_App/app/src/main/res/drawable/update_buttons.xml" value="0.292" />
         <entry key="..\:/Social_Media_App/app/src/main/res/layout/activity_chat.xml" value="0.33" />
-        <entry key="..\:/Social_Media_App/app/src/main/res/layout/activity_comment_post.xml" value="0.3625" />
+        <entry key="..\:/Social_Media_App/app/src/main/res/layout/activity_comment_post.xml" value="0.33" />
         <entry key="..\:/Social_Media_App/app/src/main/res/layout/activity_dashboard.xml" value="0.1762917933130699" />
         <entry key="..\:/Social_Media_App/app/src/main/res/layout/activity_edit_profile_page.xml" value="0.358695652173913" />
         <entry key="..\:/Social_Media_App/app/src/main/res/layout/activity_login.xml" value="0.358695652173913" />
@@ -83,6 +94,8 @@
         <entry key="..\:/Social_Media_App/app/src/main/res/menu/menu_find.xml" value="0.3490740740740741" />
         <entry key="..\:/Social_Media_App/app/src/main/res/menu/menu_home.xml" value="0.3625" />
         <entry key="..\:/Social_Media_App/app/src/main/res/menu/menu_logout.xml" value="0.3625" />
+        <entry key="..\:/Social_Media_App/app/src/main/res/menu/menu_post.xml" value="0.3625" />
+        <entry key="..\:/Social_Media_App/app/src/main/res/menu/menu_profile.xml" value="0.3569230769230769" />
         <entry key="..\:/Social_Media_App/app/src/main/res/menu/menu_users.xml" value="0.3625" />
       </map>
     </option>

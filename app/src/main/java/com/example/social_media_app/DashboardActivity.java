@@ -24,6 +24,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.HashMap;
+
 public class DashboardActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     private FirebaseUser user;
@@ -147,5 +149,31 @@ public class DashboardActivity extends AppCompatActivity {
                 return false;
             }
         });
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        String timeStamp = String.valueOf(System.currentTimeMillis());
+        checkOnlineStatus(timeStamp);
+    }
+
+    @Override
+    protected void onResume() {
+        checkOnlineStatus("Online");
+        super.onResume();
+    }
+
+    @Override
+    protected void onStart() {
+        checkOnlineStatus("Online");
+        super.onStart();
+    }
+
+    private void checkOnlineStatus(String status){
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(myUID);
+        HashMap<String,Object> hashMap = new HashMap<>();
+        hashMap.put("status", status);
+        databaseReference.updateChildren(hashMap);
     }
 }

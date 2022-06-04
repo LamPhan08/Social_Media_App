@@ -1,19 +1,19 @@
 package com.example.social_media_app.Models;
 
 public class    ModelUsers {
-    private String name, email, bio, avatar, cover, uid, onlineStatus, typingTo;
+    private String name, email, bio, avatar, cover, uid, status;
 
     public ModelUsers() {
     }
 
-    public ModelUsers(String name, String email, String avatar, String cover, String uid, String onlineStatus, String typingTo) {
+    public ModelUsers(String name, String email, String bio, String avatar, String cover, String uid, String status) {
         this.name = name;
         this.email = email;
+        this.bio = bio;
         this.avatar = avatar;
         this.cover = cover;
         this.uid = uid;
-        this.onlineStatus = onlineStatus;
-        this.typingTo = typingTo;
+        this.status = status;
     }
 
     public String getName() {
@@ -22,14 +22,6 @@ public class    ModelUsers {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getTypingTo() {
-        return typingTo;
-    }
-
-    public void setTypingTo(String typingTo) {
-        this.typingTo = typingTo;
     }
 
     public String getEmail() {
@@ -72,11 +64,11 @@ public class    ModelUsers {
         this.cover = cover;
     }
 
-    public String getOnlineStatus() {
-        return onlineStatus;
+    public String getStatus() {
+        return status;
     }
 
-    public void setOnlineStatus(String onlineStatus) {
-        this.onlineStatus = onlineStatus;
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

@@ -31,8 +31,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.social_media_app.DashboardActivity;
 import com.example.social_media_app.R;
 import com.google.android.gms.common.api.Response;
@@ -61,6 +64,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -86,7 +91,9 @@ public class CreatePostFragment extends Fragment {
     private String name, email, uid, avatar;
     private DatabaseReference databaseReference;
     private Button upload;
-
+    private LinearLayout addImage;
+    private TextView nameTV;
+    private CircleImageView profileImage;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -97,7 +104,10 @@ public class CreatePostFragment extends Fragment {
 
         description = (EditText) view.findViewById(R.id.descriptionEDT);
         image = (ImageView) view.findViewById(R.id.uploadImage);
-        upload = (Button) view.findViewById(R.id.uploadBtn);
+        upload = (Button) view.findViewById(R.id.post);
+        addImage = (LinearLayout) view.findViewById(R.id.layoutAddImage);
+        nameTV = (TextView) view.findViewById(R.id.createPostName);
+        profileImage = (CircleImageView) view.findViewById(R.id.createPostProfileImage);
 
         uid = FirebaseAuth.getInstance().getUid();
 
@@ -118,6 +128,14 @@ public class CreatePostFragment extends Fragment {
                     email = "" + dataSnapshot1.child("email").getValue();
                     avatar = "" + dataSnapshot1.child("avatar").getValue().toString();
                 }
+                nameTV.setText(name);
+
+                try {
+                    Glide.with(getContext()).load(avatar).into(profileImage);
+                }
+                catch (Exception e) {
+
+                }
             }
 
             @Override
@@ -125,10 +143,11 @@ public class CreatePostFragment extends Fragment {
 
             }
         });
+
         cameraPermission = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
         storagePermission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
-        image.setOnClickListener(new View.OnClickListener() {
+        addImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showImagePicDialog();

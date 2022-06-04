@@ -162,31 +162,6 @@ public class LoginActivity extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     loadingBar.dismiss();
 
-//                    FirebaseUser user = auth.getCurrentUser();
-
-//                    if (task.getResult().getAdditionalUserInfo().isNewUser()) {
-//                        String mEmail = user.getEmail();
-//                        String uid = user.getUid();
-//
-//                        HashMap<Object, String> hashMap = new HashMap<>();
-//                        hashMap.put("email", mEmail);
-//                        hashMap.put("uid", uid);
-//                        hashMap.put("name", "");
-//                        hashMap.put("onlineStatus", "online");
-//                        hashMap.put("typingTo", "noOne");
-//                        hashMap.put("phone", "");
-//                        hashMap.put("image", "");
-//                        hashMap.put("cover", "");
-//
-//                        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-//
-//                        /** Lưu trữ giá trị trong database trong node "Users" */
-//                        DatabaseReference databaseReference = firebaseDatabase.getReference("Users");
-//
-//                        /** Lưu trữ giá trị trong Firebase */
-//                        databaseReference.child(uid).setValue(hashMap);
-//                    }
-
                     Toast.makeText(LoginActivity.this, "Login Successfully!", Toast.LENGTH_SHORT).show();
 
                     Intent dashboardIntent = new Intent(LoginActivity.this, DashboardActivity.class);
@@ -195,16 +170,12 @@ public class LoginActivity extends AppCompatActivity {
 
                     finish();
                 }
-                else {
-                    loadingBar.dismiss();
-                    Toast.makeText(LoginActivity.this, "Login Failed!", Toast.LENGTH_SHORT).show();
-                }
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
                 loadingBar.dismiss();
-                Toast.makeText(LoginActivity.this, "Error Occurred!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, "Invalid Email or Password!", Toast.LENGTH_SHORT).show();
             }
         });
     }

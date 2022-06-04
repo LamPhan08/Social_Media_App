@@ -64,10 +64,10 @@
         <ImageView
             android:id="@+id/imageComment"
             android:layout_width="match_parent"
-            android:layout_toRightOf="@+id/avatarComment"
-            android:layout_height="wrap_content"
+            android:layout_height="275dp"
             android:layout_below="@+id/commentText"
             android:layout_toEndOf="@id/avatarComment"
+            android:layout_toRightOf="@+id/avatarComment"
             android:background="@color/colorWhite" />
 
         <TextView

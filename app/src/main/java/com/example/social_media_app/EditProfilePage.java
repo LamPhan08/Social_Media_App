@@ -92,7 +92,7 @@ public class EditProfilePage extends AppCompatActivity {
         setContentView(R.layout.activity_edit_profile_page);
 
         actionBar = getSupportActionBar();
-        actionBar.setTitle("Edit Profile");
+        actionBar.setTitle("Edit Your Profile");
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         editAvatar = (TextView) findViewById(R.id.avatarEdit);
@@ -197,6 +197,7 @@ public class EditProfilePage extends AppCompatActivity {
     private void showBioUpdate() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Describe yourself...");
+        builder.setIcon(R.drawable.bio);
 
         // creating a layout to update your biography
         LinearLayout layout = new LinearLayout(this);
@@ -429,7 +430,8 @@ public class EditProfilePage extends AppCompatActivity {
     // Updating name
     private void showNameUpdate(final String key) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Update new " + key);
+        builder.setTitle("Enter new name...");
+        builder.setIcon(R.drawable.ic_rename);
 
         // creating a layout to write the new name
         LinearLayout layout = new LinearLayout(this);
@@ -524,7 +526,8 @@ public class EditProfilePage extends AppCompatActivity {
     private void showImagePicDialog() {
         String options[] = {"Camera", "Gallery"};
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Pick Image From");
+        builder.setTitle("Pick Image From...");
+        builder.setIcon(R.drawable.ic_add_photo);
         builder.setItems(options, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

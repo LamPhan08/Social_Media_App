@@ -62,7 +62,7 @@ public class AdapterChat extends RecyclerView.Adapter<AdapterChat.Myholder>{
     }
 
     @Override
-    public void onBindViewHolder(@NonNull Myholder holder, @SuppressLint("RecyclerView") final int position) {
+    public void onBindViewHolder(@NonNull Myholder holder, final int position) {
         String message = list.get(position).getMessage();
         String timeStamp = list.get(position).getTimeStamp();
         String type = list.get(position).getType();
@@ -99,12 +99,13 @@ public class AdapterChat extends RecyclerView.Adapter<AdapterChat.Myholder>{
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
                 builder.setTitle("Delete Message");
+                builder.setIcon(R.drawable.ic_delete);
                 builder.setMessage("Are you sure to delete this message?");
 
                 builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        deleteMessage(position);
+                        deleteMessage(holder.getAdapterPosition());
                     }
                 });
 
@@ -139,7 +140,9 @@ public class AdapterChat extends RecyclerView.Adapter<AdapterChat.Myholder>{
                     if(dataSnapshot1.child("sender").getValue().equals(myuid)) {
                         dataSnapshot1.getRef().removeValue();
 
-                        notifyDataSetChanged();
+                        list.remove(position);
+
+                        notifyItemRemoved(position);
 
                         Toast.makeText(context,"Message Deleted!",Toast.LENGTH_SHORT).show();
                     }

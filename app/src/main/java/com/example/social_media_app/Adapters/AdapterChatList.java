@@ -20,6 +20,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import java.util.HashMap;
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class AdapterChatList extends RecyclerView.Adapter<AdapterChatList.Myholder> {
 
     private Context context;
@@ -50,6 +52,7 @@ public class AdapterChatList extends RecyclerView.Adapter<AdapterChatList.Myhold
         String userAvatar = usersList.get(position).getAvatar();
         String username = usersList.get(position).getName();
         String lastmess = lastMessageMap.get(hisuid);
+        String status = usersList.get(position).getStatus();
 
         holder.name.setText(username);
 
@@ -67,6 +70,15 @@ public class AdapterChatList extends RecyclerView.Adapter<AdapterChatList.Myhold
         }
         catch (Exception e) {
 
+        }
+
+        if (status.equals("Online")) {
+            holder.statusOn.setVisibility(View.VISIBLE);
+            holder.statusOff.setVisibility(View.GONE);
+        }
+        else {
+            holder.statusOn.setVisibility(View.GONE);
+            holder.statusOff.setVisibility(View.VISIBLE);
         }
 
         // redirecting to chat activity on item click
@@ -94,16 +106,18 @@ public class AdapterChatList extends RecyclerView.Adapter<AdapterChatList.Myhold
     }
 
     class Myholder extends RecyclerView.ViewHolder {
-        ImageView profile, status;
+        CircleImageView profile;
         TextView name, lastmessage;
+        CircleImageView statusOn, statusOff;
 
         public Myholder(@NonNull View itemView) {
             super(itemView);
 
-            profile = (ImageView) itemView.findViewById(R.id.profileimage);
-            status = (ImageView) itemView.findViewById(R.id.onlinestatus);
+            profile = (CircleImageView) itemView.findViewById(R.id.profileimage);
             name = (TextView) itemView.findViewById(R.id.nameonline);
             lastmessage = (TextView) itemView.findViewById(R.id.lastmessge);
+            statusOn = (CircleImageView) itemView.findViewById(R.id.img_on);
+            statusOff = (CircleImageView) itemView.findViewById(R.id.img_off);
         }
     }
 }

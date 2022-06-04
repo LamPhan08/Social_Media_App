@@ -6,6 +6,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -53,7 +55,7 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
     private Context context;
     private String myuid;
     private DatabaseReference likeDatabaseReference, postDatabaseReference;
-    boolean mprocesslike = false;
+    boolean processLike = false;
 
     public AdapterPosts(Context context, List<ModelPosts> modelPosts) {
         this.context = context;
@@ -90,29 +92,37 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
         Calendar calendar = Calendar.getInstance(Locale.ENGLISH);
         calendar.setTimeInMillis(Long.parseLong(mPostTime));
 
-        String timedate = DateFormat.format("dd/MM/yyyy hh:mm aa", calendar).toString();
+        String dateTime = DateFormat.format("dd/MM/yyyy hh:mm aa", calendar).toString();
 
         holder.name.setText(mName);
-        holder.description.setText(mDescription);
-        holder.time.setText(timedate);
+        holder.time.setText(dateTime);
         holder.title.setText(mTitle);
 
-        if (mPostLikes.equals("0")) {
-            holder.likes.setVisibility(View.INVISIBLE);
+        holder.description.setVisibility(View.VISIBLE);
+
+        if (TextUtils.isEmpty(mDescription)) {
+            holder.description.setVisibility(View.GONE);
         }
         else {
-            holder.likes.setVisibility(View.VISIBLE);
-            holder.likes.setText(mPostLikes);
+            holder.description.setText(mDescription);
+        }
+
+        if (mPostLikes.equals("0")) {
+            holder.likeCountLayout.setVisibility(View.GONE);
+        }
+        else {
+            holder.likeCountLayout.setVisibility(View.VISIBLE);
+            holder.likes.setText(" " + mPostLikes);
         }
 
         if (mPostComments.equals("0")) {
-            holder.comments.setText("");
+            holder.commentTV.setText("");
         }
         else if (mPostComments.equals("1")) {
-            holder.comments.setText(mPostComments + " comment");
+            holder.commentTV.setText(mPostComments + " Comment");
         }
         else {
-            holder.comments.setText(mPostComments + " comments");
+            holder.commentTV.setText(mPostComments + " Comments");
         }
 
         setLikes(holder, mPostTime);
@@ -126,11 +136,16 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
 
         holder.image.setVisibility(View.VISIBLE);
 
-        try {
-            Glide.with(context).load(mPostImage).into(holder.image);
+        if (mPostImage.equals("")) {
+            holder.image.setVisibility(View.GONE);
         }
-        catch (Exception e) {
+        else {
+            try {
+                Glide.with(context).load(mPostImage).into(holder.image);
+            }
+            catch (Exception e) {
 
+            }
         }
 
         holder.likes.setOnClickListener(new View.OnClickListener() {
@@ -142,30 +157,29 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
             }
         });
 
-        holder.likeBtn.setOnClickListener(new View.OnClickListener() {
+        holder.likeTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final int plike = Integer.parseInt(modelPosts.get(position).getPostLikes());
 
-                mprocesslike = true;
+                processLike = true;
 
                 final String postid = modelPosts.get(position).getPostTime();
 
                 likeDatabaseReference.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if (mprocesslike) {
+                        if (processLike) {
                             if (dataSnapshot.child(postid).hasChild(myuid)) {
                                 postDatabaseReference.child(postid).child("postLikes").setValue("" + (plike - 1));
                                 likeDatabaseReference.child(postid).child(myuid).removeValue();
 
-
-                                mprocesslike = false;
+                                processLike = false;
                             } else {
                                 postDatabaseReference.child(postid).child("postLikes").setValue("" + (plike + 1));
                                 likeDatabaseReference.child(postid).child(myuid).setValue("Liked");
 
-                                mprocesslike = false;
+                                processLike = false;
                             }
                         }
                     }
@@ -181,15 +195,18 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
         if (!myuid.equals(uid)) {
             holder.moreBtn.setVisibility(View.GONE);
         }
+        else {
+            holder.moreBtn.setVisibility(View.VISIBLE);
+        }
 
         holder.moreBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showMoreOptions(holder.moreBtn, mPostTime, mPostImage);
+                showMoreOptions(holder.moreBtn, mPostTime, mPostImage, holder.getAdapterPosition());
             }
         });
 
-        holder.commentBtn.setOnClickListener(new View.OnClickListener() {
+        holder.commentTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(holder.itemView.getContext(), CommentPost.class);
@@ -215,18 +232,9 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
                 holder.itemView.getContext().startActivity(profileIntent);
             }
         });
-
-        holder.comments.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent commentIntent = new Intent(holder.itemView.getContext(), CommentPost.class);
-                commentIntent.putExtra("pid", mPostTime);
-                holder.itemView.getContext().startActivity(commentIntent);
-            }
-        });
     }
 
-    private void showMoreOptions(ImageButton more, final String pid, final String image) {
+    private void showMoreOptions(ImageButton more, final String pid, final String image, int position) {
         PopupMenu popupMenu = new PopupMenu(context, more, Gravity.END);
 
         popupMenu.getMenu().add(Menu.NONE, 0, 0, "Delete this post");
@@ -238,12 +246,13 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
                     AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
                     builder.setTitle("Delete Post");
+                    builder.setIcon(R.drawable.ic_delete);
                     builder.setMessage("Are you sure to delete this post?");
 
                     builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            deletePost(pid, image);
+                            deletePost(pid, image, position);
                         }
                     });
 
@@ -264,7 +273,7 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
         popupMenu.show();
     }
 
-    private void deletePost(final String pid, String image) {
+    private void deletePost(final String pid, String image, int position) {
         final ProgressDialog progressDialog = new ProgressDialog(context);
         progressDialog.setMessage("Deleting this post...");
         progressDialog.show();
@@ -277,9 +286,10 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                         dataSnapshot1.getRef().removeValue();
-                    }
 
-                    notifyDataSetChanged();
+                        modelPosts.remove(position);
+
+                    }
 
                     progressDialog.dismiss();
                     Toast.makeText(context, "Delete successfully!", Toast.LENGTH_SHORT).show();
@@ -304,9 +314,8 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                                 dataSnapshot1.getRef().removeValue();
+                                modelPosts.remove(position);
                             }
-
-                            notifyDataSetChanged();
 
                             progressDialog.dismiss();
                             Toast.makeText(context, "Delete successfully!", Toast.LENGTH_SHORT).show();
@@ -334,12 +343,10 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 if (dataSnapshot.child(pid).hasChild(myuid)) {
-                    holder.likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_liked, 0, 0, 0);
-                    holder.likeBtn.setText("Liked");
+                    holder.likeTV.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_heart_red, 0, 0, 0);
                 }
                 else {
-                    holder.likeBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_like, 0, 0, 0);
-                    holder.likeBtn.setText("Like");
+                    holder.likeTV.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_heart, 0, 0, 0);
                 }
             }
 
@@ -359,9 +366,10 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
     class MyHolder extends RecyclerView.ViewHolder {
         CircleImageView avatar;
         ImageView image;
-        TextView name, time, description, title, likes, comments;
+        TextView name, time, description, title, likes;
         ImageButton moreBtn;
-        MaterialButton likeBtn, commentBtn;
+        TextView likeTV, commentTV;
+        LinearLayout likeCountLayout;
 
         public MyHolder(@NonNull View itemView) {
             super(itemView);
@@ -372,11 +380,11 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
             time = (TextView) itemView.findViewById(R.id.utimetv);
             description = (TextView) itemView.findViewById(R.id.descript);
             title = (TextView) itemView.findViewById(R.id.postTitle);
-            likes = (TextView) itemView.findViewById(R.id.plikeb);
-            comments = (TextView) itemView.findViewById(R.id.pcommentco);
+            likes = (TextView) itemView.findViewById(R.id.likeCount);
             moreBtn = (ImageButton) itemView.findViewById(R.id.btnMore);
-            likeBtn = (MaterialButton) itemView.findViewById(R.id.btnLike);
-            commentBtn = (MaterialButton) itemView.findViewById(R.id.btnComment);
+            likeTV = (TextView) itemView.findViewById(R.id.tvLike);
+            commentTV = (TextView) itemView.findViewById(R.id.tvComment);
+            likeCountLayout = (LinearLayout) itemView.findViewById(R.id.linearLayoutLikeCount);
         }
     }   
 }

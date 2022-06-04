@@ -68,14 +68,18 @@ public class HomeFragment extends Fragment {
 
         recyclerView.setLayoutManager(layoutManager);
 
-        modelPostsList = new ArrayList<>();
-
         loadPosts();
 
         return view;
     }
 
+
+
     private void loadPosts() {
+        modelPostsList = new ArrayList<>();
+
+        adapterPosts = new AdapterPosts(getActivity(), modelPostsList);
+        recyclerView.setAdapter(adapterPosts);
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Posts");
 
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -87,11 +91,9 @@ public class HomeFragment extends Fragment {
                     ModelPosts modelPost = dataSnapshot1.getValue(ModelPosts.class);
 
                     modelPostsList.add(modelPost);
-
-                    adapterPosts = new AdapterPosts(getActivity(), modelPostsList);
-
-                    recyclerView.setAdapter(adapterPosts);
                 }
+
+                adapterPosts.notifyDataSetChanged();
             }
 
             @Override
@@ -140,11 +142,15 @@ public class HomeFragment extends Fragment {
     }
 
     private void searchPosts(String query) {
+        adapterPosts = new AdapterPosts(getActivity(), modelPostsList);
+        recyclerView.setAdapter(adapterPosts);
+
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Posts");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 modelPostsList.clear();
+
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                     ModelPosts modelPost = dataSnapshot1.getValue(ModelPosts.class);
 
@@ -152,9 +158,6 @@ public class HomeFragment extends Fragment {
                             || modelPost.getUserName().toLowerCase().contains(query.toLowerCase())) {
                         modelPostsList.add(modelPost);
                     }
-
-                    adapterPosts = new AdapterPosts(getActivity(), modelPostsList);
-                    recyclerView.setAdapter(adapterPosts);
                 }
             }
 
