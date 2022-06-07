@@ -77,7 +77,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ChatActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
-    private CircleImageView profile;
+    private CircleImageView profile, online, offline;
     private TextView name, userstatus, back;
     private EditText msg;
     private ImageButton sendMessage, sendImages;
@@ -109,6 +109,8 @@ public class ChatActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
 
         profile = (CircleImageView) findViewById(R.id.profiletv);
+        online = (CircleImageView) findViewById(R.id.img_chat_online);
+        offline = (CircleImageView) findViewById(R.id.img_chat_offline);
         name = (TextView) findViewById(R.id.nameptv);
         userstatus = (TextView) findViewById(R.id.onlinetv);
         msg = (EditText) findViewById(R.id.messageType);
@@ -182,12 +184,18 @@ public class ChatActivity extends AppCompatActivity {
 
                     if (status.equals("Online")) {
                         userstatus.setText(status);
+
+                        online.setVisibility(View.VISIBLE);
+                        offline.setVisibility(View.GONE);
                     }
                     else {
                         Calendar calendar = Calendar.getInstance();
                         calendar.setTimeInMillis(Long.parseLong(status));
                         String dateTime = DateFormat.format("dd/MM/yyyy hh:mm aa", calendar).toString();
                         userstatus.setText("Last Seen: " + dateTime);
+
+                        online.setVisibility(View.GONE);
+                        offline.setVisibility(View.VISIBLE);
                     }
 
                     name.setText(mName);
@@ -216,6 +224,7 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         checkUserStatus();
+        checkOnlineStatus("Online");
         super.onStart();
     }
 
@@ -266,6 +275,7 @@ public class ChatActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(ChatActivity.this);
 
         builder.setTitle("Pick Image From");
+        builder.setIcon(R.drawable.ic_add_photo);
 
         builder.setItems(options, new DialogInterface.OnClickListener() {
             @Override
@@ -359,6 +369,7 @@ public class ChatActivity extends AppCompatActivity {
 
         final String timestamp = ""+System.currentTimeMillis();
         String filepathandname = "ChatImages/"+"post"+timestamp;
+
         Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(),imageuri);
         ByteArrayOutputStream arrayOutputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG,100,arrayOutputStream);
@@ -531,5 +542,25 @@ public class ChatActivity extends AppCompatActivity {
         if (user != null) {
             myuid = user.getUid();
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        String timeStamp = String.valueOf(System.currentTimeMillis());
+        checkOnlineStatus(timeStamp);
+    }
+
+    @Override
+    protected void onResume() {
+        checkOnlineStatus("Online");
+        super.onResume();
+    }
+
+    private void checkOnlineStatus(String status){
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(myuid);
+        HashMap<String,Object> hashMap = new HashMap<>();
+        hashMap.put("status", status);
+        databaseReference.updateChildren(hashMap);
     }
 }

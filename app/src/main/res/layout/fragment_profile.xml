@@ -27,6 +27,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="120dp"
                 android:layout_marginTop="100dp"
+                android:background="#77000000"
                 android:orientation="horizontal">
 
                 <de.hdodenhof.circleimageview.CircleImageView
@@ -52,9 +53,9 @@
                         android:layout_marginTop="5dp"
                         android:background="#77000000"
                         android:text="Name"
-                        android:textStyle="bold"
                         android:textColor="@color/colorWhite"
-                        android:textSize="25sp" />
+                        android:textSize="25sp"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/emailtv"
@@ -70,13 +71,13 @@
                         android:id="@+id/bioTV"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginTop="22dp"
-                        android:textStyle="bold"
-                        android:background="@color/colorWhite"
+                        android:layout_margin="5dp"
+                        android:background="@drawable/type_chat"
+                        android:backgroundTint="@color/colorWhite"
+                        android:paddingLeft="10dp"
                         android:text="Biography"
-                        android:textSize="15sp"/>
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
                 </LinearLayout>
 
 

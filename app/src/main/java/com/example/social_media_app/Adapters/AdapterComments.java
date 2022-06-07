@@ -46,12 +46,14 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class AdapterComments extends RecyclerView.Adapter<AdapterComments.MyHolder> {
     private Context context;
     private List<ModelComments> modelCommentsList;
+    private DatabaseReference notificationsDatabaseReference;
 
     public AdapterComments(Context context, List<ModelComments> modelCommentsList, String myuid, String postid) {
         this.context = context;
         this.modelCommentsList = modelCommentsList;
         this.myuid = myuid;
         this.postid = postid;
+        notificationsDatabaseReference = FirebaseDatabase.getInstance().getReference().child("Notifications");
     }
 
     private String myuid;
@@ -131,16 +133,19 @@ public class AdapterComments extends RecyclerView.Adapter<AdapterComments.MyHold
         if (!myuid.equals(uid)) {
             holder.btnMore.setVisibility(View.GONE);
         }
+        else {
+            holder.btnMore.setVisibility(View.VISIBLE);
+        }
 
         holder.btnMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showOption(holder.btnMore, mCommentId, mCommentImage, holder.getAdapterPosition());
+                showOption(holder.btnMore, mCommentId, mCommentImage, holder.getAdapterPosition(), uid);
             }
         });
     }
 
-    private void showOption(ImageButton btnMore, String mCommentId, String mCommentImage, int position) {
+    private void showOption(ImageButton btnMore, String mCommentId, String mCommentImage, int position, String uid) {
         PopupMenu popupMenu = new PopupMenu(context, btnMore, Gravity.END);
 
         popupMenu.getMenu().add(Menu.NONE, 0, 0, "Delete this comment");
@@ -158,7 +163,7 @@ public class AdapterComments extends RecyclerView.Adapter<AdapterComments.MyHold
                     builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            deleteComment(mCommentId, mCommentImage, position);
+                            deleteComment(mCommentId, mCommentImage, position, uid);
                         }
                     });
 
@@ -179,7 +184,7 @@ public class AdapterComments extends RecyclerView.Adapter<AdapterComments.MyHold
         popupMenu.show();
     }
 
-    private void deleteComment(String mCommentId, String mCommentImage, int position) {
+    private void deleteComment(String mCommentId, String mCommentImage, int position, String uid) {
         final ProgressDialog progressDialog = new ProgressDialog(context);
         progressDialog.setMessage("Deleting this comment...");
         progressDialog.show();
@@ -196,6 +201,10 @@ public class AdapterComments extends RecyclerView.Adapter<AdapterComments.MyHold
                         modelCommentsList.remove(position);
                     }
 
+                    if (myuid.equals(uid)) {
+                        notificationsDatabaseReference.child(mCommentId).removeValue();
+                    }
+
                     updateCommentsCount();
 
                     progressDialog.dismiss();
@@ -208,6 +217,7 @@ public class AdapterComments extends RecyclerView.Adapter<AdapterComments.MyHold
 
                 }
             });
+
         }
         else {
             StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(mCommentImage);
@@ -223,6 +233,10 @@ public class AdapterComments extends RecyclerView.Adapter<AdapterComments.MyHold
                             for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                                 dataSnapshot1.getRef().removeValue();
                                 modelCommentsList.remove(position);
+                            }
+
+                            if (myuid.equals(uid)) {
+                                notificationsDatabaseReference.child(mCommentId).removeValue();
                             }
 
                             updateCommentsCount();

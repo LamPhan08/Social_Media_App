@@ -1,16 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorGray"
-    tools:context=".Fragments.HomeFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#F1EDED"
+    tools:context=".Fragments.ProfileFragment">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/postRecyclerView"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:listitem="@layout/row_posts"/>
+        android:layout_height="match_parent">
 
-</FrameLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/layoutSearchUser"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorWhite"
+                android:layout_marginBottom="10dp"
+                android:gravity="start"
+                android:orientation="horizontal">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/profileImageInHome"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:src="@drawable/profile_image"/>
+
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/searchUserBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:background="@drawable/buttonss"
+                    android:drawableLeft="@drawable/ic_search"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="Search User"
+                    android:textSize="15dp"
+                    android:layout_marginRight="10dp"/>
+
+
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/postRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/layoutSearchUser"
+                tools:listitem="@layout/row_posts" />
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+</RelativeLayout>

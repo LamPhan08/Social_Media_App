@@ -44,12 +44,12 @@ public class ChatListFragment extends Fragment {
 
     private FirebaseAuth firebaseAuth;
     private RecyclerView recyclerView;
-    private List<ModelChatList> chatListList;
+    private List<ModelChatList> chatList;
     private List<ModelUsers> usersList;
     private DatabaseReference reference;
     private FirebaseUser firebaseUser;
     private AdapterChatList adapterChatList;
-    private List<ModelChat> chatList;
+
     public ChatListFragment() {
         // Required empty public constructor
     }
@@ -59,26 +59,25 @@ public class ChatListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View  view=inflater.inflate(R.layout.fragment_chat_list, container, false);
+        View  view = inflater.inflate(R.layout.fragment_chat_list, container, false);
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
         recyclerView = (RecyclerView) view.findViewById(R.id.chatlistrecycle);
 
-        chatListList = new ArrayList<>();
         chatList = new ArrayList<>();
         reference = FirebaseDatabase.getInstance().getReference("ChatList").child(firebaseUser.getUid());
 
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                chatListList.clear();
+                chatList.clear();
                 for (DataSnapshot ds : dataSnapshot.getChildren()){
                     ModelChatList modelChatList = ds.getValue(ModelChatList.class);
 
                     if(!modelChatList.getId().equals(firebaseUser.getUid())) {
-                        chatListList.add(modelChatList);
+                        chatList.add(modelChatList);
                     }
                 }
                 loadChats();
@@ -104,8 +103,8 @@ public class ChatListFragment extends Fragment {
                 for (DataSnapshot dataSnapshot1:dataSnapshot.getChildren()){
                     ModelUsers user = dataSnapshot1.getValue(ModelUsers.class);
 
-                    for (ModelChatList chatList:chatListList){
-                        if (user.getUid() != null && user.getUid().equals(chatList.getId())){
+                    for (ModelChatList modelChatList : chatList){
+                        if (user.getUid() != null && user.getUid().equals(modelChatList.getId())){
                             usersList.add(user);
 
                             break;

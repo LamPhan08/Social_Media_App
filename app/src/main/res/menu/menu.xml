@@ -3,11 +3,18 @@
     <item
         android:id="@+id/menuHome"
         android:icon="@drawable/ic_home"
-        android:title="Home" />
+        android:title="Home"/>
+
     <item
-        android:id="@+id/menuUsers"
-        android:icon="@drawable/ic_users"
-        android:title="Users" />
+        android:id="@+id/menuNotifications"
+        android:icon="@drawable/ic_notifications"
+        android:title="Notifications"/>
+
+<!--    <item-->
+<!--        android:id="@+id/menuUsers"-->
+<!--        android:icon="@drawable/ic_users"-->
+<!--        android:title="" />-->
+
     <item
         android:id="@+id/menuCreatePost"
         android:icon="@drawable/ic_add"

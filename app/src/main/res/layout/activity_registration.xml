@@ -27,7 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/txvSignUp"
         android:layout_marginStart="35dp"
-        android:layout_marginTop="120dp"
+        android:layout_marginTop="40dp"
         android:text="Name"
         android:textColor="@color/colorBlack" />
 

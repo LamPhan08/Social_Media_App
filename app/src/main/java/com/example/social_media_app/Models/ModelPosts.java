@@ -1,12 +1,21 @@
 package com.example.social_media_app.Models;
 
 public class ModelPosts {
-    String uid, description, title, userName, userEmail, userAvatar, postLikes, postComments, postTime, postImage;
+    String uid, description, title, userName, userEmail, userAvatar, postLikes, postComments, postTime, postImage, likeRemoveValue;
 
     public ModelPosts() {
     }
 
-    public ModelPosts(String uid, String description, String userName, String userEmail, String userAvatar, String postLikes, String postComments, String postTime, String postImage) {
+    public ModelPosts(String uid
+            , String description
+            , String userName
+            , String userEmail
+            , String userAvatar
+            , String postLikes
+            , String postComments
+            , String postTime
+            , String postImage
+            , String likeRemoveValue) {
         this.uid = uid;
         this.description = description;
         this.userName = userName;
@@ -16,6 +25,7 @@ public class ModelPosts {
         this.postComments = postComments;
         this.postTime = postTime;
         this.postImage = postImage;
+        this.likeRemoveValue = likeRemoveValue;
     }
 
     public String getUid() {
@@ -96,5 +106,13 @@ public class ModelPosts {
 
     public void setPostImage(String postImage) {
         this.postImage = postImage;
+    }
+
+    public String getLikeRemoveValue() {
+        return likeRemoveValue;
+    }
+
+    public void setLikeRemoveValue(String likeRemoveValue) {
+        this.likeRemoveValue = likeRemoveValue;
     }
 }

@@ -67,6 +67,7 @@ public class EditProfilePage extends AppCompatActivity {
     private DatabaseReference commentsReference;
     private DatabaseReference usersReference;
     private DatabaseReference postReference;
+    private DatabaseReference notificationsReference;
     private StorageReference storageReference;
     private String avatarStorage = "Users_Profile_Image/";
     private String coverStorage = "Users_Cover_Image/";
@@ -116,6 +117,7 @@ public class EditProfilePage extends AppCompatActivity {
         usersReference = usersDatabase.getReference("Users");
         postReference = postDatabase.getReference("Posts");
         commentsReference = commentsDatabase.getReference("Comments");
+        notificationsReference = FirebaseDatabase.getInstance().getReference("Notifications");
         cameraPermission = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
         storagePermission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
@@ -506,7 +508,27 @@ public class EditProfilePage extends AppCompatActivity {
 
                         }
                     });
-                } else {
+
+                    HashMap<String, Object> notifyHashMap = new HashMap<>();
+                    notifyHashMap.put("name", value);
+
+                    Query notifyQuery = notificationsReference.orderByChild("hisUid").equalTo(uid);
+
+                    notifyQuery.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                dataSnapshot.getRef().updateChildren(notifyHashMap);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                }
+                else {
                     Toast.makeText(EditProfilePage.this, "Unable to update!", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -688,8 +710,26 @@ public class EditProfilePage extends AppCompatActivity {
                             }
                         });
 
+                        HashMap<String, Object> notifyHashMap = new HashMap<>();
+                        notifyHashMap.put("avatar", downloadUri.toString());
 
-                    } else {
+                        Query notifyQuery = notificationsReference.orderByChild("hisUid").equalTo(uid);
+
+                        notifyQuery.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                    dataSnapshot.getRef().updateChildren(notifyHashMap);
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+                    }
+                    else {
                         progressDialog.dismiss();
                         Toast.makeText(EditProfilePage.this, "Error!", Toast.LENGTH_SHORT).show();
                     }
@@ -775,6 +815,7 @@ public class EditProfilePage extends AppCompatActivity {
                 hashMap.put("postTime", timeStamp);
                 hashMap.put("postLikes", "0");
                 hashMap.put("postComments", "0");
+                hashMap.put("likeRemoveValue", "");
 
                 DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Posts");
 

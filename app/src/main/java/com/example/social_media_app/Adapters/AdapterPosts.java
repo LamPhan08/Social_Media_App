@@ -46,6 +46,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -53,16 +54,18 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
     private Context context;
-    private String myuid;
-    private DatabaseReference likeDatabaseReference, postDatabaseReference;
+    private String myUid, email, myName, myAvatar;
+    private DatabaseReference likeDatabaseReference, postDatabaseReference, notificationsDatabaseReference, myInformation;
     boolean processLike = false;
+
 
     public AdapterPosts(Context context, List<ModelPosts> modelPosts) {
         this.context = context;
         this.modelPosts = modelPosts;
-        myuid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        myUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         likeDatabaseReference = FirebaseDatabase.getInstance().getReference().child("Likes");
         postDatabaseReference = FirebaseDatabase.getInstance().getReference().child("Posts");
+        notificationsDatabaseReference = FirebaseDatabase.getInstance().getReference().child("Notifications");
     }
 
     private List<ModelPosts> modelPosts;
@@ -88,6 +91,8 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
         final String mPostImage = modelPosts.get(position).getPostImage();
         String mPostComments = modelPosts.get(position).getPostComments();
         final String postId = modelPosts.get(position).getPostTime();
+
+        loadMyInformation();
 
         Calendar calendar = Calendar.getInstance(Locale.ENGLISH);
         calendar.setTimeInMillis(Long.parseLong(mPostTime));
@@ -125,7 +130,7 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
             holder.commentTV.setText(mPostComments + " Comments");
         }
 
-        setLikes(holder, mPostTime);
+        setLikes(holder, mPostTime, position);
 
         try {
             Glide.with(context).load(mAvatar).into(holder.avatar);
@@ -162,22 +167,32 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
             public void onClick(View v) {
                 final int plike = Integer.parseInt(modelPosts.get(position).getPostLikes());
 
-                processLike = true;
+                String timeStamp = String.valueOf(System.currentTimeMillis());
 
-                final String postid = modelPosts.get(position).getPostTime();
+                processLike = true;
 
                 likeDatabaseReference.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if (processLike) {
-                            if (dataSnapshot.child(postid).hasChild(myuid)) {
-                                postDatabaseReference.child(postid).child("postLikes").setValue("" + (plike - 1));
-                                likeDatabaseReference.child(postid).child(myuid).removeValue();
+                            if (dataSnapshot.child(postId).hasChild(myUid)) {
+                                postDatabaseReference.child(postId).child("postLikes").setValue("" + (plike - 1));
+                                likeDatabaseReference.child(postId).child(myUid).removeValue();
+
+                                if (!myUid.equals(uid)) {
+                                    notificationsDatabaseReference.child(modelPosts.get(position).getLikeRemoveValue()).removeValue();
+                                }
 
                                 processLike = false;
+
+
                             } else {
-                                postDatabaseReference.child(postid).child("postLikes").setValue("" + (plike + 1));
-                                likeDatabaseReference.child(postid).child(myuid).setValue("Liked");
+                                postDatabaseReference.child(postId).child("postLikes").setValue("" + (plike + 1));
+                                likeDatabaseReference.child(postId).child(myUid).setValue(timeStamp);
+
+                                if (!myUid.equals(uid)) {
+                                    addToHisNotification(postId, timeStamp, uid);
+                                }
 
                                 processLike = false;
                             }
@@ -192,7 +207,7 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
             }
         });
 
-        if (!myuid.equals(uid)) {
+        if (!myUid.equals(uid)) {
             holder.moreBtn.setVisibility(View.GONE);
         }
         else {
@@ -230,6 +245,54 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
                 Intent profileIntent = new Intent(holder.itemView.getContext(), Other_Profile_Page.class);
                 profileIntent.putExtra("uid", uid);
                 holder.itemView.getContext().startActivity(profileIntent);
+            }
+        });
+    }
+
+    private void loadMyInformation() {
+        email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+
+        myInformation = FirebaseDatabase.getInstance().getReference().child("Users");
+
+        Query query = myInformation.orderByChild("email").equalTo(email);
+
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    myName = dataSnapshot.child("name").getValue().toString();
+                    myAvatar = dataSnapshot.child("avatar").getValue().toString();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void addToHisNotification(String postId, String timeStamp, String hisUid) {
+        HashMap<Object, String> notifyHashmap = new HashMap<>();
+        notifyHashmap.put("postId", postId);
+        notifyHashmap.put("time", timeStamp);
+        notifyHashmap.put("hisUid", myUid);
+        notifyHashmap.put("myUid", hisUid);
+        notifyHashmap.put("notification", " liked your post.");
+        notifyHashmap.put("name", myName);
+        notifyHashmap.put("type", "Like");
+        notifyHashmap.put("avatar", myAvatar);
+
+        notificationsDatabaseReference.child(timeStamp).setValue(notifyHashmap)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
             }
         });
     }
@@ -279,9 +342,9 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
         progressDialog.show();
 
         if (image.equals("")) {
-            Query query = FirebaseDatabase.getInstance().getReference("Posts").orderByChild("postTime").equalTo(pid);
+            Query query1 = FirebaseDatabase.getInstance().getReference("Posts").orderByChild("postTime").equalTo(pid);
 
-            query.addValueEventListener(new ValueEventListener() {
+            query1.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
@@ -297,6 +360,22 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+            Query query2 = notificationsDatabaseReference.orderByChild("postId").equalTo(pid);
+
+            query2.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                        dataSnapshot.getRef().removeValue();
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
 
                 }
             });
@@ -333,17 +412,34 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
 
                 }
             });
+
+            Query query = notificationsDatabaseReference.orderByChild("postId").equalTo(pid);
+
+            query.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                        dataSnapshot.getRef().removeValue();
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
         }
 
     }
 
-    private void setLikes(final MyHolder holder, final String pid) {
+    private void setLikes(final MyHolder holder, final String pid, int position) {
         likeDatabaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                if (dataSnapshot.child(pid).hasChild(myuid)) {
+                if (dataSnapshot.child(pid).hasChild(myUid)) {
                     holder.likeTV.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_heart_red, 0, 0, 0);
+
+                    modelPosts.get(position).setLikeRemoveValue(dataSnapshot.child(pid).child(myUid).getValue().toString());
                 }
                 else {
                     holder.likeTV.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_heart, 0, 0, 0);

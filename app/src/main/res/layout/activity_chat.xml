@@ -20,8 +20,8 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="wrap_content"
                 android:id="@+id/back"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:background="@drawable/ic_back" />
@@ -106,4 +106,26 @@
             android:background="@drawable/ic_circle"
             android:src="@drawable/ic_send_white" />
     </LinearLayout>
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_width="11dp"
+        android:layout_height="11dp"
+        app:civ_border_width="10dp"
+        app:civ_border_color="#05df29"
+        android:visibility="gone"
+        android:id="@+id/img_chat_online"
+        android:src="@mipmap/ic_launcher"
+        android:layout_marginTop="37dp"
+        android:layout_marginLeft="85dp"/>
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_width="11dp"
+        android:layout_height="11dp"
+        app:civ_border_width="10dp"
+        app:civ_border_color="#bfbfbf"
+        android:visibility="gone"
+        android:id="@+id/img_chat_offline"
+        android:src="@mipmap/ic_launcher"
+        android:layout_marginTop="38dp"
+        android:layout_marginLeft="85dp"/>
 </RelativeLayout>

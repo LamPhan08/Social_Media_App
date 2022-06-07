@@ -11,8 +11,8 @@ import android.view.MenuItem;
 import com.example.social_media_app.Fragments.CreatePostFragment;
 import com.example.social_media_app.Fragments.ChatListFragment;
 import com.example.social_media_app.Fragments.HomeFragment;
+import com.example.social_media_app.Fragments.NotificationsFragment;
 import com.example.social_media_app.Fragments.ProfileFragment;
-import com.example.social_media_app.Fragments.UsersFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -34,8 +34,8 @@ public class DashboardActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
     private ActionBar actionBar;
 
-    private static int homeFragment = 0,
-            usersFragment = 1,
+    private final static int homeFragment = 0,
+            notificationsFragment = 1,
             createPostFragment = 2,
             chatListFragment = 3,
             profileFragment = 4;
@@ -59,6 +59,7 @@ public class DashboardActivity extends AppCompatActivity {
 
         actionBar = getSupportActionBar();
         actionBar.setTitle("Home");
+
 
         auth = FirebaseAuth.getInstance();
 
@@ -94,6 +95,8 @@ public class DashboardActivity extends AppCompatActivity {
                         if (currentFragment != homeFragment) {
                             actionBar.setTitle("Home");
                             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                            transaction.setCustomAnimations(R.anim.enter_left_to_right
+                                    , R.anim.exit_left_to_right);
                             transaction.replace(R.id.content, new HomeFragment());
                             currentFragment = homeFragment;
                             transaction.commit();
@@ -105,19 +108,12 @@ public class DashboardActivity extends AppCompatActivity {
                         if (currentFragment != profileFragment) {
                             actionBar.setTitle(myName);
                             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
+                            transaction.setCustomAnimations(R.anim.enter_right_to_left
+                                    , R.anim.exit_right_to_left);
+
                             transaction.replace(R.id.content, new ProfileFragment());
                             currentFragment = profileFragment;
-                            transaction.commit();
-                        }
-                        return true;
-                    }
-
-                    case R.id.menuUsers: {
-                        if (currentFragment != usersFragment) {
-                            actionBar.setTitle("Users");
-                            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                            transaction.replace(R.id.content, new UsersFragment());
-                            currentFragment = usersFragment;
                             transaction.commit();
                         }
                         return true;
@@ -127,6 +123,14 @@ public class DashboardActivity extends AppCompatActivity {
                         if (currentFragment != createPostFragment) {
                             actionBar.setTitle("Create Post");
                             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
+                            if (currentFragment < createPostFragment) {
+                                transaction.setCustomAnimations(R.anim.enter_right_to_left, R.anim.exit_right_to_left);
+                            }
+                            else {
+                                transaction.setCustomAnimations(R.anim.enter_left_to_right, R.anim.exit_left_to_right);
+                            }
+
                             transaction.replace(R.id.content, new CreatePostFragment());
                             currentFragment = createPostFragment;
                             transaction.commit();
@@ -138,8 +142,35 @@ public class DashboardActivity extends AppCompatActivity {
                         if (currentFragment != chatListFragment) {
                             actionBar.setTitle("Chats");
                             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
+                            if (currentFragment < chatListFragment) {
+                                transaction.setCustomAnimations(R.anim.enter_right_to_left, R.anim.exit_right_to_left);
+                            }
+                            else {
+                                transaction.setCustomAnimations(R.anim.enter_left_to_right, R.anim.exit_left_to_right);
+                            }
+
                             transaction.replace(R.id.content, new ChatListFragment());
                             currentFragment = chatListFragment;
+                            transaction.commit();
+                        }
+                        return true;
+                    }
+
+                    case R.id.menuNotifications: {
+                        if (currentFragment != notificationsFragment) {
+                            actionBar.setTitle("Notifications");
+                            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
+                            if (currentFragment < notificationsFragment) {
+                                transaction.setCustomAnimations(R.anim.enter_right_to_left, R.anim.exit_right_to_left);
+                            }
+                            else {
+                                transaction.setCustomAnimations(R.anim.enter_left_to_right, R.anim.exit_left_to_right);
+                            }
+
+                            transaction.replace(R.id.content, new NotificationsFragment());
+                            currentFragment = notificationsFragment;
                             transaction.commit();
                         }
                         return true;

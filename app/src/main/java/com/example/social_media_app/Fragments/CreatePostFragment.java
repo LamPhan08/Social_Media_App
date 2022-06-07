@@ -80,8 +80,8 @@ public class CreatePostFragment extends Fragment {
     private EditText description;
     private static final int CAMERA_REQUEST = 100;
     private static final int STORAGE_REQUEST = 200;
-    private String cameraPermission[];
-    private String storagePermission[];
+    private String[] cameraPermission;
+    private String[] storagePermission;
     private ProgressDialog progressDialog;
     private ImageView image;
     private static final int IMAGEPICK_GALLERY_REQUEST = 300;
@@ -183,6 +183,7 @@ public class CreatePostFragment extends Fragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
         builder.setTitle("Pick Image From");
+        builder.setIcon(R.drawable.ic_add_photo);
 
         builder.setItems(options, new DialogInterface.OnClickListener() {
             @Override
@@ -307,6 +308,7 @@ public class CreatePostFragment extends Fragment {
             hashMap.put("postTime", timeStamp);
             hashMap.put("postLikes", "0");
             hashMap.put("postComments", "0");
+            hashMap.put("likeRemoveValue", "");
 
             DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Posts");
 
@@ -368,6 +370,7 @@ public class CreatePostFragment extends Fragment {
                         hashMap.put("postTime", timeStamp);
                         hashMap.put("postLikes", "0");
                         hashMap.put("postComments", "0");
+                        hashMap.put("likeRemoveValue", "");
 
                         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Posts");
 

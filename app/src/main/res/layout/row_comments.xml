@@ -59,7 +59,8 @@
             android:layout_toEndOf="@id/avatarComment"
             android:layout_toRightOf="@id/avatarComment"
             android:text="Actual Comment"
-            android:textColor="@color/colorBlack" />
+            android:textColor="@color/colorBlack"
+            android:textSize="17dp" />
 
         <ImageView
             android:id="@+id/imageComment"
