@@ -6,7 +6,7 @@
     android:background="@color/colorGray"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PeopleWhoLiked">
+    tools:context=".ViewPeopleWhoLikedPostActivity">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/likeRecycle"

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/background"
     tools:context=".RegistrationActivity">
 
@@ -14,9 +14,9 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_marginStart="0dp"
-        android:layout_marginTop="75dp"
+        android:layout_marginTop="30dp"
         android:gravity="center"
-        android:text="Sign Up Here"
+        android:text="Sign Up"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="28sp"
         android:textStyle="bold|italic" />
@@ -27,14 +27,14 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/txvSignUp"
         android:layout_marginStart="35dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="20dp"
         android:text="Name"
         android:textColor="@color/colorBlack" />
 
     <EditText
         android:id="@+id/edtRegisterName"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="70dp"
         android:layout_below="@+id/txvRegisterName"
         android:layout_alignParentStart="true"
         android:layout_marginLeft="30dp"
@@ -42,10 +42,11 @@
         android:layout_marginRight="30dp"
         android:background="@drawable/edit"
         android:drawableStart="@drawable/name"
-        android:hint=" Your Name..."
-        android:inputType="text"
+        android:hint=" Your Name"
+        android:inputType="textCapSentences"
         android:minHeight="48dp"
-        android:padding="8dp" />
+        android:padding="8dp"
+        android:textSize="18dp" />
 
     <TextView
         android:id="@+id/txvRegisterEmail"
@@ -60,7 +61,7 @@
     <EditText
         android:id="@+id/edtRegisterEmail"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="70dp"
         android:layout_below="@+id/txvRegisterEmail"
         android:layout_alignParentStart="true"
         android:layout_marginLeft="30dp"
@@ -68,10 +69,11 @@
         android:layout_marginRight="30dp"
         android:background="@drawable/edit"
         android:drawableStart="@drawable/ic_email"
-        android:hint=" Email..."
+        android:hint=" Email"
         android:inputType="textEmailAddress"
         android:minHeight="48dp"
-        android:padding="8dp" />
+        android:padding="8dp"
+        android:textSize="18dp" />
 
     <TextView
         android:id="@+id/txvRegisterPassword"
@@ -83,8 +85,8 @@
         android:text="Password"
         android:textColor="@color/colorBlack" />
 
-    <EditText
-        android:id="@+id/edtRegisterPassword"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/layoutEnterPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/txvRegisterPassword"
@@ -92,20 +94,52 @@
         android:layout_marginLeft="30dp"
         android:layout_marginTop="10dp"
         android:layout_marginRight="30dp"
-        android:background="@drawable/edit"
-        android:drawableStart="@drawable/password"
-        android:hint=" Password..."
-        android:inputType="textPassword"
-        android:minHeight="48dp"
-        android:padding="8dp" />
+        app:passwordToggleEnabled="true">
+
+        <EditText
+            android:id="@+id/edtRegisterPassword"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:hint="Password"
+            android:drawableStart="@drawable/password"
+            android:background="@drawable/edit"
+            android:padding="8dp"
+            android:textSize="18dp"
+            android:inputType="textPassword" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/layoutReenterPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/layoutEnterPassword"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="30dp"
+        app:passwordToggleEnabled="true">
+
+        <EditText
+            android:id="@+id/edtReenterPassword"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:hint= "Confirm Password"
+            android:drawableStart="@drawable/password"
+            android:background="@drawable/edit"
+            android:padding="8dp"
+            android:textSize="18dp"
+            android:inputType="textPassword" />
+
+    </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/btnCreateAccount"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/edtRegisterPassword"
+        android:layout_below="@+id/layoutReenterPassword"
         android:layout_marginLeft="30dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="15dp"
         android:layout_marginRight="30dp"
         android:background="@drawable/buttonss"
         android:padding="4dp"
@@ -121,7 +155,7 @@
         android:layout_below="@+id/btnCreateAccount"
         android:layout_centerHorizontal="true"
         android:layout_marginStart="15dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="23dp"
         android:text="Already have an account? Sign In"
         android:textAlignment="center"

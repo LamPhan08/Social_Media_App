@@ -6,12 +6,10 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.social_media_app.Adapters.AdapterUsers;
 import com.example.social_media_app.Models.ModelUsers;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -21,7 +19,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PeopleWhoLiked extends AppCompatActivity {
+public class ViewPeopleWhoLikedPostActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
     String postId;
@@ -78,7 +76,7 @@ public class PeopleWhoLiked extends AppCompatActivity {
                     ModelUsers model = ds.getValue(ModelUsers.class);
                     usersList.add(model);
                 }
-                adapterUsers = new AdapterUsers(PeopleWhoLiked.this, usersList);
+                adapterUsers = new AdapterUsers(ViewPeopleWhoLikedPostActivity.this, usersList);
                 recyclerView.setAdapter(adapterUsers);
             }
 

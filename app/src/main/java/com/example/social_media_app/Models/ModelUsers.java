@@ -1,6 +1,6 @@
 package com.example.social_media_app.Models;
 
-public class    ModelUsers {
+public class ModelUsers {
     private String name, email, bio, avatar, cover, uid, status;
 
     public ModelUsers() {

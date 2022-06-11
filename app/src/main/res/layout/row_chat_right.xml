@@ -23,9 +23,9 @@
 
         <TextView
             android:id="@+id/timetv"
-            android:layout_marginRight="3dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginRight="3dp"
             android:text="02/01/1990 06:19PM"
             android:textColor="@color/colorBlack"
             android:textSize="12sp" />
@@ -44,8 +44,8 @@
 
         <ImageView
             android:id="@+id/images"
-            android:layout_width="250dp"
-            android:layout_height="250dp"
+            android:layout_width="240dp"
+            android:layout_height="240dp"
             android:layout_alignParentEnd="true"
             android:adjustViewBounds="true"
             android:background="@drawable/message_sender"

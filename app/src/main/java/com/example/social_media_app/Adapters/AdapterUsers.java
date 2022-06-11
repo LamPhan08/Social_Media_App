@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.social_media_app.Other_Profile_Page;
+import com.example.social_media_app.ViewOtherProfilePageActivity;
 import com.example.social_media_app.Models.ModelUsers;
 import com.example.social_media_app.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -58,7 +58,7 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder> {
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, Other_Profile_Page.class);
+                Intent intent = new Intent(context, ViewOtherProfilePageActivity.class);
                 intent.putExtra("uid", hisuid);
                 context.startActivity(intent);
             }

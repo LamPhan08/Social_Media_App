@@ -56,7 +56,6 @@ public class AdapterChatList extends RecyclerView.Adapter<AdapterChatList.Myhold
 
         holder.name.setText(username);
 
-        // if no last message then Hide the layout
         if (lastmess == null || lastmess.equals("default")) {
             holder.lastmessage.setVisibility(View.GONE);
         } else {
@@ -65,7 +64,6 @@ public class AdapterChatList extends RecyclerView.Adapter<AdapterChatList.Myhold
         }
 
         try {
-            // loading profile pic of user
             Glide.with(context).load(userAvatar).into(holder.profile);
         }
         catch (Exception e) {
@@ -81,13 +79,11 @@ public class AdapterChatList extends RecyclerView.Adapter<AdapterChatList.Myhold
             holder.statusOff.setVisibility(View.VISIBLE);
         }
 
-        // redirecting to chat activity on item click
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, ChatActivity.class);
 
-                // putting uid of user in extras
                 intent.putExtra("UID", hisuid);
                 context.startActivity(intent);
             }
@@ -95,7 +91,6 @@ public class AdapterChatList extends RecyclerView.Adapter<AdapterChatList.Myhold
 
     }
 
-    // setting last message sent by users.
     public void setlastMessageMap(String userId, String lastmessage) {
         lastMessageMap.put(userId, lastmessage);
     }

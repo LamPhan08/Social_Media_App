@@ -44,7 +44,9 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
                     android:text="Search User"
-                    android:textSize="15dp"
+                    android:gravity="top|center_horizontal"
+                    android:textAllCaps="false"
+                    android:textSize="17dp"
                     android:layout_marginRight="10dp"/>
 
 

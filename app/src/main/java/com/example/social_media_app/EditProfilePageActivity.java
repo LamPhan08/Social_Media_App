@@ -8,14 +8,11 @@ import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.TextUtils;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -53,11 +50,10 @@ import com.google.firebase.storage.UploadTask;
 import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class EditProfilePage extends AppCompatActivity {
+public class EditProfilePageActivity extends AppCompatActivity {
 
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
@@ -137,8 +133,8 @@ public class EditProfilePage extends AppCompatActivity {
                     bio.setText(mBio);
 
                     try {
-                        Glide.with(EditProfilePage.this).load(mAvatar).into(avatar);
-                        Glide.with(EditProfilePage.this).load(mCover).into(cover);
+                        Glide.with(EditProfilePageActivity.this).load(mAvatar).into(avatar);
+                        Glide.with(EditProfilePageActivity.this).load(mCover).into(cover);
                     }
                     catch (Exception e) {
                     }
@@ -227,18 +223,18 @@ public class EditProfilePage extends AppCompatActivity {
                             progressDialog.dismiss();
 
                             // after updated we will show updated
-                            Toast.makeText(EditProfilePage.this, " Saved! ", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(EditProfilePageActivity.this, " Saved! ", Toast.LENGTH_SHORT).show();
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             progressDialog.dismiss();
-                            Toast.makeText(EditProfilePage.this, "Unable to update!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(EditProfilePageActivity.this, "Unable to update!", Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
                 else {
-                    Toast.makeText(EditProfilePage.this, "Unable to update!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EditProfilePageActivity.this, "Unable to update!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -274,8 +270,8 @@ public class EditProfilePage extends AppCompatActivity {
 
                     name.setText(mName);
                     try {
-                        Glide.with(EditProfilePage.this).load(mAvatar).into(avatar);
-                        Glide.with(EditProfilePage.this).load(mCover).into(cover);
+                        Glide.with(EditProfilePageActivity.this).load(mAvatar).into(avatar);
+                        Glide.with(EditProfilePageActivity.this).load(mCover).into(cover);
                     } catch (Exception e) {
                     }
 
@@ -314,8 +310,8 @@ public class EditProfilePage extends AppCompatActivity {
 
                     name.setText(mName);
                     try {
-                        Glide.with(EditProfilePage.this).load(mAvatar).into(avatar);
-                        Glide.with(EditProfilePage.this).load(mCover).into(cover);
+                        Glide.with(EditProfilePageActivity.this).load(mAvatar).into(avatar);
+                        Glide.with(EditProfilePageActivity.this).load(mCover).into(cover);
                     } catch (Exception e) {
                     }
 
@@ -366,57 +362,54 @@ public class EditProfilePage extends AppCompatActivity {
     // We will show an alert box where we will write our old and new password
     private void showPasswordChangeDailog() {
         View view = LayoutInflater.from(this).inflate(R.layout.dialog_update_password, null);
-        final EditText oldpass = view.findViewById(R.id.oldpasslog);
-        final EditText newpass = view.findViewById(R.id.newpasslog);
-        Button editpass = view.findViewById(R.id.updatepass);
+        final EditText oldPass = view.findViewById(R.id.oldpasslog);
+        final EditText newPass = view.findViewById(R.id.newpasslog);
+        Button editPass = view.findViewById(R.id.updatepass);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setView(view);
         final AlertDialog dialog = builder.create();
         dialog.show();
-        editpass.setOnClickListener(new View.OnClickListener() {
+        editPass.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String oldp = oldpass.getText().toString().trim();
-                String newp = newpass.getText().toString().trim();
-                if (TextUtils.isEmpty(oldp)) {
-                    Toast.makeText(EditProfilePage.this, "Current Password can't be empty!", Toast.LENGTH_SHORT).show();
+                String mOldPass = oldPass.getText().toString().trim();
+                String mNewPass = newPass.getText().toString().trim();
+                if (TextUtils.isEmpty(mOldPass)) {
+                    Toast.makeText(EditProfilePageActivity.this, "Current Password can't be empty!", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (TextUtils.isEmpty(newp)) {
-                    Toast.makeText(EditProfilePage.this, "New Password can't be empty!", Toast.LENGTH_SHORT).show();
+                if (TextUtils.isEmpty(mNewPass)) {
+                    Toast.makeText(EditProfilePageActivity.this, "New Password can't be empty!", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                dialog.dismiss();
-                updatePassword(oldp, newp);
+                updatePassword(mOldPass, mNewPass);
             }
         });
     }
 
-    // Now we will check that if old password was authenticated
-    // correctly then we will update the new password
-    private void updatePassword(String oldpass, final String newpass) {
+    private void updatePassword(String oldPass, final String newPass) {
         progressDialog.show();
 
         final FirebaseUser user = firebaseAuth.getCurrentUser();
 
-        AuthCredential authCredential = EmailAuthProvider.getCredential(user.getEmail(), oldpass);
+        AuthCredential authCredential = EmailAuthProvider.getCredential(user.getEmail(), oldPass);
 
         user.reauthenticate(authCredential)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        user.updatePassword(newpass)
+                        user.updatePassword(newPass)
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
                                         progressDialog.dismiss();
-                                        Toast.makeText(EditProfilePage.this, "Password changed!", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(EditProfilePageActivity.this, "Password Changed!", Toast.LENGTH_SHORT).show();
                                     }
                                 }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                progressDialog.dismiss();
-                                Toast.makeText(EditProfilePage.this, "Failed!", Toast.LENGTH_SHORT).show();
+//                                progressDialog.dismiss();
+//                                Toast.makeText(EditProfilePage.this, "Wrong Old Password!", Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
@@ -424,7 +417,7 @@ public class EditProfilePage extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Exception e) {
                 progressDialog.dismiss();
-                Toast.makeText(EditProfilePage.this, "Failed!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(EditProfilePageActivity.this, "Wrong Old Password!", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -461,13 +454,13 @@ public class EditProfilePage extends AppCompatActivity {
                             progressDialog.dismiss();
 
                             // after updated we will show updated
-                            Toast.makeText(EditProfilePage.this, " Updated! ", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(EditProfilePageActivity.this, " Updated! ", Toast.LENGTH_SHORT).show();
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             progressDialog.dismiss();
-                            Toast.makeText(EditProfilePage.this, "Unable to update!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(EditProfilePageActivity.this, "Unable to update!", Toast.LENGTH_SHORT).show();
                         }
                     });
 
@@ -529,7 +522,7 @@ public class EditProfilePage extends AppCompatActivity {
                     });
                 }
                 else {
-                    Toast.makeText(EditProfilePage.this, "Unable to update!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EditProfilePageActivity.this, "Unable to update!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -543,8 +536,6 @@ public class EditProfilePage extends AppCompatActivity {
         builder.create().show();
     }
 
-    // Here we are showing image pic dialog where we will select
-    // and image either from camera or gallery
     private void showImagePicDialog() {
         String options[] = {"Camera", "Gallery"};
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -660,13 +651,13 @@ public class EditProfilePage extends AppCompatActivity {
                             @Override
                             public void onSuccess(Void aVoid) {
                                 progressDialog.dismiss();
-                                Toast.makeText(EditProfilePage.this, "Updated!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(EditProfilePageActivity.this, "Updated!", Toast.LENGTH_SHORT).show();
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
                                 progressDialog.dismiss();
-                                Toast.makeText(EditProfilePage.this, "Error Updating! ", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(EditProfilePageActivity.this, "Error Updating! ", Toast.LENGTH_SHORT).show();
                             }
                         });
 
@@ -731,14 +722,14 @@ public class EditProfilePage extends AppCompatActivity {
                     }
                     else {
                         progressDialog.dismiss();
-                        Toast.makeText(EditProfilePage.this, "Error!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(EditProfilePageActivity.this, "Error!", Toast.LENGTH_SHORT).show();
                     }
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     progressDialog.dismiss();
-                    Toast.makeText(EditProfilePage.this, "Error!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EditProfilePageActivity.this, "Error!", Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -763,27 +754,27 @@ public class EditProfilePage extends AppCompatActivity {
                             @Override
                             public void onSuccess(Void aVoid) {
                                 progressDialog.dismiss();
-                                Toast.makeText(EditProfilePage.this, "Updated!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(EditProfilePageActivity.this, "Updated!", Toast.LENGTH_SHORT).show();
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
                                 progressDialog.dismiss();
-                                Toast.makeText(EditProfilePage.this, "Error Updating! ", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(EditProfilePageActivity.this, "Error Updating! ", Toast.LENGTH_SHORT).show();
                             }
                         });
 
                         CreatePost(downloadUri.toString(), "updated cover photo.");
                     } else {
                         progressDialog.dismiss();
-                        Toast.makeText(EditProfilePage.this, "Error!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(EditProfilePageActivity.this, "Error!", Toast.LENGTH_SHORT).show();
                     }
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     progressDialog.dismiss();
-                    Toast.makeText(EditProfilePage.this, "Error!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EditProfilePageActivity.this, "Error!", Toast.LENGTH_SHORT).show();
                 }
             });
         }

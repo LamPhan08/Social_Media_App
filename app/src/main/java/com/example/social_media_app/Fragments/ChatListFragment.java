@@ -51,7 +51,6 @@ public class ChatListFragment extends Fragment {
     private AdapterChatList adapterChatList;
 
     public ChatListFragment() {
-        // Required empty public constructor
     }
 
 
@@ -181,104 +180,74 @@ public class ChatListFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
-//    @Override
-//    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-//        inflater.inflate(R.menu.menu_users, menu);
-//
-//        MenuItem menuItem = menu.findItem(R.id.search);
-//
-//        SearchView searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
-//
-//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//            @Override
-//            public boolean onQueryTextSubmit(String query) {
-//                if (!TextUtils.isEmpty(query.trim())) {
-//                    searchChats(query);
-//                }
-//                else {
-//                    getAllChats();
-//                }
-//
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean onQueryTextChange(String newText) {
-//                if (!TextUtils.isEmpty(newText.trim())) {
-//                    searchChats(newText);
-//                }
-//                else {
-//                    getAllChats();
-//                }
-//
-//                return false;
-//            }
-//        });
-//
-//        super.onCreateOptionsMenu(menu, inflater);
-//    }
-//
-//    private void searchChats(String query) {
-//        final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-//
-//        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
-//
-//        reference.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                usersList.clear();
-//
-//                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-//                    ModelUsers modelUsers = dataSnapshot1.getValue(ModelUsers.class);
-//                    if (modelUsers.getUid() != null && !modelUsers.getUid().equals(firebaseUser.getUid())) {
-//                        if (modelUsers.getName().toLowerCase().contains(query.toLowerCase())) {
-//                            usersList.add(modelUsers);
-//                        }
-//                    }
-//
-//                    adapterChatList.notifyDataSetChanged();
-//
-//                    recyclerView.setAdapter(adapterChatList);
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
-//    }
-//
-//    private void getAllChats() {
-//        final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-//
-//        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
-//
-//        reference.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                usersList.clear();
-//
-//                for (DataSnapshot dataSnapshot1:dataSnapshot.getChildren()) {
-//                    ModelUsers modelUsers = dataSnapshot1.getValue(ModelUsers.class);
-//                    //if uid is not equl is current user uid
-//                    //the add modelusers
-//                    if (dataSnapshot1.exists()) {
-//                        if (!modelUsers.getUid().equals(firebaseUser.getUid())) {
-//                            usersList.add(modelUsers);
-//                        }
-//
-//                        recyclerView.setAdapter(adapterChatList);
-//                    }
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
-//    }
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_users, menu);
+
+        MenuItem menuItem = menu.findItem(R.id.search);
+
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                if (!TextUtils.isEmpty(query.trim())) {
+                    searchChats(query);
+                }
+                else {
+                    loadChats();
+                }
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (!TextUtils.isEmpty(newText.trim())) {
+                    searchChats(newText);
+                }
+                else {
+                    loadChats();
+                }
+
+                return false;
+            }
+        });
+
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    private void searchChats(String query) {
+        final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                usersList.clear();
+
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                    ModelUsers modelUsers = dataSnapshot1.getValue(ModelUsers.class);
+                    for (ModelChatList modelChatList : chatList) {
+                        if (modelUsers.getUid() != null && modelUsers.getUid().equals(modelChatList.getId())) {
+                            if (modelUsers.getName().toLowerCase().contains(query.toLowerCase())) {
+                                usersList.add(modelUsers);
+                            }
+                        }
+                    }
+
+                    adapterChatList.notifyDataSetChanged();
+
+                    recyclerView.setAdapter(adapterChatList);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
 }

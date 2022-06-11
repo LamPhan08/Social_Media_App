@@ -1,20 +1,15 @@
 package com.example.social_media_app;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.InputType;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,11 +19,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
-import java.util.HashMap;
-import java.util.regex.Pattern;
 
 public class LoginActivity extends AppCompatActivity {
     private EditText email, password;
@@ -87,66 +77,8 @@ public class LoginActivity extends AppCompatActivity {
         forgetPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showRecoverPasswordDialog();
-            }
-        });
-    }
-
-    private void showRecoverPasswordDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Recover Password");
-
-        LinearLayout layout = new LinearLayout(this);
-
-        EditText edtEmail = new EditText(this); /** Nhập tài khoản đã đăng ký */
-        edtEmail.setHint("Email");
-        edtEmail.setMinEms(16);
-        edtEmail.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
-
-        layout.addView(edtEmail);
-        layout.setPadding(10, 10, 10, 10);
-
-        builder.setView(layout);
-        builder.setPositiveButton("Recover", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                String emaill = edtEmail.getText().toString().trim();
-                beginRecoverPassWord(emaill); /** Gửi mail tới địa chỉ email để phục hồi mật khẩu */
-            }
-        });
-
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-            }
-        });
-
-        builder.create().show();
-    }
-
-    private void beginRecoverPassWord(String emaill) {
-        loadingBar.setMessage("Sending Email...");
-        loadingBar.setCanceledOnTouchOutside(false);
-        loadingBar.show();
-
-        /** Gửi mail đặt lại mật khẩu */
-        auth.sendPasswordResetEmail(emaill).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                loadingBar.dismiss();
-
-                if (task.isSuccessful()) {
-                    Toast.makeText(LoginActivity.this, "Done sent!", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(LoginActivity.this, "Error occured!", Toast.LENGTH_SHORT).show();
-                }
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                loadingBar.dismiss();
-                Toast.makeText(LoginActivity.this, "Failed!", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(LoginActivity.this, ForgotPasswordActivity.class);
+                startActivity(intent);
             }
         });
     }

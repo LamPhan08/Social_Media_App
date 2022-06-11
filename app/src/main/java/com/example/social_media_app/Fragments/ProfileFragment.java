@@ -3,6 +3,7 @@ package com.example.social_media_app.Fragments;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,7 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.social_media_app.Adapters.AdapterPosts;
-import com.example.social_media_app.EditProfilePage;
+import com.example.social_media_app.EditProfilePageActivity;
 import com.example.social_media_app.LoginActivity;
 import com.example.social_media_app.Models.ModelPosts;
 import com.example.social_media_app.R;
@@ -114,7 +115,14 @@ public class ProfileFragment extends Fragment {
                     // setting data to our text view
                     name.setText(mName);
                     email.setText(mEmail);
-                    bio.setText(mBio);
+
+                    if (TextUtils.isEmpty(mBio)) {
+                        bio.setVisibility(View.GONE);
+                    }
+                    else {
+                        bio.setVisibility(View.VISIBLE);
+                        bio.setText(mBio);
+                    }
 
                     try {
                         Glide.with(getActivity()).load(avatar).into(mAvatar);
@@ -132,11 +140,11 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        // On click we will open EditProfileActiity
+        // On click we will open EditProfileActivity
         editProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getActivity(), EditProfilePage.class));
+                startActivity(new Intent(getActivity(), EditProfilePageActivity.class));
             }
         });
         return view;

@@ -15,37 +15,44 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Social_Media_App">
         <activity
-            android:name=".PostDetails"
+            android:name=".ForgotPasswordActivity"
+            android:exported="false"
+            android:windowSoftInputMode="stateVisible|adjustPan"/>
+        <activity
+            android:name=".PostDetailsActivity"
             android:exported="false" />
         <activity
             android:name=".SearchUserActivity"
             android:exported="false" />
         <activity
-            android:name=".CommentPost"
+            android:name=".CommentActivity"
             android:exported="false" />
         <activity
-            android:name=".PeopleWhoLiked"
+            android:name=".ViewPeopleWhoLikedPostActivity"
             android:exported="false" />
         <activity
-            android:name=".Other_Profile_Page"
+            android:name=".ViewOtherProfilePageActivity"
             android:exported="false" />
         <activity
             android:name=".ChatActivity"
             android:exported="false" />
         <activity
-            android:name=".EditProfilePage"
-            android:exported="false" />
+            android:name=".EditProfilePageActivity"
+            android:exported="false"
+            android:windowSoftInputMode="stateVisible|adjustPan"/>
         <activity
             android:name=".DashboardActivity"
             android:exported="false" />
         <activity
             android:name=".LoginActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="stateVisible|adjustPan" />
         <activity
             android:name=".RegistrationActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="stateVisible|adjustPan" />
         <activity
-            android:name=".SplashScreen"
+            android:name=".SplashScreenActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

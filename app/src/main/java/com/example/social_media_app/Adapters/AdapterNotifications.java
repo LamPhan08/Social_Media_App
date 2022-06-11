@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.social_media_app.Models.ModelNotifications;
-import com.example.social_media_app.PostDetails;
+import com.example.social_media_app.PostDetailsActivity;
 import com.example.social_media_app.R;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -78,7 +78,7 @@ public class AdapterNotifications extends RecyclerView.Adapter<AdapterNotificati
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, PostDetails.class);
+                Intent intent = new Intent(context, PostDetailsActivity.class);
                 intent.putExtra("postId", mPostId);
                 context.startActivity(intent);
             }

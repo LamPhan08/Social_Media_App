@@ -27,7 +27,7 @@ import java.util.HashMap;
 import java.util.regex.Pattern;
 
 public class RegistrationActivity extends AppCompatActivity {
-    private EditText name, email, password;
+    private EditText name, email, password, re_enterPassword;
     private Button registerBtn;
     private TextView signIn;
     private ProgressDialog loadingBar;
@@ -41,6 +41,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
         name = (EditText) findViewById(R.id.edtRegisterName);
         email = (EditText) findViewById(R.id.edtRegisterEmail);
+        re_enterPassword = (EditText) findViewById(R.id.edtReenterPassword);
         password = (EditText) findViewById(R.id.edtRegisterPassword);
         registerBtn = (Button) findViewById(R.id.btnCreateAccount);
         signIn = (TextView) findViewById(R.id.txvHaveAnAccount);
@@ -56,6 +57,7 @@ public class RegistrationActivity extends AppCompatActivity {
                 String mName = name.getText().toString().trim();
                 String mEmail = email.getText().toString().trim();
                 String mPassword = password.getText().toString().trim();
+                String mReEnterPassword = re_enterPassword.getText().toString().trim();
 
                 /** Kiểm tra email có hợp lệ không */
                 if (!Patterns.EMAIL_ADDRESS.matcher(mEmail).matches()) {
@@ -65,6 +67,10 @@ public class RegistrationActivity extends AppCompatActivity {
                 else if (mPassword.length() < 6) { /** Kiểm tra mật khẩu phải từ 6 ký tự trở lên */
                     password.setError("Password length must be greater than 6 character!");
                     password.setFocusable(true);
+                }
+                else if (!mReEnterPassword.equals(mPassword)) {
+                    re_enterPassword.setError("Password mismatch!");
+                    re_enterPassword.setFocusable(true);
                 }
                 else {
                     registerUser(mName, mEmail, mPassword);

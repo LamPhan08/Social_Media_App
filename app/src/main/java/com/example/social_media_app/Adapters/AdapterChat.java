@@ -70,9 +70,10 @@ public class AdapterChat extends RecyclerView.Adapter<AdapterChat.Myholder>{
 
         calendar.setTimeInMillis(Long.parseLong(timeStamp));
 
-        String timedate = DateFormat.format("dd/MM/yyyy hh:mm aa",calendar).toString();
+        String timedate = DateFormat.format("dd/MM/yyyy hh:mm aa", calendar).toString();
 
         holder.message.setText(message);
+        holder.message.setVisibility(View.VISIBLE);
         holder.time.setText(timedate);
 
         try {

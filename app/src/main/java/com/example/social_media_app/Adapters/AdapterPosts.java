@@ -6,7 +6,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.view.Gravity;
@@ -15,7 +14,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -27,14 +25,13 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.social_media_app.CommentPost;
+import com.example.social_media_app.CommentActivity;
 import com.example.social_media_app.Models.ModelPosts;
-import com.example.social_media_app.Other_Profile_Page;
-import com.example.social_media_app.PeopleWhoLiked;
+import com.example.social_media_app.ViewOtherProfilePageActivity;
+import com.example.social_media_app.ViewPeopleWhoLikedPostActivity;
 import com.example.social_media_app.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -156,7 +153,7 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
         holder.likes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(holder.itemView.getContext(), PeopleWhoLiked.class);
+                Intent intent = new Intent(holder.itemView.getContext(), ViewPeopleWhoLikedPostActivity.class);
                 intent.putExtra("pid", postId);
                 holder.itemView.getContext().startActivity(intent);
             }
@@ -224,7 +221,7 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
         holder.commentTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(holder.itemView.getContext(), CommentPost.class);
+                Intent intent = new Intent(holder.itemView.getContext(), CommentActivity.class);
                 intent.putExtra("pid", mPostTime);
                 holder.itemView.getContext().startActivity(intent);
             }
@@ -233,7 +230,7 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
         holder.avatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent profileIntent = new Intent(holder.itemView.getContext(), Other_Profile_Page.class);
+                Intent profileIntent = new Intent(holder.itemView.getContext(), ViewOtherProfilePageActivity.class);
                 profileIntent.putExtra("uid", uid);
                 holder.itemView.getContext().startActivity(profileIntent);
             }
@@ -242,7 +239,7 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
         holder.name.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent profileIntent = new Intent(holder.itemView.getContext(), Other_Profile_Page.class);
+                Intent profileIntent = new Intent(holder.itemView.getContext(), ViewOtherProfilePageActivity.class);
                 profileIntent.putExtra("uid", uid);
                 holder.itemView.getContext().startActivity(profileIntent);
             }

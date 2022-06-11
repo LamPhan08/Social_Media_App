@@ -30,7 +30,7 @@ import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class Other_Profile_Page extends AppCompatActivity {
+public class ViewOtherProfilePageActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
     private FirebaseDatabase firebaseDatabase;
@@ -69,7 +69,7 @@ public class Other_Profile_Page extends AppCompatActivity {
 
         modelPostsArrayList = new ArrayList<>();
 
-        adapterPosts = new AdapterPosts(Other_Profile_Page.this, modelPostsArrayList);
+        adapterPosts = new AdapterPosts(ViewOtherProfilePageActivity.this, modelPostsArrayList);
 
         recyclerView.setAdapter(adapterPosts);
 
@@ -98,8 +98,8 @@ public class Other_Profile_Page extends AppCompatActivity {
                     actionBar.setTitle(mName);
 
                     try {
-                        Glide.with(Other_Profile_Page.this).load(avatar).into(mAvatar);
-                        Glide.with(Other_Profile_Page.this).load(cover).into(mCover);
+                        Glide.with(ViewOtherProfilePageActivity.this).load(avatar).into(mAvatar);
+                        Glide.with(ViewOtherProfilePageActivity.this).load(cover).into(mCover);
                     }
                     catch (Exception e) {
 
@@ -116,7 +116,7 @@ public class Other_Profile_Page extends AppCompatActivity {
         btnChat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent chatIntent = new Intent(Other_Profile_Page.this, ChatActivity.class);
+                Intent chatIntent = new Intent(ViewOtherProfilePageActivity.this, ChatActivity.class);
                 chatIntent.putExtra("UID", uid);
                 startActivity(chatIntent);
             }
@@ -149,7 +149,7 @@ public class Other_Profile_Page extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                Toast.makeText(Other_Profile_Page.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(ViewOtherProfilePageActivity.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

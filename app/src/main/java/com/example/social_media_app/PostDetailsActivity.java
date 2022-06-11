@@ -24,7 +24,6 @@ import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -60,7 +59,7 @@ import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class PostDetails extends AppCompatActivity {
+public class PostDetailsActivity extends AppCompatActivity {
     private CircleImageView avatar;
     private TextView name, title, time, description, like, comment, likeCount;
     private ImageView image;
@@ -148,8 +147,26 @@ public class PostDetails extends AppCompatActivity {
         avatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(PostDetails.this, Other_Profile_Page.class);
+                Intent intent = new Intent(PostDetailsActivity.this, ViewOtherProfilePageActivity.class);
                 intent.putExtra("uid", myUid);
+                startActivity(intent);
+            }
+        });
+
+        name.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(PostDetailsActivity.this, ViewOtherProfilePageActivity.class);
+                intent.putExtra("uid", myUid);
+                startActivity(intent);
+            }
+        });
+
+        likeCount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(PostDetailsActivity.this, ViewPeopleWhoLikedPostActivity.class);
+                intent.putExtra("pid", postId);
                 startActivity(intent);
             }
         });
@@ -194,7 +211,7 @@ public class PostDetails extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Exception e) {
                 progressDialog.dismiss();
-                Toast.makeText(PostDetails.this, "Failed", Toast.LENGTH_LONG).show();
+                Toast.makeText(PostDetailsActivity.this, "Failed", Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -229,7 +246,7 @@ public class PostDetails extends AppCompatActivity {
     private void showPickImageDialog() {
         String options[] = { "Camera","Gallery"};
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(PostDetails.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(PostDetailsActivity.this);
 
         builder.setTitle("Pick Image From");
         builder.setIcon(R.drawable.ic_add_photo);
@@ -370,7 +387,7 @@ public class PostDetails extends AppCompatActivity {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             progressDialog.dismiss();
-                            Toast.makeText(PostDetails.this,"Failed!",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(PostDetailsActivity.this,"Failed!",Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
@@ -417,7 +434,7 @@ public class PostDetails extends AppCompatActivity {
     }
 
     private boolean checkStoragePermission() {
-        boolean result = ContextCompat.checkSelfPermission(PostDetails.this,Manifest.permission.WRITE_EXTERNAL_STORAGE) == (PackageManager.PERMISSION_GRANTED);
+        boolean result = ContextCompat.checkSelfPermission(PostDetailsActivity.this,Manifest.permission.WRITE_EXTERNAL_STORAGE) == (PackageManager.PERMISSION_GRANTED);
         return result;
     }
 
@@ -462,38 +479,6 @@ public class PostDetails extends AppCompatActivity {
         });
     }
 
-    private void loadComments() {
-        modelCommentsList = new ArrayList<>();
-
-        adapterComment = new AdapterComments(PostDetails.this, modelCommentsList, myUid, postId);
-
-        commentRecyclerView.setAdapter(adapterComment);
-
-        DatabaseReference commentDatabase = FirebaseDatabase.getInstance().getReference("Comments");
-
-        Query query = commentDatabase.orderByChild("postId").equalTo(postId);
-
-        query.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                modelCommentsList.clear();
-
-                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                    ModelComments modelComments = dataSnapshot1.getValue(ModelComments.class);
-
-                    modelCommentsList.add(modelComments);
-                }
-
-                adapterComment.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
-
     private void loadUserInfo() {
         Query query = FirebaseDatabase.getInstance().getReference("Users");
 
@@ -510,7 +495,7 @@ public class PostDetails extends AppCompatActivity {
                 name.setText(myName);
 
                 try {
-                    Glide.with(PostDetails.this).load(myAvatar).into(avatar);
+                    Glide.with(PostDetailsActivity.this).load(myAvatar).into(avatar);
                 }
                 catch (Exception e) {
 
@@ -544,7 +529,14 @@ public class PostDetails extends AppCompatActivity {
                 }
 
                 title.setText(postTitle);
-                description.setText(postDescription);
+
+                if (TextUtils.isEmpty(postDescription)) {
+                    description.setVisibility(View.GONE);
+                }
+                else {
+                    description.setVisibility(View.VISIBLE);
+                    description.setText(postDescription);
+                }
 
                 Calendar calendar = Calendar.getInstance(Locale.ENGLISH);
                 calendar.setTimeInMillis(Long.parseLong(postTime));
@@ -578,12 +570,44 @@ public class PostDetails extends AppCompatActivity {
                     image.setVisibility(View.VISIBLE);
 
                     try {
-                        Glide.with(PostDetails.this).load(postImage).into(image);
+                        Glide.with(PostDetailsActivity.this).load(postImage).into(image);
                     }
                     catch (Exception e) {
 
                     }
                 }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void loadComments() {
+        modelCommentsList = new ArrayList<>();
+
+        adapterComment = new AdapterComments(PostDetailsActivity.this, modelCommentsList, myUid, postId);
+
+        commentRecyclerView.setAdapter(adapterComment);
+
+        DatabaseReference commentDatabase = FirebaseDatabase.getInstance().getReference("Comments");
+
+        Query query = commentDatabase.orderByChild("postId").equalTo(postId);
+
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                modelCommentsList.clear();
+
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                    ModelComments modelComments = dataSnapshot1.getValue(ModelComments.class);
+
+                    modelCommentsList.add(modelComments);
+                }
+
+                adapterComment.notifyDataSetChanged();
             }
 
             @Override

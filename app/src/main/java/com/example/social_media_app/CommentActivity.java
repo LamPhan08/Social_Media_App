@@ -31,7 +31,6 @@ import com.example.social_media_app.Models.ModelComments;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -49,7 +48,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class CommentPost extends AppCompatActivity {
+public class CommentActivity extends AppCompatActivity {
     private String myUid, myName, myEmail, myAvatar, postId, postLikes, hisUid;
     private TextView like;
     private TextView likeTV, back;
@@ -135,7 +134,7 @@ public class CommentPost extends AppCompatActivity {
         like.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(CommentPost.this, PeopleWhoLiked.class);
+                Intent intent = new Intent(CommentActivity.this, ViewPeopleWhoLikedPostActivity.class);
                 intent.putExtra("pid", postId);
                 startActivity(intent);
             }
@@ -152,7 +151,7 @@ public class CommentPost extends AppCompatActivity {
     private void showPickImageDialog() {
         String options[] = { "Camera","Gallery"};
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(CommentPost.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(CommentActivity.this);
 
         builder.setTitle("Pick Image From");
         builder.setIcon(R.drawable.ic_add_photo);
@@ -297,7 +296,7 @@ public class CommentPost extends AppCompatActivity {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             progressDialog.dismiss();
-                            Toast.makeText(CommentPost.this,"Failed!",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(CommentActivity.this,"Failed!",Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
@@ -338,7 +337,7 @@ public class CommentPost extends AppCompatActivity {
     }
 
     private boolean checkStoragePermission() {
-        boolean result = ContextCompat.checkSelfPermission(CommentPost.this,Manifest.permission.WRITE_EXTERNAL_STORAGE) == (PackageManager.PERMISSION_GRANTED);
+        boolean result = ContextCompat.checkSelfPermission(CommentActivity.this,Manifest.permission.WRITE_EXTERNAL_STORAGE) == (PackageManager.PERMISSION_GRANTED);
         return result;
     }
 
@@ -358,7 +357,7 @@ public class CommentPost extends AppCompatActivity {
     private void loadComments() {
         modelCommentsList = new ArrayList<>();
 
-        adapterComment = new AdapterComments(CommentPost.this, modelCommentsList, myUid, postId);
+        adapterComment = new AdapterComments(CommentActivity.this, modelCommentsList, myUid, postId);
 
         recyclerView.setAdapter(adapterComment);
 
@@ -498,7 +497,7 @@ public class CommentPost extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Exception e) {
                 progressDialog.dismiss();
-                Toast.makeText(CommentPost.this, "Failed", Toast.LENGTH_LONG).show();
+                Toast.makeText(CommentActivity.this, "Failed", Toast.LENGTH_LONG).show();
             }
         });
 

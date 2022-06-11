@@ -5,7 +5,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -24,7 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.social_media_app.Models.ModelComments;
-import com.example.social_media_app.Other_Profile_Page;
+import com.example.social_media_app.ViewOtherProfilePageActivity;
 import com.example.social_media_app.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -115,7 +114,7 @@ public class AdapterComments extends RecyclerView.Adapter<AdapterComments.MyHold
         holder.avatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent profileIntent = new Intent(holder.itemView.getContext(), Other_Profile_Page.class);
+                Intent profileIntent = new Intent(holder.itemView.getContext(), ViewOtherProfilePageActivity.class);
                 profileIntent.putExtra("uid", uid);
                 holder.itemView.getContext().startActivity(profileIntent);
             }
@@ -124,7 +123,7 @@ public class AdapterComments extends RecyclerView.Adapter<AdapterComments.MyHold
         holder.name.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent profileIntent = new Intent(holder.itemView.getContext(), Other_Profile_Page.class);
+                Intent profileIntent = new Intent(holder.itemView.getContext(), ViewOtherProfilePageActivity.class);
                 profileIntent.putExtra("uid", uid);
                 holder.itemView.getContext().startActivity(profileIntent);
             }
