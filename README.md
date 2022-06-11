@@ -9,7 +9,7 @@ Hồ Minh Ngân - 20520647
 ## Link Github:  
 [SOCIAL_MEDIA_APP_ANDROID_JAVA](https://github.com/LamPhan08/Social_Media_App.git)
 ## Hướng dẫn cài đặt:
-*Tải Source Sode từ Github (có 2 cách):*   
+*Tải Source Code từ Github (có 2 cách):*   
 ***Cách 1:*** Tải file ZIP:  
 Vào link Github của dự án (https://github.com/LamPhan08/Social_Media_App.git), mở phần **Code** và bấm **Download ZIP**.  
 ***Cách 2:*** Git clone:  
